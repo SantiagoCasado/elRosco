@@ -26,10 +26,10 @@ session_start();
                 $usuario = new Usuario();
 
                 //Buscar usuario de la bd
-                $usuarioEncontrado = $usuario -> getUsuario($nombreFormulario);
+                $usuario -> getUsuario($nombreFormulario);
                        
                 //Comprobar si existe y si los datos ingresados son validos
-                if ($usuarioEncontrado) {
+                if ($usuario -> getID() != null) {
                     echo 'existe el usuario';
                     $contraseniaUsuario = $usuario -> getContrasenia();
                     
@@ -71,9 +71,9 @@ session_start();
                         // exit;
                     }
                 } else {
-                    //Correo no registrado en la bd
+                    //Usuario no registrado en la bd
 
-                    $mensaje = 'El correo no se encuentra registrado';
+                    $mensaje = 'El usuario no se encuentra registrado';
                     echo $mensaje;
 
                     //Recargar pagina

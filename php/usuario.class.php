@@ -48,7 +48,7 @@ class Usuario
 		$this -> fechaNacimientoUsuario = $fechaNacimiento;
 	}
 
-	public function existeUsuario($nombreUsuario) {
+	private function buscarUsuario($nombreUsuario) {
 		try {
 			//Buscar usuario en la base de datos
 			$bd = new BaseDatos('rosco');
@@ -61,62 +61,79 @@ class Usuario
 					WHERE nombre = '$nombreUsuario'";
 
 			$resultadoConsulta = $bd -> consulta($sql);
-	
-			$existe = false;
 		
 			if ($registro = $resultadoConsulta->fetch_object()) {
-				$existe = true;
-			}	
+				$resultadoConsulta->free();
+				$bd->cerrarBD();
+				return $registro;
+			}
+
 			$resultadoConsulta->free();
 			$bd->cerrarBD();
-
-			return $existe;
+			return null;
 
 		} catch (Exception $e) {
       	  	error_log("Error al buscar el usuario: " . $e->getMessage());
       	  	return false;
    		}
-
 	}
+
+    public function existeUsuario($nombreUsuario) {
+        $registro = $this->buscarUsuario($nombreUsuario);
+        return $registro !== null; // Retorna true si existe, false si no
+    }
 
 	public function getUsuario($nombreUsuario) {
+
+		//Si existe se asigna los atributos encontrado al Objeto Usuario
+		if ($registro = $this-> buscarUsuario($nombreUsuario)) {
+			$this->setID($registro->id);
+			$this->setNombreUsuario($registro->nombre);
+			$this->setCorreo($registro->correo);
+			$this->setContrasenia($registro->contrasenia);
+			$this->setFechaNacimiento($registro->FechaNacimiento);
+		}
 		
-		try {
-			//Buscar usuario en la base de datos
-			$bd = new BaseDatos('rosco');
-			$conexion = $bd -> conectarBD();
-		
-			$nombreUsuario = $conexion->real_escape_string($nombreUsuario); //Evita inyecciones SQL
-
-			$sql = "SELECT * 
-					FROM usuario 
-					WHERE nombre = '$nombreUsuario'";
-
-			$resultadoConsulta = $bd -> consulta($sql);
-	
-			$encontrado = false;
-		
-			//Si existe se asigna los atributos encontrado al Objeto Usuario
-			if ($registro = $resultadoConsulta->fetch_object()) {
-				$encontrado = true;
-
-				$this->setID($registro->id);
-				$this->setNombreUsuario($registro->nombre);
-				$this->setCorreo($registro->correo);
-				$this->setContrasenia($registro->contrasenia);
-				$this->setFechaNacimiento($registro->FechaNacimiento);
-			}
-		
-			$resultadoConsulta->free();
-			$bd->cerrarBD();
-
-			return $encontrado;
-
-		} catch (Exception $e) {
-      	  	error_log("Error al buscar el usuario: " . $e->getMessage());
-      	  	return false;
-   		}
 	}
+
+	// public function getUsuario($nombreUsuario) {
+		
+	// 	try {
+	// 		//Buscar usuario en la base de datos
+	// 		$bd = new BaseDatos('rosco');
+	// 		$conexion = $bd -> conectarBD();
+		
+	// 		$nombreUsuario = $conexion->real_escape_string($nombreUsuario); //Evita inyecciones SQL
+
+	// 		$sql = "SELECT * 
+	// 				FROM usuario 
+	// 				WHERE nombre = '$nombreUsuario'";
+
+	// 		$resultadoConsulta = $bd -> consulta($sql);
+	
+	// 		$encontrado = false;
+		
+	// 		//Si existe se asigna los atributos encontrado al Objeto Usuario
+	// 		if ($registro = $resultadoConsulta->fetch_object()) {
+	// 			$encontrado = true;
+
+	// 			$this->setID($registro->id);
+	// 			$this->setNombreUsuario($registro->nombre);
+	// 			$this->setCorreo($registro->correo);
+	// 			$this->setContrasenia($registro->contrasenia);
+	// 			$this->setFechaNacimiento($registro->FechaNacimiento);
+	// 		}
+		
+	// 		$resultadoConsulta->free();
+	// 		$bd->cerrarBD();
+
+	// 		return $encontrado;
+
+	// 	} catch (Exception $e) {
+    //   	  	error_log("Error al buscar el usuario: " . $e->getMessage());
+    //   	  	return false;
+   	// 	}
+	// }
 
 	public function guardarUsuario($nombre, $correo, $contrasenia, $fechaNacimiento) {
 		$bd = new BaseDatos('rosco');
