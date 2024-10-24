@@ -91,9 +91,8 @@ class Usuario
 			$this->setNombreUsuario($registro->nombre);
 			$this->setCorreo($registro->correo);
 			$this->setContrasenia($registro->contrasenia);
-			$this->setFechaNacimiento($registro->FechaNacimiento);
+			$this->setFechaNacimiento($registro->fechaNacimiento);
 		}
-		
 	}
 
 	// public function getUsuario($nombreUsuario) {

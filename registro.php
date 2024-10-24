@@ -1,12 +1,17 @@
 <?php
-include_once("php/baseDatos.class.php");
 include_once("php/usuario.class.php");
 session_start();
+
+if (isset($_SESSION['mensaje'])) {
+    $mensaje = $_SESSION['mensaje'];
+    echo "<script type='text/javascript'>alert('$mensaje');</script>";
+    unset($_SESSION['mensaje']);
+}
 ?>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="iso-8859-1"/>
+        <meta charset="UTF-8"/>
         <title>El Rosco</title>
         <link rel="stylesheet" href="Estilos/estilo.css">
         <!-- <script type="text/javascript"  src="Script/script.js"></script> -->
@@ -22,10 +27,10 @@ session_start();
         <?php
             
             //Redirigir si hay dos sesiones iniciadas
-// ]        if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
-//             header("location:index.php");
-//             exit;
-//         }
+            if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
+                header("location:crearPartida.php");
+                exit;
+            }
 
             if (isset($_POST['botonRegistro'])) {
                 //Obtener los datos ingresados en el formulario
@@ -40,15 +45,32 @@ session_start();
                 if ($existe) {
                     //Alertar que el usuario ya existe
                     $mensaje = 'El usuario ya existe';
-                    echo $mensaje;
+                    $_SESSION['mensaje'] = $mensaje;
 
                     //Recargar pagina
+                    header("location:registro.php");
+                    exit;
 
                 } else {
                     //Guardar en base de datos
                     $mensaje = $usuario -> guardarUsuario($nombreUsuario, $correoUsuario, $contraseniaUsuario, $fechaNacimiento);
+                    $_SESSION['mensaje'] = $mensaje;
 
-                    echo $mensaje;
+                    //Guardarlo en la sesion
+                    if (!isset($_SESSION['vectorSesion'])) {
+                        //Jugador 1
+                        $vectorSesion = array();
+                    } else {
+                        echo '<br>jugador 2';
+                        //Jugador 2
+                        $vectorSesion = $_SESSION['vectorSesion'];
+                    }
+                    
+                    array_push($vectorSesion, $usuario);
+                    $_SESSION['vectorSesion'] = $vectorSesion;
+
+                    header("location:index.php");
+                    exit;
 
                 }
             } else {

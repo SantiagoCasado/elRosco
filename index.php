@@ -1,14 +1,28 @@
 <?php
 include_once("php/usuario.class.php");
 session_start();
+
+// $_SESSION = array();
+// session_destroy();
+
+if (isset($_SESSION['mensaje'])) {
+    $mensaje = $_SESSION['mensaje'];
+    echo "<script type='text/javascript'>alert('$mensaje');</script>";
+    unset($_SESSION['mensaje']);
+}
+
+//Redirigir si hay dos sesiones iniciadas
+if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
+header("location:crearPartida.php");
+exit;
+}
 ?>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="iso-8859-1" />
+        <meta charset="UTF-8" />
         <title>El Rosco</title>
         <link rel="stylesheet" href="Estilos/estilo.css">
-        <!-- <script type="text/javascript"  src="Script/script.js"></script> -->
     </head>
     <header>
         <div class="itemsCentrados">
@@ -30,55 +44,61 @@ session_start();
                        
                 //Comprobar si existe y si los datos ingresados son validos
                 if ($usuario -> getID() != null) {
-                    echo 'existe el usuario';
                     $contraseniaUsuario = $usuario -> getContrasenia();
                     
                     if ($contraseniaFormulario == $contraseniaUsuario) {
-                        echo 'contrasenia valida';
+
                         if (!isset($_SESSION['vectorSesion'])) {
-                            echo 'jugador1';
                             //Jugador 1
                             $vectorSesion = array();
                         } else {
-                            echo 'jugador 2';
                             //Jugador 2
                             $vectorSesion = $_SESSION['vectorSesion'];
+
+                            //Verificar si el usuario ya inicio sesion
+                            $usuarioSesion = $vectorSesion[0];
+                            echo $usuarioSesion  -> getNombreUsuario();
+                            if ($usuarioSesion  -> getNombreUsuario() == $usuario -> getNombreUsuario()) {
+                                $mensaje = $usuario -> getNombreUsuario() . ' ya se encuentra con sesión iniciada.';
+                                $_SESSION['mensaje'] = $mensaje;
+                                
+                                header("location:index.php");
+                                exit;
+
+                            }
                         }
+
+                        $mensaje = $usuario -> getNombreUsuario() . ' inicio sesión.';
+                        $_SESSION['mensaje'] = $mensaje;
                         
                         array_push($vectorSesion, $usuario);
-                        foreach ($vectorSesion as $usuario1) {
-                                echo "<p>" . $usuario1 -> getNombreUsuario() . "</p>";
-                        }
                         $_SESSION['vectorSesion'] = $vectorSesion;
-
+                        
+                        //Redirigir segun la cantidad de jugadores en la sesion
                         if(count($vectorSesion) == 2) {
-                            //Los dos jugadores iniciaron la sesion
-                            // Formulario de inicio de partida
-                            echo "formulario de inicio de partida";
+                            header("location:crearPartida.php");
+                            exit;
                         } else {
-                            //Un jugador inicio la partida
-                            echo 'un jugador inicio la partida';
-                            //Recargar Pagina
-                            // header("location:index.php");
-                            // exit;
+                            header("location:index.php");
+                            exit;
                         }
                     } else {
                         //Alertar que el correo o contraseña incorrecto
                         $mensaje = 'Correo o contrasenia incorrecta';
-                        echo $mensaje;
+                        $_SESSION['mensaje'] = $mensaje;
+
                         //Recargar pagina
-                        // header("location:index.php");
-                        // exit;
+                        header("location:index.php");
+                        exit;
                     }
                 } else {
                     //Usuario no registrado en la bd
-
                     $mensaje = 'El usuario no se encuentra registrado';
-                    echo $mensaje;
+                    $_SESSION['mensaje'] = $mensaje;
 
                     //Recargar pagina
-                    // header("location:index.php");
-                    // exit;
+                    header("location:index.php");
+                    exit;
                 }
             } else {
                 ?>
