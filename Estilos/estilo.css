@@ -139,12 +139,6 @@ li {
     margin-right: 10px;
 }
 
-.logoEmpresa {
-    width: 50px;
-    height: auto;
-    object-fit: cover;
-}
-
 /* Estilo para etiquetas divs */
 
 .formularios {
@@ -156,6 +150,12 @@ li {
     max-width: 25%;
     margin: 20px auto;
     text-align: center;
+}
+
+fieldset {
+    border: none;
+    padding: 0; /* Opcional: Elimina cualquier padding interno */
+    margin: 0; /* Opcional: Elimina el margen */
 }
 
 .itemsCentrados {

@@ -1,6 +1,11 @@
 <?php
 include_once("php/partida.class.php");
 session_start();
+//Redirigir si no hay dos sesiones iniciadas
+if (!isset($_SESSION['vectorSesion']) || count($_SESSION['vectorSesion']) < 2) {
+header("location:index.php");
+exit;
+}
 
 if (isset($_SESSION['mensaje'])) {
     $mensaje = $_SESSION['mensaje'];
@@ -21,75 +26,58 @@ if (isset($_SESSION['mensaje'])) {
 </head>
 <body>
     <head>
-        <h1>Configuraci&oacute;n de Partida</h1>
+        <h1>El Rosco</h1>
     </head>
     <section>
+        <article>
         <?php
-            if (!isset($_POST['nombre'], $_POST['comboBox'], $_POST['radio'], $_POST['checkbox'])) {
-                echo "<br><p>No hay datos</p> </div>";
-        ?>
-        <form id = "formulario" method = "post" action = "formulario.php">
-
-            <fieldset id = "camposFormulario" class = "camposFormulario">
-                <h2>Formulario</h2>
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
-                
-                <br><br>
-                <label for="comboBox">Selecciona una opción del Combo:</label>
-                <br>
-                <div class = "itemsCentrados">
-                <select id="comboBox" name="comboBox">
-                    <option value="---">---</option>
-                    <option value="opcion1">Opción Uno</option>
-                    <option value="opcion2">Opción Dos</option>
-                    <option value="opcion3">Opción Tres</option>
-                </select>
-                </div>
-
-                <br>
-                <label for="radio">Selecciona una opción del Radio:</label>
-                <br>
-                    <input type="radio" name = "radio" value="opcion1">Opcion 1
-                    <br>
-                    <input type="radio" name = "radio" value="opcion2">Opcion 2
-                    <br>
-                    <input type="radio" name = "radio" value="opcion3">Opcion 3
-
-                <br><br>    
-                <label for="checkbox">Selecciona una opción del checkbox:</label>
-                <br>
-                    <input type="checkbox" name = "checkbox[]" value="opcion1">Opcion 1
-                    <br>
-                    <input type="checkbox" name = "checkbox[]" value="opcion2">Opcion 2
-                    <br>
-                    <input type="checkbox" name = "checkbox[]" value="opcion3">Opcion 3
-
-                <br>
-                <div class = "itemsCentrados">
-                    <button type="reset">Borrar</button>
-                    <button type="submit">Enviar</button>
-                </div>
-            </fieldset>
-        </form>
-        <?php
+            if (isset($_POST['formularioPartida'])) {
+                //Crear partida
             } else {
-                echo "<p>Nombre: " . $_POST['nombre'] . "<br>";
-
-                echo "<p>Combo: " . $_POST['comboBox'] . "<br>";
-
-                echo "<p>Radio: " . $_POST['radio'] . "<br>";
-
-                $checkbox = $_POST['checkbox'];
-                foreach ($checkbox as $opcionSeleccionada) {
-                    echo "Opcion: " . htmlspecialchars($opcionSeleccionada) . "<br>";
-                }
-            }
         ?>
+        <!-- Formulario de Partida -->
+        <div class="formularios">
+            <form id = "idFormularioPartida" method = "get" action = "rosco.php">
 
+                <fieldset id = "camposFormulario" class = "camposFormulario">
+                    <h2>Configuracion de la Partida</h2>
+
+                    <label for="comboBoxNivelPartida">Selecciona el nivel de dificultad de la Partida</label>
+                    <select id="comboBox" name="comboBoxNivelPartida">
+                        <option value="---">---</option>
+                        <option value="baja">Baja</option>
+                        <option value="media">Media</option>
+                        <option value="alta">Alta</option>
+                    </select>
+
+                    <label for="comboBoxDuracionPartida">Selecciona el tiempo de la Partida</label>
+                    <select id="comboBox" name="comboBoxTiempoPartida">
+                        <option value="---">---</option>
+                        <option value="2">2 minutos</option>
+                        <option value="3">3 minutos</option>
+                        <option value="5">5 minutos</option>
+                    </select> 
+                    
+                    <label for="checkboxAyuda">Marca esta opcion si deseas ayuda adicional</label>
+                    <input type="checkbox" name = "checkboxAyuda[]" value="1">Ayuda adicional
+                    <br><br><br>
+
+                    <button type="submit">Comenzar a Jugar</button>
+                    <br><br> 
+                    <button type="reset">Borrar</button>
+                </fieldset>
+            </form>
+        </div>
+            <?php
+            }
+            ?>
+        </article>
+        <article>
+            
+        </article>
     </section>
     <footer>
-        <p>&copy; 2024 Casado Santiago</p>
+        <p>&copy; Final Laboratorio de Programacion y Lenguajes - 2024 - Santiago Casado</p>
     </footer>
 </body>
 </html>
