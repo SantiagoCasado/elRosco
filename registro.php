@@ -40,9 +40,9 @@ if (isset($_SESSION['mensaje'])) {
                 $fechaNacimiento = htmlspecialchars(trim($_POST['fechaNacimiento']));
 
                 $usuario = new Usuario();
+
                 //Verificar si el usuario ya existe
-                $existe = $usuario -> existeUsuario($nombreUsuario);
-                if ($existe) {
+                if ($usuario -> getUsuario($nombreUsuario)) {
                     //Alertar que el usuario ya existe
                     $mensaje = 'El usuario ya existe';
                     $_SESSION['mensaje'] = $mensaje;

@@ -2,8 +2,10 @@
 include_once("php/usuario.class.php");
 session_start();
 
-// $_SESSION = array();
-// session_destroy();
+if (isset($_POST['botonCerrarSesion'])) {
+    $_SESSION = array();
+    session_destroy();
+}
 
 if (isset($_SESSION['mensaje'])) {
     $mensaje = $_SESSION['mensaje'];
@@ -38,15 +40,12 @@ exit;
                 $contraseniaFormulario = $_POST['contraseniaFormulario'];
 
                 $usuario = new Usuario();
-
-                //Buscar usuario de la bd
-                $usuario -> getUsuario($nombreFormulario);
                        
-                //Comprobar si existe y si los datos ingresados son validos
-                if ($usuario -> getID() != null) {
-                    $contraseniaUsuario = $usuario -> getContrasenia();
-                    
-                    if ($contraseniaFormulario == $contraseniaUsuario) {
+                //Comprobar si existe
+                if ($usuario -> getUsuario($nombreFormulario)) {
+
+                    //Comprobar si la contrasenia es correcta
+                    if ($usuario -> validarContrasenia($nombreFormulario, $contraseniaFormulario)) {
 
                         if (!isset($_SESSION['vectorSesion'])) {
                             //Jugador 1
@@ -84,7 +83,7 @@ exit;
                         }
                     } else {
                         //Alertar que el correo o contraseña incorrecto
-                        $mensaje = 'Correo o contrasenia incorrecta';
+                        $mensaje = 'Usuario o contrasenia incorrecta';
                         $_SESSION['mensaje'] = $mensaje;
 
                         //Recargar pagina

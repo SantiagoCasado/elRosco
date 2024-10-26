@@ -30,14 +30,9 @@ if (isset($_SESSION['mensaje'])) {
     </head>
     <section>
         <article>
-        <?php
-            if (isset($_POST['formularioPartida'])) {
-                //Crear partida
-            } else {
-        ?>
         <!-- Formulario de Partida -->
         <div class="formularios">
-            <form id = "idFormularioPartida" method = "get" action = "rosco.php">
+            <form id = "idFormularioPartida" method = "post" action = "rosco.php">
 
                 <fieldset id = "camposFormulario" class = "camposFormulario">
                     <h2>Configuracion de la Partida</h2>
@@ -62,18 +57,21 @@ if (isset($_SESSION['mensaje'])) {
                     <input type="checkbox" name = "checkboxAyuda[]" value="1">Ayuda adicional
                     <br><br><br>
 
-                    <button type="submit">Comenzar a Jugar</button>
+                    <button type="submit" name="botonComenzarPartida">Comenzar a Jugar</button>
                     <br><br> 
                     <button type="reset">Borrar</button>
                 </fieldset>
             </form>
         </div>
-            <?php
-            }
-            ?>
         </article>
+    </section>
+    <section>
         <article>
-            
+            <div class="formularios">
+                <form action="index.php" method = "post">
+                <button name ="botonCerrarSesion">Cerrar Sesión</button>
+                </form>
+            </div>
         </article>
     </section>
     <footer>

@@ -48,7 +48,28 @@ class Usuario
 		$this -> fechaNacimientoUsuario = $fechaNacimiento;
 	}
 
-	private function buscarUsuario($nombreUsuario) {
+	public function guardarUsuario($nombre, $correo, $contrasenia, $fechaNacimiento) {
+		$bd = new BaseDatos('rosco');
+		$bd -> conectarBD();
+
+		// Encriptar la contraseña
+		$contraseniaHash = password_hash($contrasenia, PASSWORD_DEFAULT);
+
+		$sql = "INSERT INTO usuario (nombre, correo, contrasenia, fechaNacimiento) 
+                VALUES ('$nombre', '$correo', '$contraseniaHash', '$fechaNacimiento')";    
+		
+		$resultadoConsulta = $bd ->consulta($sql);
+
+		if ($resultadoConsulta) {
+			$bd->cerrarBD();
+			return $mensaje = 'Usuario registrado exitosamente.';
+		} else {
+			$bd->cerrarBD();
+			return $mensaje = 'Error: no se pudo registrar al usuario.';
+		}
+	}
+
+	public function getUsuario($nombreUsuario) {
 		try {
 			//Buscar usuario en la base de datos
 			$bd = new BaseDatos('rosco');
@@ -62,96 +83,32 @@ class Usuario
 
 			$resultadoConsulta = $bd -> consulta($sql);
 		
-			if ($registro = $resultadoConsulta->fetch_object()) {
+			if ($registro = $resultadoConsulta->fetch_object()) {			
+				$this->setID($registro->id);
+				$this->setNombreUsuario($registro->nombre);
+				$this->setCorreo($registro->correo);
+				$this->setContrasenia($registro->contrasenia);
+				$this->setFechaNacimiento($registro->fechaNacimiento);
+
 				$resultadoConsulta->free();
 				$bd->cerrarBD();
-				return $registro;
+				return True;
 			}
 
 			$resultadoConsulta->free();
 			$bd->cerrarBD();
-			return null;
-
+			return False;
 		} catch (Exception $e) {
       	  	error_log("Error al buscar el usuario: " . $e->getMessage());
-      	  	return false;
    		}
 	}
 
-    public function existeUsuario($nombreUsuario) {
-        $registro = $this->buscarUsuario($nombreUsuario);
-        return $registro !== null; // Retorna true si existe, false si no
+    public function validarContrasenia($nombreUsuario, $contraseniaFormulario) {
+        //Se obtiene el usuario a partir de su nombre y si existe se guardan los registros encontados en el propio Objeto
+        if ($this->getUsuario($nombreUsuario)) {
+            return password_verify($contraseniaFormulario, $this-> contraseniaUsuario);
+        }   
+        return false;
     }
-
-	public function getUsuario($nombreUsuario) {
-
-		//Si existe se asigna los atributos encontrado al Objeto Usuario
-		if ($registro = $this-> buscarUsuario($nombreUsuario)) {
-			$this->setID($registro->id);
-			$this->setNombreUsuario($registro->nombre);
-			$this->setCorreo($registro->correo);
-			$this->setContrasenia($registro->contrasenia);
-			$this->setFechaNacimiento($registro->fechaNacimiento);
-		}
-	}
-
-	// public function getUsuario($nombreUsuario) {
-		
-	// 	try {
-	// 		//Buscar usuario en la base de datos
-	// 		$bd = new BaseDatos('rosco');
-	// 		$conexion = $bd -> conectarBD();
-		
-	// 		$nombreUsuario = $conexion->real_escape_string($nombreUsuario); //Evita inyecciones SQL
-
-	// 		$sql = "SELECT * 
-	// 				FROM usuario 
-	// 				WHERE nombre = '$nombreUsuario'";
-
-	// 		$resultadoConsulta = $bd -> consulta($sql);
-	
-	// 		$encontrado = false;
-		
-	// 		//Si existe se asigna los atributos encontrado al Objeto Usuario
-	// 		if ($registro = $resultadoConsulta->fetch_object()) {
-	// 			$encontrado = true;
-
-	// 			$this->setID($registro->id);
-	// 			$this->setNombreUsuario($registro->nombre);
-	// 			$this->setCorreo($registro->correo);
-	// 			$this->setContrasenia($registro->contrasenia);
-	// 			$this->setFechaNacimiento($registro->FechaNacimiento);
-	// 		}
-		
-	// 		$resultadoConsulta->free();
-	// 		$bd->cerrarBD();
-
-	// 		return $encontrado;
-
-	// 	} catch (Exception $e) {
-    //   	  	error_log("Error al buscar el usuario: " . $e->getMessage());
-    //   	  	return false;
-   	// 	}
-	// }
-
-	public function guardarUsuario($nombre, $correo, $contrasenia, $fechaNacimiento) {
-		$bd = new BaseDatos('rosco');
-		$conexion = $bd -> conectarBD();
-
-		$sql = "INSERT INTO usuario (nombre, correo, contrasenia, fechaNacimiento) 
-                VALUES ('$nombre', '$correo', '$contrasenia', '$fechaNacimiento')";    
-		
-		$resultadoConsulta = $bd ->consulta($sql);
-
-		if ($resultadoConsulta) {
-			return $mensaje = 'Usuario registrado exitosamente.';
-		} else {
-			return $mensaje = 'Error: no se pudo registrar al usuario.';
-		}
-		
-		$bd->cerrarBD();
-
-		return $mensaje;
-	}
 }
 ?>
