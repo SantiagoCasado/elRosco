@@ -58,8 +58,6 @@ if (isset($_SESSION['mensaje'])) {
                     <br><br><br>
 
                     <button type="submit" name="botonComenzarPartida">Comenzar a Jugar</button>
-                    <br><br> 
-                    <button type="reset">Borrar</button>
                 </fieldset>
             </form>
         </div>

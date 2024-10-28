@@ -27,10 +27,10 @@ if (isset($_SESSION['mensaje'])) {
         <?php
             
             //Redirigir si hay dos sesiones iniciadas
-            if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
-                header("location:crearPartida.php");
-                exit;
-            }
+            // if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
+            //     header("location:crearPartida.php");
+            //     exit;
+            // }
 
             if (isset($_POST['botonRegistro'])) {
                 //Obtener los datos ingresados en el formulario
@@ -42,7 +42,8 @@ if (isset($_SESSION['mensaje'])) {
                 $usuario = new Usuario();
 
                 //Verificar si el usuario ya existe
-                if ($usuario -> getUsuario($nombreUsuario)) {
+                $usuario -> getUsuario($nombreUsuario);
+                if ($usuario -> getID() != null) {
                     //Alertar que el usuario ya existe
                     $mensaje = 'El usuario ya existe';
                     $_SESSION['mensaje'] = $mensaje;
@@ -65,7 +66,7 @@ if (isset($_SESSION['mensaje'])) {
                         //Jugador 2
                         $vectorSesion = $_SESSION['vectorSesion'];
                     }
-                    
+                    $usuario -> getUsuario($nombreUsuario);
                     array_push($vectorSesion, $usuario);
                     $_SESSION['vectorSesion'] = $vectorSesion;
 

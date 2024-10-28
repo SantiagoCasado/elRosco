@@ -49,13 +49,13 @@ class Usuario
 	}
 
 	public function guardarUsuario($nombre, $correo, $contrasenia, $fechaNacimiento) {
-		$bd = new BaseDatos('rosco');
+		$bd = new BaseDatos();
 		$bd -> conectarBD();
 
 		// Encriptar la contraseña
 		$contraseniaHash = password_hash($contrasenia, PASSWORD_DEFAULT);
 
-		$sql = "INSERT INTO usuario (nombre, correo, contrasenia, fechaNacimiento) 
+		$sql = "INSERT INTO usuario (nombreUsuario, correoUsuario, contrasenia, fechaNacimiento) 
                 VALUES ('$nombre', '$correo', '$contraseniaHash', '$fechaNacimiento')";    
 		
 		$resultadoConsulta = $bd ->consulta($sql);
@@ -72,43 +72,39 @@ class Usuario
 	public function getUsuario($nombreUsuario) {
 		try {
 			//Buscar usuario en la base de datos
-			$bd = new BaseDatos('rosco');
+			$bd = new BaseDatos();
 			$conexion = $bd -> conectarBD();
 		
 			$nombreUsuario = $conexion->real_escape_string($nombreUsuario); //Evita inyecciones SQL
 
 			$sql = "SELECT * 
-					FROM usuario 
-					WHERE nombre = '$nombreUsuario'";
+					FROM USUARIO 
+					WHERE nombreUsuario = '$nombreUsuario'";
 
 			$resultadoConsulta = $bd -> consulta($sql);
 		
 			if ($registro = $resultadoConsulta->fetch_object()) {			
-				$this->setID($registro->id);
-				$this->setNombreUsuario($registro->nombre);
-				$this->setCorreo($registro->correo);
+				$this->setID($registro->idUsuario);
+				$this->setNombreUsuario($registro->nombreUsuario);
+				$this->setCorreo($registro->correoUsuario);
 				$this->setContrasenia($registro->contrasenia);
 				$this->setFechaNacimiento($registro->fechaNacimiento);
 
-				$resultadoConsulta->free();
-				$bd->cerrarBD();
-				return True;
+				// $resultadoConsulta->free();
+				// $bd->cerrarBD();
+				// return True;
 			}
 
 			$resultadoConsulta->free();
 			$bd->cerrarBD();
-			return False;
+			// return False;
 		} catch (Exception $e) {
       	  	error_log("Error al buscar el usuario: " . $e->getMessage());
    		}
 	}
 
-    public function validarContrasenia($nombreUsuario, $contraseniaFormulario) {
-        //Se obtiene el usuario a partir de su nombre y si existe se guardan los registros encontados en el propio Objeto
-        if ($this->getUsuario($nombreUsuario)) {
-            return password_verify($contraseniaFormulario, $this-> contraseniaUsuario);
-        }   
-        return false;
+    public function validarContrasenia($contraseniaFormulario) {
+		return password_verify($contraseniaFormulario, $this-> contraseniaUsuario);
     }
 }
 ?>

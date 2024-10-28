@@ -7,11 +7,22 @@ if (isset($_POST['botonCerrarSesion'])) {
     session_destroy();
 }
 
+// // $_SESSION = array();
+// // session_destroy();
+
 if (isset($_SESSION['mensaje'])) {
     $mensaje = $_SESSION['mensaje'];
     echo "<script type='text/javascript'>alert('$mensaje');</script>";
     unset($_SESSION['mensaje']);
 }
+
+// //Mostrarv los usuario con sesion iniciada
+// if (isset($_SESSION['vectorSesion'])) {
+//     $vectorSesion = $_SESSION['vectorSesion'];
+//     foreach ($vectorSesion as $index => $usuario) {
+//         echo "<br>" . $index . ' ' . $usuario -> getNombreUsuario();
+//     }
+//     }
 
 //Redirigir si hay dos sesiones iniciadas
 if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
@@ -37,15 +48,16 @@ exit;
         <?php
             if (isset($_POST['botonInicio'])) {
                 $nombreFormulario = $_POST['nombreFormulario'];
-                $contraseniaFormulario = $_POST['contraseniaFormulario'];
 
                 $usuario = new Usuario();
                        
                 //Comprobar si existe
-                if ($usuario -> getUsuario($nombreFormulario)) {
+                $usuario -> getUsuario($nombreFormulario);
+                if ($usuario -> getID() != null) {
 
                     //Comprobar si la contrasenia es correcta
-                    if ($usuario -> validarContrasenia($nombreFormulario, $contraseniaFormulario)) {
+                    $contraseniaFormulario = $_POST['contraseniaFormulario'];
+                    if ($usuario -> validarContrasenia($contraseniaFormulario)) {
 
                         if (!isset($_SESSION['vectorSesion'])) {
                             //Jugador 1
@@ -56,7 +68,6 @@ exit;
 
                             //Verificar si el usuario ya inicio sesion
                             $usuarioSesion = $vectorSesion[0];
-                            echo $usuarioSesion  -> getNombreUsuario();
                             if ($usuarioSesion  -> getNombreUsuario() == $usuario -> getNombreUsuario()) {
                                 $mensaje = $usuario -> getNombreUsuario() . ' ya se encuentra con sesión iniciada.';
                                 $_SESSION['mensaje'] = $mensaje;

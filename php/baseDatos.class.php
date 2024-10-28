@@ -10,11 +10,11 @@ class BaseDatos
     private $errorConsulta;
     private $conexion;
 
-    public function __construct ($baseDatos) {
+    public function __construct () {
         $this -> servidor = 'localhost';
         $this -> usuario = 'root';
         $this -> contrasenia = 'root';
-        $this -> baseDatos = $baseDatos;
+        $this -> baseDatos = 'elrosco';
         $this -> errorConexion = 'No se pudo conectar al servidor';
         $this -> errorConsulta = 'No se pudo realizar la consulta';
     }
