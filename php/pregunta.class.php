@@ -57,17 +57,27 @@ class Pregunta
 			//Buscar Preguntas en la base de datos por letra y dificultad
 			$bd = new BaseDatos();
 			$conexion = $bd -> conectarBD();
-
-			//idPreguntas son los IDs que se encuentran en la sesion
-            $sql = "SELECT * 
-					FROM pregunta 
-					WHERE letra = '$letra' 
-                        AND dificultad = '$dificultadPregunta'
-                        AND IS NOT IN idPregunta = ($idPreguntas)";
+            if ($idPreguntas == '0') {
+                $sql = "SELECT * 
+                        FROM pregunta 
+                        WHERE letra = '$letra' 
+                            AND dificultadPregunta = '$dificultadPregunta'
+                        ORDER BY RAND()
+                        LIMIT 1";
+            } else {
+                //idPreguntas son los IDs que se encuentran en la sesion
+                $sql = "SELECT * 
+                        FROM pregunta 
+                        WHERE letra = '$letra' 
+                            AND dificultadPregunta = '$dificultadPregunta'
+                            AND idPregunta NOT IN ($idPreguntas)
+                        ORDER BY RAND()
+                        LIMIT 1";
+            }
 
 			$resultadoConsulta = $bd -> consulta($sql);
 		
-			if ($registro = $resultadoConsulta->fetch_object()) {	
+			if ($registro = $resultadoConsulta->fetch_object()) {
                 
                 $pregunta = new Pregunta();
 

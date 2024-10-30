@@ -15,13 +15,17 @@ if (!isset($_SESSION['vectorSesion']) || count($_SESSION['vectorSesion']) < 2) {
     }
 
 //Crear Partida
-if ($_POST['botonComenzarPartida']) {
+if (isset($_POST['botonComenzarPartida'])) {
 
     //Obtener caracteristicas de la partida
     $dificultad = $_POST['comboBoxNivelPartida'];
     $tiempoPartida = $_POST['comboBoxTiempoPartida'];
-    $ayudaAdicional = $_POST['checkboxAyuda'];
-
+    if(isset($_POST['checkboxAyuda'])) {
+        $ayudaAdicional = 1;
+    } else {
+        $ayudaAdicional = 0;
+    }
+    
     //Obtener los jugadores
     $jugadores = $_SESSION['vectorSesion'];
 
@@ -62,7 +66,7 @@ if ($_POST['botonComenzarPartida']) {
     <section>
         <article>
             <div class="formularios">
-                <form action="resultadoPartida.php" method = "post">
+                <form action="crearPartida.php" method = "post">
                     <h1>Agregar logica para definir partida y guardar juego en la bd</h1>
                 <button name ="botonCerrarSesion">Abandonar</button>
                 </form>

@@ -32,7 +32,7 @@ if (isset($_SESSION['mensaje'])) {
         <article>
         <!-- Formulario de Partida -->
         <div class="formularios">
-            <form id = "idFormularioPartida" method = "post" action = "rosco.php">
+            <form id = "idFormularioPartida" method = "POST" action = "rosco.php">
 
                 <fieldset id = "camposFormulario" class = "camposFormulario">
                     <h2>Configuracion de la Partida</h2>

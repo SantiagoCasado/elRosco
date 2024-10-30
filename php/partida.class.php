@@ -15,8 +15,7 @@ class Partida {
     private $turnoActual;
     private $ganador;
 
-    public function __construct($idPartida, $dificultad, $tiempoPartida, $ayuda, $jugadores) {
-        $this->idPartida = $idPartida;
+    public function __construct($dificultad, $tiempoPartida, $ayuda, $jugadores) {
         $this->dificultad = $dificultad;
         $this->tiempoPartida = $tiempoPartida;
         $this->ayuda = $ayuda;
@@ -30,6 +29,8 @@ class Partida {
         //Inicializar datos
         $this -> prepararJugadores($jugadores);
         $this -> prepararRoscos();
+
+        echo '<br>Partida creada';
     }
 
     public function getIdPartida() {
@@ -123,8 +124,10 @@ class Partida {
     }
 
     public function prepararRoscos() {
-        // Crear los roscos y asignarlos a cada jugador
+        // Si hubo una partida previa, se limpian las preguntas utilizadas
+        unset($_SESSION['idPreguntas']);
 
+        // Crear los roscos y asignarlos a cada jugador
         foreach ($this->jugadores as $jugador) {
             
             $rosco = new Rosco($this -> dificultad);
@@ -142,11 +145,11 @@ class Partida {
 
             // Iniciar la transacción
             $conexion->begin_transaction();
-    
+            
             // Guardar la partida (PARTIDA)
+            $tiempoPartidaSQL = sprintf('%02d:%02d:%02d', 0, $this->tiempoPartida, 0); // Se pasa de entero a minutos
             $sqlPartida = "INSERT INTO partida (tiempo, dificultadPartida, ayudaAdicional) 
-                           VALUES ('$this->tiempo', '$this->dificultad', '$this->ayuda')";
-            //$resultadoPartida = $bd -> consulta($sqlPartida);
+                           VALUES ('$tiempoPartidaSQL', '$this->dificultad', '$this->ayuda')";
             $bd -> consulta($sqlPartida);
             $idPartida = $conexion->insert_id; //Obtener el ID de la partida guardada
     
@@ -156,27 +159,23 @@ class Partida {
                 $rosco = $this -> roscos[$jugador->getID()];
                 
                 $sqlRosco = "INSERT INTO rosco (estadoRosco) 
-                            VALUES ('$rosco -> estadoRosco')";
-                //$resultadoRosco = $bd -> consulta($sqlRosco);
+                            VALUES ('" . $rosco -> getEstadoRosco() . "')";
                 $bd -> consulta($sqlRosco);
                 $idRosco = $conexion -> insert_id;
 
     
                 $sqlPartidaUsuario = "INSERT INTO partida_usuario (idPartida, idUsuario, tiempoRestante, idRosco) 
-                                      VALUES ('$idPartida', '$jugador -> getID()', '$this -> tiempo, '$idRosco')";
-                //$resultadoPartidaUsuario = $bd -> consulta($sqlPartidaUsuario);
+                                      VALUES ('$idPartida', '" . $jugador->getID() . "', '$tiempoPartidaSQL', '$idRosco')";
                 $bd -> consulta($sqlPartidaUsuario);
     
                 // Guardar las preguntas asignadas al rosco (ROSCO_PREGUNTA)
                 $resultadoRoscoPregunta = array();
                 foreach ($rosco->getPreguntasPendientes() as $pregunta) {
                     $sqlPartidaUsuario = "INSERT INTO rosco_pregunta (idRosco, idPregunta, estadoRespuesta) 
-                                        VALUES ('$idRosco', '$pregunta -> getIdPregunta()', 'sinResponder')";
-                    //array_push($resultadoRoscoPregunta, $bd -> consulta($sqlPartidaUsuario));
+                                        VALUES ('$idRosco', '" . $pregunta->getIdPregunta() . "', 'sinResponder')";
                     $bd -> consulta($sqlPartidaUsuario);
                 }
             }
-    
             // Confirmar la transacción
             $conexion->commit();
             $bd->cerrarBD();
@@ -184,8 +183,8 @@ class Partida {
         } catch (Exception $e) {
             // Revertir la transacción en caso de error
             $conexion->rollback();
-            error_log("Error al guardar la partida: " . $e->getMessage());
-            return "Hubo un error al guardar la partida.";
+            return error_log("Error al guardar la partida: " . $e->getMessage());
+            //return "Hubo un error al guardar la partida.";
         }
     }
 
