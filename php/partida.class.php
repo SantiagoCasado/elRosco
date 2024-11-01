@@ -29,8 +29,6 @@ class Partida {
         //Inicializar datos
         $this -> prepararJugadores($jugadores);
         $this -> prepararRoscos();
-
-        echo '<br>Partida creada';
     }
 
     public function getIdPartida() {
@@ -41,7 +39,7 @@ class Partida {
         return $this->jugadores;
     }
 
-    public function getRoscoss() {
+    public function getRoscos() {
         return $this->roscos;
     }
 
@@ -179,7 +177,7 @@ class Partida {
             // Confirmar la transacción
             $conexion->commit();
             $bd->cerrarBD();
-            return 'Partida guardada';
+            
         } catch (Exception $e) {
             // Revertir la transacción en caso de error
             $conexion->rollback();
@@ -194,6 +192,10 @@ class Partida {
         } else {
             $this -> turnoActual = 0;
         }
+    }
+
+    public function guardarPartidaSesion() {
+        
     }
 }
 ?>

@@ -7,6 +7,24 @@ body {
     background-color: #f0f0f0;
 }
 
+/* Estilos para secciones */
+
+section {
+    margin-bottom: 20px;
+}
+
+/* Estilos para artículos */
+
+article {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
 .container {
     width: 80%;
     margin: 0 auto;
@@ -24,21 +42,6 @@ h1 {
 h2 {
     font-size: 24px;
     color: #666;
-}
-
-/* Estilos para secciones */
-
-section {
-    margin-bottom: 20px;
-}
-
-/* Estilos para artículos */
-
-article {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos para párrafos */
@@ -68,7 +71,7 @@ input[type="checkbox"] {
     margin-left: 2.5%;
 }
 
-label {
+.labelFormulario {
     display: block;
     text-align: left;
     margin: 0 0 5px;
@@ -160,4 +163,67 @@ fieldset {
 
 .itemsCentrados {
     text-align: center;
+}
+
+/* Estilos para la zona de juego */
+
+.zonaJugadores {
+    display: flex;
+    /* justify-content: space-between; */
+    
+}
+
+.nombreJugador {
+    text-align: center;
+    padding: 1px;
+    border-radius: 20px;
+}
+
+.nombreJugador1 {
+    background-color: #FF7F50;
+    /* text-align: center;
+    padding: 1px;
+    border-radius: 20px; */
+}
+
+.nombreJugador2 {
+    background-color: #50BFFF;
+}
+
+.sinResponder {
+    color: white;
+    background-color: blue;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.correcto {
+    background-color: green;
+}
+
+.incorrecto {
+    background-color: red;
+}
+
+.rosco {
+    position: relative;
+    width: 300px; /* Ajusta el tamaño según sea necesario */
+    height: 300px;
+    border: 5px solid #000; /* Opcional, para visualizar el rosco */
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.letra {
+    position: absolute;
+    width: 30px; /* Tamaño de las letras */
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px; /* Tamaño de la fuente */
+    transform: rotate(calc(var(--i) * 13.3deg)) translateY(-120px); /* Ajusta el ángulo y distancia */
+    left: 50%;
+    top: 50%;
+    transform-origin: 0 0; /* Punto de rotación */
 }

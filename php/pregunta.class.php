@@ -7,9 +7,11 @@ class Pregunta
     private $palabra;
     private $descripcion;
     private $dificultadPregunta;
+    private $estadoRespuesta;
 
 
     public function __construct () {
+        $this->estadoRespuesta = 'sinResponder';
     }
 
         public function getIdPregunta() {
@@ -31,6 +33,10 @@ class Pregunta
         public function getDificultadPregunta() {
             return $this->dificultadPregunta;
         }
+
+        public function getEstadoRespuesta() {
+            return $this->estadoRespuesta;
+        }
     
         public function setIdPregunta($idPregunta) {
             $this->idPregunta = $idPregunta;
@@ -50,6 +56,10 @@ class Pregunta
     
         public function setDificultadPregunta($dificultadPregunta) {
             $this->dificultadPregunta = $dificultadPregunta;
+        }
+
+        public function setEstadoRespuesta($estadoRespuesta) {
+            $this->estadoRespuesta = $estadoRespuesta;
         }
 
     public function getPreguntaBD($letra, $dificultadPregunta, $idPreguntas) {

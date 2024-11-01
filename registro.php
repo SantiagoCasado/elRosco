@@ -96,7 +96,7 @@ if (isset($_SESSION['mensaje'])) {
                                         placeholder="Contrase&ntilde;a" 
                                         required>
                                     <br>
-                                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                                    <label class="labelFormulario" for="fechaNacimiento">Fecha de nacimiento</label>
                                     <input type="date" id="idFechaNacimiento" name="fechaNacimiento" title="Ingresa tu fecha de nacimiento" required>
                                     <br><br>
 

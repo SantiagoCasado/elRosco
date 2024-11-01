@@ -3,9 +3,11 @@ include_once("php/partida.class.php");
 session_start();
 //Redirigir si no hay dos sesiones iniciadas
 if (!isset($_SESSION['vectorSesion']) || count($_SESSION['vectorSesion']) < 2) {
-header("location:index.php");
-exit;
-}
+    $mensaje = 'Deben haber dos usuarios con sesion iniciada';
+    $_SESSION['mensaje'] = $mensaje;
+    header("location:index.php");
+    exit;
+    }
 
 if (isset($_SESSION['mensaje'])) {
     $mensaje = $_SESSION['mensaje'];
@@ -37,7 +39,7 @@ if (isset($_SESSION['mensaje'])) {
                 <fieldset id = "camposFormulario" class = "camposFormulario">
                     <h2>Configuracion de la Partida</h2>
 
-                    <label for="comboBoxNivelPartida">Selecciona el nivel de dificultad de la Partida</label>
+                    <label class="labelFormulario" for="comboBoxNivelPartida">Selecciona el nivel de dificultad de la Partida</label>
                     <select id="comboBox" name="comboBoxNivelPartida">
                         <option value="---">---</option>
                         <option value="baja">Baja</option>
@@ -45,7 +47,7 @@ if (isset($_SESSION['mensaje'])) {
                         <option value="alta">Alta</option>
                     </select>
 
-                    <label for="comboBoxDuracionPartida">Selecciona el tiempo de la Partida</label>
+                    <label class="labelFormulario" for="comboBoxDuracionPartida">Selecciona el tiempo de la Partida</label>
                     <select id="comboBox" name="comboBoxTiempoPartida">
                         <option value="---">---</option>
                         <option value="2">2 minutos</option>
@@ -53,7 +55,7 @@ if (isset($_SESSION['mensaje'])) {
                         <option value="5">5 minutos</option>
                     </select> 
                     
-                    <label for="checkboxAyuda">Marca esta opcion si deseas ayuda adicional</label>
+                    <label class="labelFormulario" for="checkboxAyuda">Marca esta opcion si deseas ayuda adicional</label>
                     <input type="checkbox" name = "checkboxAyuda[]" value="1">Ayuda adicional
                     <br><br><br>
 

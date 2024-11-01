@@ -16,8 +16,6 @@ class Rosco
         $this->dificultadRosco = $dificultadRosco;
 
         $this->asignarPreguntas();
-
-        echo '<br>Rosco creado';
     }
 
     public function getIdRosco() {

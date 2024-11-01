@@ -10,33 +10,16 @@ if (isset($_SESSION['mensaje'])) {
 
 //Redirigir si no hay dos sesiones iniciadas
 if (!isset($_SESSION['vectorSesion']) || count($_SESSION['vectorSesion']) < 2) {
+    $mensaje = 'Deben haber dos usuarios con sesion iniciada';
+    $_SESSION['mensaje'] = $mensaje;
     header("location:index.php");
     exit;
     }
 
 //Crear Partida
-if (isset($_POST['botonComenzarPartida'])) {
-
-    //Obtener caracteristicas de la partida
-    $dificultad = $_POST['comboBoxNivelPartida'];
-    $tiempoPartida = $_POST['comboBoxTiempoPartida'];
-    if(isset($_POST['checkboxAyuda'])) {
-        $ayudaAdicional = 1;
-    } else {
-        $ayudaAdicional = 0;
-    }
-    
-    //Obtener los jugadores
-    $jugadores = $_SESSION['vectorSesion'];
-
-    //Instancio la partida
-    $partida = new Partida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
-    echo $partida -> guardarPartidaBD();
-    
-
-}
-
+include_once("php/iniciarPartida.php");
 ?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -51,17 +34,35 @@ if (isset($_POST['botonComenzarPartida'])) {
     </header>
 <body>
     <section>
-        <article>
+        <article id="idZonaInformacionPartida" class="ZonaInformacionPartida">
             <h2>Información de la partida</h2>
+            <p><strong>Dificultad: </strong> <?php echo $partida -> getDificultad() ?> </p>
+            <p><strong>Tiempo por jugador: </strong> <?php echo $partida -> getTiempoPartida() ?> minutos </p>
+            <p><strong>Ayuda Adicional: </strong> <?php echo $partida -> getAyuda() == 1 ? "Si" : "No" ?> </p>
+            <p><strong>Turno Actual: </strong> <?php echo $partida -> getTurnoActual() == 0 ? $jugadores[0] -> getNombreUsuario() : $jugadores[1] -> getNombreUsuario() ?> </p>
         </article>
+
+        <div class="zonaJugadores">
+            <article class="zonaJugador1" id="idZonaJugador<?php echo $jugadores[0]->getID(); ?>">
+                <div class="nombreJugador">
+                    <div class="nombreJugador1">
+                        <h1>Rosco de <?php echo $partida -> getJugadores()[0] -> getNombreUsuario() ?></h1>
+                    </div>
+                </div>
+                <div id="idLetrasJugador<?php echo $jugadores[0]->getID(); ?>" class="letras"></div>
+            </article>
+            <article class="zonaJugador2" id="idZonaJugador<?php echo $jugadores[1]->getID(); ?>">
+                <div class="nombreJugador">
+                    <div class="nombreJugador2">
+                        <h1>Rosco de <?php echo $partida -> getJugadores()[1] -> getNombreUsuario() ?></h1>
+                    </div>
+                </div>
+                <div id="idLetrasJugador<?php echo $jugadores[1]->getID(); ?>"></div>
+            </article>
+        </div>
+
     </section>
     <section>
-        <article class='zonaJugador1'>
-            <h3>Zona Jugador 1</h3>
-        </article>
-        <article class='zonaJugador2'>
-            <h3>Zona Jugador 2</h3>
-        </article>
     </section>
     <section>
         <article>
@@ -73,8 +74,16 @@ if (isset($_POST['botonComenzarPartida'])) {
             </div>
         </article>
     </section>
-    <footer>
+    <script>
+        // Objeto JSON generado en iniciarPartida.php
+        var roscosData = <?php echo json_encode($roscosJSON); ?>;
+        window.onload = function() {
+                crearVistaRosco(roscosData);
+            }
+    </script>
+    <script src="Script/script.js"></script>
+</body>
+<footer>
         <p>&copy; Final Laboratorio de Programacion y Lenguajes - 2024 - Santiago Casado</p>
     </footer>
-</body>
 </html>
