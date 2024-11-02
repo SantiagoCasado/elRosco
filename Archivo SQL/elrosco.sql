@@ -63,12 +63,13 @@ CREATE TABLE `PARTIDA_USUARIO` (
 -- Tabla PREGUNTA
 CREATE TABLE `PREGUNTA` (
   `idPregunta` INT(11) NOT NULL AUTO_INCREMENT,
-  `letra` CHAR(1) NOT NULL,
-  `palabra` VARCHAR(50) NOT NULL,
-  `descripcion` TEXT NOT NULL,
-  `dificultadPregunta` ENUM('baja', 'media', 'alta') NOT NULL,
+  `letra` CHAR(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `palabra` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dificultadPregunta` ENUM('baja', 'media', 'alta') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`idPregunta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- utf8mb4_bin para distinguir N de Ń
 
 -- Tabla ROSCO_PREGUNTA
 CREATE TABLE `ROSCO_PREGUNTA` (

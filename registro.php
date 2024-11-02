@@ -81,7 +81,7 @@ if (isset($_SESSION['mensaje'])) {
                         <form id = "idFormularioRegistro" method = "post" action = "registro.php">
             
                             <fieldset id = "camposFormularioRegistro" class = "form">
-                                    <h2>Crea una Cuenta</h2>
+                                    <div class="itemsCentrados"><h2>Crea una Cuenta</h2></div>
             
                                     <input type="text" id="idNombreUsuario" name="nombreUsuario" placeholder="Nombre Usuario" autofocus required>
                                     <br>
@@ -104,12 +104,12 @@ if (isset($_SESSION['mensaje'])) {
                                     <!-- <br><br>
                                     <input type="checkbox" name = "checkboxRecordarme" value="True"><label for="checkboxRecordarme">Recordarme</label>
                                     -->
-                                    <button type="submit" name = "botonRegistro">Registrarse</button>
+                                    <div class="itemsCentrados"><button class="botonAceptar" type="submit" name = "botonRegistro">Registrarse</button></div>
                             </fieldset>
                         </form>
                     </div>
                     <div class="formularios">
-                        <button onclick="location.href='index.php'">Ya tengo Cuenta</button>
+                        <div class="itemsCentrados"><button onclick="location.href='index.php'">Ya tengo Cuenta</button></div>
                     </div>
 
                     <?php 

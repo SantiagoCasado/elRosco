@@ -117,7 +117,7 @@ exit;
                     <form id = "idFormularioIngreso" method = "post" action = "index.php">  
                         <fieldset id = "camposFormularioIngreso" class = "form">
                         
-                            <h2>Ingresa a tu Cuenta</h2>
+                            <div class="itemsCentrados"><h2>Ingresa a tu Cuenta</h2></div>
         
                             <input type="text" id="idNombreUsuarioIngreso" name="nombreFormulario" placeholder="Nombre Usuario" autofocus required>
                             <br>
@@ -133,13 +133,13 @@ exit;
                             <!-- <input type="checkbox" name = "checkboxRecordarme" value="True"><label for="checkboxRecordarme">Recordarme</label>
                             <br><br> -->
                         
-                            <button type="submit" name = "botonInicio">Ingresar</button>
+                            <div class="itemsCentrados"><button class="botonAceptar" type="submit" name = "botonInicio">Ingresar</button></div>
                         
                         </fieldset>
                     </form>
                 </div>
                 <div class="formularios">
-                    <button onclick="location.href='registro.php'">Registrarse</button>
+                    <div class="itemsCentrados"><button onclick="location.href='registro.php'">Registrarse</button></div>
                 </div>
                 <?php
             }
