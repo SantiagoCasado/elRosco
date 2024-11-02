@@ -9,11 +9,10 @@ function crearVistaRosco(roscos) {
         // Se crea el Label para cada pregunta (letra)
         preguntas.forEach(pregunta => {
             var label = document.createElement("label");
-            // label.setAttribute("id", pregunta.idPregunta);
             label.id = pregunta.idPregunta
-            // label.setAttribute("class", pregunta.estadoRespuesta);
             label.className = pregunta.estadoRespuesta
             label.innerHTML = pregunta.letra;
+            console.log(pregunta.letra + ': ' + pregunta.idPregunta);
 
             zonaJugador.appendChild(label);
         }
@@ -21,6 +20,35 @@ function crearVistaRosco(roscos) {
     }
     )
 }
+
+
+// PARA EL ROSCO EN FORMA DE CIRCULO
+// function crearVistaRosco(roscos) {
+//     roscos.forEach(rosco => {
+//         // Se obtiene la zona del jugador
+//         var zonaJugador = document.getElementById('idLetrasJugador' + rosco.idJugador);
+//         var preguntas = rosco.preguntasPendientes;
+//         var totalPreguntas = preguntas.length;
+//         var radioCirculo = 300;
+        
+//         preguntas.forEach((pregunta, index) => {
+//             var label = document.createElement("label");
+//             label.id = pregunta.idPregunta;
+//             label.className = pregunta.estadoRespuesta;
+//             label.innerHTML = pregunta.letra;
+            
+//             // Calcula la posición de la letra en el círculo
+//             var angulo = (index / totalPreguntas) * (2 * Math.PI) - Math.PI / 2; // (numeroLetra - 1) / 27 * 360 - 90 [grados]
+//             var x = radioCirculo * Math.cos(angulo) + (zonaJugador.offsetWidth / 2) - 20;
+//             var y = radioCirculo * Math.sin(angulo) + (zonaJugador.offsetHeight / 2) - 30;
+            
+//             label.style.left = `${x}px`;
+//             label.style.top = `${y}px`;
+//             zonaJugador.appendChild(label);
+//         });
+//     });
+// }
+
 
 // function listarEmpresas() {
 

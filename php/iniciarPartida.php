@@ -2,8 +2,8 @@
 if (isset($_POST['botonComenzarPartida'])) {
 
     //Obtener caracteristicas de la partida
-    $dificultad = $_POST['comboBoxNivelPartida'];
-    $tiempoPartida = $_POST['comboBoxTiempoPartida'];
+    $dificultad = $_POST['radioNivelPartida'];
+    $tiempoPartida = $_POST['radioDuracionPartida'];
     if(isset($_POST['checkboxAyuda'])) {
         $ayudaAdicional = 1;
     } else {

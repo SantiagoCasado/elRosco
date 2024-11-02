@@ -1,4 +1,4 @@
-/* Estilos generales */
+/* ESTILOS DE ETIQUETAS HTML */
 
 body {
     font-family: Arial, sans-serif;
@@ -7,13 +7,9 @@ body {
     background-color: #f0f0f0;
 }
 
-/* Estilos para secciones */
-
 section {
     margin-bottom: 20px;
 }
-
-/* Estilos para artículos */
 
 article {
     background-color: #fff;
@@ -31,8 +27,6 @@ article {
     padding: 20px;
 }
 
-/* Estilos para títulos */
-
 h1 {
     text-align: center;
     font-size: 36px;
@@ -44,15 +38,30 @@ h2 {
     color: #666;
 }
 
-/* Estilos para párrafos */
-
 p {
     font-size: 16px;
     line-height: 1.5;
     color: #444;
 }
 
-/* Estilos específicos para text input */
+/* CLASES PARA FORMULARIOS */
+
+.formularios {
+    background-color: #fff;
+    padding: 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 25%;
+    margin: 20px auto;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
 input[type="text"], 
 input[type="number"], 
 input[type="mail"], 
@@ -67,21 +76,6 @@ select {
     border-radius: 5px;
 }
 
-input[type="checkbox"] {
-    margin-left: 2.5%;
-}
-
-.labelFormulario {
-    display: block;
-    text-align: left;
-    margin: 0 0 5px;
-    margin-left: 7.5px;
-    color: #666;
-    font-size: smaller;
-    width: 100%;
-}
-
-
 button {
     width: 47.5%;
     align-items: center;
@@ -91,10 +85,95 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
+}
+
+.radioLabel {
+    display: inline-block;
+    margin-left: 10px;
+    text-align: left;
+    font-size: medium;
+}
+
+
+.labelFormulario {
+    display: block;
+    text-align: left;
+    margin: 0 0 5px;
+    color: #666;
+    font-size: large;
+    width: 100%;
+    text-align: left;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+.botonAceptar {
+    background-color: forestgreen;
+    font-size: large;
+}
+
+/* ZONA DE JUEGO */
+
+.zonaJugadores {
+    display: flex;
+    height: auto;
+    /* justify-content: space-between; */
+}
+
+.zonaJugador1, .zonaJugador2 {
+    max-width: 50%;
+    height: auto;
+    position: relative;
+    overflow: auto;
+}
+
+.nombreJugador1 {
+    background-color: #FF7F50;
+    padding: 5px;
+    border-radius: 20px;
+    height: 100px;
+    margin-bottom: 50px;
+}
+
+.nombreJugador2 {
+    background-color: #50BFFF;
+    padding: 5px;
+    border-radius: 20px;
+    height: 100px;
+    margin-bottom: 50px;
+}
+
+.letras {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    max-height: auto;
+
+    font-size: x-large;
+    color: white;
+}
+
+.sinResponder {
+    background-color: blue;
+
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+}
+
+.correcto {
+    background-color: green;
+}
+
+.incorrecto {
+    background-color: red;
 }
 
 /* Estilos para tablas */
@@ -144,86 +223,34 @@ li {
 
 /* Estilo para etiquetas divs */
 
-.formularios {
-    background-color: #fff;
-    padding: 20px;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 25%;
-    margin: 20px auto;
-    text-align: center;
-}
-
-fieldset {
-    border: none;
-    padding: 0; /* Opcional: Elimina cualquier padding interno */
-    margin: 0; /* Opcional: Elimina el margen */
-}
-
 .itemsCentrados {
     text-align: center;
 }
 
-/* Estilos para la zona de juego */
 
-.zonaJugadores {
-    display: flex;
-    /* justify-content: space-between; */
-    
-}
-
-.nombreJugador {
-    text-align: center;
-    padding: 1px;
-    border-radius: 20px;
-}
-
-.nombreJugador1 {
-    background-color: #FF7F50;
-    /* text-align: center;
-    padding: 1px;
-    border-radius: 20px; */
-}
-
-.nombreJugador2 {
-    background-color: #50BFFF;
-}
-
-.sinResponder {
-    color: white;
-    background-color: blue;
-    padding: 15px;
-    border-radius: 15px;
-}
-
-.correcto {
-    background-color: green;
-}
-
-.incorrecto {
-    background-color: red;
-}
-
-.rosco {
+/* PARA EL ROSCO EN FORMA DE CIRCULO */
+/* .letras {
     position: relative;
-    width: 300px; /* Ajusta el tamaño según sea necesario */
-    height: 300px;
-    border: 5px solid #000; /* Opcional, para visualizar el rosco */
+    width: 300px;
+    height: 600px;
     border-radius: 50%;
-    overflow: hidden;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-.letra {
+.letras label {
     position: absolute;
-    width: 30px; /* Tamaño de las letras */
-    height: 30px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 24px; /* Tamaño de la fuente */
-    transform: rotate(calc(var(--i) * 13.3deg)) translateY(-120px); /* Ajusta el ángulo y distancia */
-    left: 50%;
-    top: 50%;
-    transform-origin: 0 0; /* Punto de rotación */
-}
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+} */

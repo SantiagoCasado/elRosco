@@ -37,29 +37,40 @@ if (isset($_SESSION['mensaje'])) {
             <form id = "idFormularioPartida" method = "POST" action = "rosco.php">
 
                 <fieldset id = "camposFormulario" class = "camposFormulario">
-                    <h2>Configuracion de la Partida</h2>
+                    <div class="itemsCentrados"><h2>Configuración de la partida</h2></div>
 
-                    <label class="labelFormulario" for="comboBoxNivelPartida">Selecciona el nivel de dificultad de la Partida</label>
-                    <select id="comboBox" name="comboBoxNivelPartida">
+                    <label class="labelFormulario" for="radioNivelPartida">Seleccioná el <strong>nivel de dificultad</strong></label>
+                    <!-- <select id="comboBox" name="comboBoxNivelPartida">
                         <option value="---">---</option>
                         <option value="baja">Baja</option>
                         <option value="media">Media</option>
                         <option value="alta">Alta</option>
-                    </select>
-
-                    <label class="labelFormulario" for="comboBoxDuracionPartida">Selecciona el tiempo de la Partida</label>
-                    <select id="comboBox" name="comboBoxTiempoPartida">
+                    </select> -->
+                    <input type="radio" name = "radioNivelPartida" value="baja"><span class="radioLabel">Baja</span>
+                    <br>
+                    <input type="radio" name = "radioNivelPartida" value="media"><span class="radioLabel">Media</span>
+                    <br>
+                    <input type="radio" name = "radioNivelPartida" value="alta"><span class="radioLabel">Alta</span>
+                    <br><br>
+                    <label class="labelFormulario" for="radioDuracionPartida">Seleccioná el <strong>tiempo</strong></label>
+                    <!-- <select id="comboBox" name="comboBoxTiempoPartida">
                         <option value="---">---</option>
                         <option value="2">2 minutos</option>
                         <option value="3">3 minutos</option>
                         <option value="5">5 minutos</option>
-                    </select> 
+                    </select>  -->
+                    <input type="radio" name = "radioDuracionPartida" value="2"><span class="radioLabel">2 minutos</span>
+                    <br>
+                    <input type="radio" name = "radioDuracionPartida" value="3"><span class="radioLabel">3 minutos</span>
+                    <br>
+                    <input type="radio" name = "radioDuracionPartida" value="5"><span class="radioLabel">5 minutos</span>
                     
-                    <label class="labelFormulario" for="checkboxAyuda">Marca esta opcion si deseas ayuda adicional</label>
-                    <input type="checkbox" name = "checkboxAyuda[]" value="1">Ayuda adicional
+                    <br><br>
+                    <label class="labelFormulario" for="checkboxAyuda">Marcá esta opción si deseas <strong>ayuda adicional</strong></label>
+                    <input type="checkbox" name = "checkboxAyuda[]" value="1"><span class="radioLabel">Ayuda adicional</span>
                     <br><br><br>
 
-                    <button type="submit" name="botonComenzarPartida">Comenzar a Jugar</button>
+                    <div class="itemsCentrados"><button class="botonAceptar" type="submit" name="botonComenzarPartida"><strong>Comenzar a jugar</strong></button></div>
                 </fieldset>
             </form>
         </div>
@@ -69,7 +80,7 @@ if (isset($_SESSION['mensaje'])) {
         <article>
             <div class="formularios">
                 <form action="index.php" method = "post">
-                <button name ="botonCerrarSesion">Cerrar Sesión</button>
+                <div class="itemsCentrados"><button name ="botonCerrarSesion">Cerrar sesión</button></div>
                 </form>
             </div>
         </article>

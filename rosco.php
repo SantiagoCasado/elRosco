@@ -44,20 +44,17 @@ include_once("php/iniciarPartida.php");
 
         <div class="zonaJugadores">
             <article class="zonaJugador1" id="idZonaJugador<?php echo $jugadores[0]->getID(); ?>">
-                <div class="nombreJugador">
-                    <div class="nombreJugador1">
-                        <h1>Rosco de <?php echo $partida -> getJugadores()[0] -> getNombreUsuario() ?></h1>
-                    </div>
+                <div class="nombreJugador1">
+                    <h1>Rosco de <?php echo $partida -> getJugadores()[0] -> getNombreUsuario() ?></h1>
                 </div>
                 <div id="idLetrasJugador<?php echo $jugadores[0]->getID(); ?>" class="letras"></div>
             </article>
+            
             <article class="zonaJugador2" id="idZonaJugador<?php echo $jugadores[1]->getID(); ?>">
-                <div class="nombreJugador">
-                    <div class="nombreJugador2">
-                        <h1>Rosco de <?php echo $partida -> getJugadores()[1] -> getNombreUsuario() ?></h1>
-                    </div>
+                <div class="nombreJugador2">
+                    <h1>Rosco de <?php echo $partida -> getJugadores()[1] -> getNombreUsuario() ?></h1>
                 </div>
-                <div id="idLetrasJugador<?php echo $jugadores[1]->getID(); ?>"></div>
+                <div id="idLetrasJugador<?php echo $jugadores[1]->getID(); ?>" class="letras"></div>
             </article>
         </div>
 
@@ -69,7 +66,7 @@ include_once("php/iniciarPartida.php");
             <div class="formularios">
                 <form action="crearPartida.php" method = "post">
                     <h1>Agregar logica para definir partida y guardar juego en la bd</h1>
-                <button name ="botonCerrarSesion">Abandonar</button>
+                    <div class="itemsCentrados"><button name ="botonCerrarSesion">Abandonar</button></div>
                 </form>
             </div>
         </article>
