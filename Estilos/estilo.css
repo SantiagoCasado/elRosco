@@ -38,6 +38,12 @@ h2 {
     color: #666;
 }
 
+h3 {
+    text-align: cemter;
+    font-size: 20px;
+    color: #555;
+}
+
 p {
     font-size: 16px;
     line-height: 1.5;
@@ -115,20 +121,24 @@ button:hover {
     font-size: large;
 }
 
-/* ZONA DE JUEGO */
+/* SECCIONES DEL JUEGO */
 
-.zonaJugadores {
+.zonaSeccion {
     display: flex;
     height: auto;
-    /* justify-content: space-between; */
 }
 
-.zonaJugador1, .zonaJugador2 {
+.zonaIzquierda, .zonaDerecha {
     max-width: 50%;
     height: auto;
     position: relative;
     overflow: auto;
 }
+
+/* ZONA DE INFORMACION DE LA PARTIDA */
+
+
+/* ZONA DE ROSCO */
 
 .nombreJugador1 {
     background-color: #FF7F50;
@@ -174,6 +184,28 @@ button:hover {
 
 .incorrecto {
     background-color: red;
+}
+
+/* ZONA DE JUEGO */
+
+.formularioJuego {
+    background-color: #fff;
+    padding: 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 50%;
+    margin: 20px auto;
+}
+
+.botonJuego0 {
+    background-color: #FF7F50;
+    font-size: large;
+}
+
+.botonJuego1 {
+    background-color: #50BFFF;
+    font-size: large;
 }
 
 /* Estilos para tablas */

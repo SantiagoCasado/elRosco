@@ -23,7 +23,7 @@ class Partida {
         $this->roscos = array();
         $this->puntajes = array();
         $this->tiemposRestantes = array();
-        $this->turnoActual = rand(0, 1); //Se define aleatoriamente quien inicia la partida
+        $this->turnoActual = rand(0, 1);//Se define aleatoriamente quien inicia la partida
         $this->ganador = null;
 
         //Inicializar datos

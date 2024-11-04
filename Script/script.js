@@ -1,25 +1,156 @@
-function crearVistaRosco(roscos) {
-    roscos.forEach(rosco => {
+function crearVistaJuego(partida) {
+    crearVistaRoscos(partida.roscos);
+
+    var enJuego = true;
+    vistaInteraccion(partida.jugadores[partida.turnoActual], partida.roscos[partida.jugadores[partida.turnoActual].id], partida.turnoActual, enJuego);
+}
+
+function crearVistaRoscos(roscos) {
+    Object.entries(roscos).forEach(([idJugador, rosco]) => {
         // Se obtiene la zona del jugador
-        var zonaJugador = document.getElementById('idLetrasJugador' + rosco.idJugador);
+        var zonaJugador = document.getElementById('idLetrasJugador' + idJugador);
 
         // Se obtienen las preguntas del rosco
         var preguntas = rosco.preguntasPendientes;
 
-        // Se crea el Label para cada pregunta (letra)
+        // Se crea el Label para cada letra (pregunta) del rosco
         preguntas.forEach(pregunta => {
             var label = document.createElement("label");
-            label.id = pregunta.idPregunta
-            label.className = pregunta.estadoRespuesta
+            label.id = pregunta.idPregunta;
+            label.className = pregunta.estadoRespuesta;
             label.innerHTML = pregunta.letra;
-            console.log(pregunta.letra + ': ' + pregunta.idPregunta);
 
             zonaJugador.appendChild(label);
-        }
-        );
-    }
-    )
+        });
+    });
 }
+
+function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
+
+    var h2Turno = document.getElementById('idTurnoDe');
+    h2Turno.innerHTML = jugador.nombreUsuario;
+
+    var strLetra = document.getElementById('idSiguienteLetra');
+    strLetra.innerHTML = rosco.preguntasPendientes[0].letra; // Primer letra del arreglo preguntasPendientes es la siguiente del jugador
+
+    if (enJuego) {
+        // VISTA JUEGO
+
+        // Iniciar temporizador del jugador
+        
+        // Mostrar letra y descripcion del rosco
+        var strLetra = document.getElementById('idSiguienteLetra');
+        strLetra.innerHTML = rosco.preguntasPendientes[1].letra;
+
+        var pregunta = rosco.preguntasPendientes[0];
+
+        var formularioJuego = document.getElementById('idFormularioJuego');
+        formularioJuego.innerHTML = '';
+
+        var h3Letra = document.createElement('h3');
+        h3Letra.innerHTML = 'Letra ' + pregunta.letra;
+        formularioJuego.appendChild(h3Letra);
+        formularioJuego.appendChild(document.createElement('br'));
+        
+        var labelDescripcion = document.createElement('label');
+        labelDescripcion.htmlFor = 'idRespuesta';
+        labelDescripcion.className = 'labelFormulario';
+        labelDescripcion.innerHTML = pregunta.descripcion;
+        formularioJuego.appendChild(labelDescripcion);
+        
+        if (false) {
+        // if (ayudaAdicional) {
+            var labelAyuda = document.createElement('label');
+            labelAyuda.htmlFor = 'idRespuesta';
+            labelAyuda.className = 'labelFormulario';
+            labelAyuda.innerHTML = '<br>Contiene ' + pregunta.palabra.length + ' letras';
+            formularioJuego.appendChild(labelAyuda);
+        }
+        
+        formularioJuego.appendChild(document.createElement('br'));
+        formularioJuego.appendChild(document.createElement('br'));
+        var respuesta = document.createElement('input');
+        respuesta.type = 'text'; 
+        respuesta.id = 'idRespuesta';
+        respuesta.name = 'respuesta';
+        formularioJuego.appendChild(respuesta);
+        respuesta.focus(); // Para escribir directamente sin seleccionar el input
+        formularioJuego.appendChild(document.createElement('br'));
+        formularioJuego.appendChild(document.createElement('br'));
+
+        var botonArriesgar = document.createElement('button');
+        botonArriesgar.innerHTML = 'Arriesgar';
+        botonArriesgar.className = 'botonJuego' + turnoActual;
+        botonArriesgar.onclick = function () {
+            enJuego = true;
+            //Fijarse los parametros necesarios
+            verificarRespuestsa(respuesta);
+        }
+        formularioJuego.appendChild(botonArriesgar);
+        formularioJuego.appendChild(document.createElement('br'));
+        formularioJuego.appendChild(document.createElement('br'));
+
+        var botonPasapalabra = document.createElement('button');
+        botonPasapalabra.innerHTML = 'Pasapalabra';
+        botonPasapalabra.onclick = function () {
+            enJuego = false;
+            vistaInteraccion(jugador, rosco, turnoActual, enJuego);
+        }
+        formularioJuego.appendChild(botonPasapalabra);
+
+
+
+        // // Ejecutar la función asociada al botón Arriesgar cuando se presione Enter
+        // respuesta.addEventListener('keydown', function(event) {
+        // if (event.key === 'Enter') {
+        //     botonArriesgar.click();
+        // }
+        // });
+        
+    } else {
+        // VISTA CAMBIO TURNO
+        
+        // Detener temporizador Jugador actual
+
+        // Cambiar turno al siguiente jugador
+
+        // Vista cambio turno
+        var strLetra = document.getElementById('idSiguienteLetra');
+        strLetra.innerHTML = rosco.preguntasPendientes[0].letra;
+
+        var formularioJuego = document.getElementById('idFormularioJuego');
+        formularioJuego.innerHTML = '';
+        var botonComenzarTurno = document.createElement('button');
+        botonComenzarTurno.innerHTML = 'Comenzar Turno';
+        botonComenzarTurno.className = 'botonJuego' + turnoActual;
+        botonComenzarTurno.onclick = function () {
+            enJuego = true;
+            vistaInteraccion(jugador, rosco, turnoActual, enJuego);
+        }
+        formularioJuego.appendChild(botonComenzarTurno);
+    }
+}
+
+function juegoRosco(rosco) {
+
+    // Verificar estado del juego para ver si mostrar cambio de turno o el juego
+
+    // Estado: cambioTurno
+    // Cambiar estado a enJuego
+    // Iniciar temporizador
+    // Limpiar seccion
+    // Mostrar temporizador
+    // Mostrar descripcion de la letra
+    // Mostrar boton de pasapalabra con accion de cambioTurno()
+    // Mostrar boton de arriesgar con accion de verificarPalabra()
+    // Mostrar input text
+
+    // Estado: enJuego
+    // Cambiar estado a cambioTurno
+    // 
+
+}
+
 
 
 // PARA EL ROSCO EN FORMA DE CIRCULO
@@ -47,133 +178,4 @@ function crearVistaRosco(roscos) {
 //             zonaJugador.appendChild(label);
 //         });
 //     });
-// }
-
-
-// function listarEmpresas() {
-
-//     var comboOrigen = document.getElementById("comboOrigen");
-//     var ciudadOrigen = comboOrigen.options[comboOrigen.selectedIndex].value;
-
-//     var comboDestino = document.getElementById("comboDestino");
-//     var ciudadDestino = comboDestino.options[comboDestino.selectedIndex].value;
-
-//     var peticion = new XMLHttpRequest();
-//     peticion.open("GET", "index_a.php?comboOrigen="+ciudadOrigen+"&comboDestino="+ciudadDestino, true);
-//     peticion.onreadystatechange = cargarEmpresas;
-//     peticion.send(null);
-    
-//     function cargarEmpresas() {
-//     var listarEmpresas = document.getElementById("listaEmpresas");
-
-//     while (listarEmpresas.rows.length > 1) {
-//         listarEmpresas.deleteRow(1);
-//     }
-
-//     if ((peticion.readyState == 4) && (peticion.status==200))
-//         {	
-//             var empresas = JSON.parse(peticion.responseText);
-
-//             for (i = 0; i < empresas.length; i++) {
-//                 var tr = document.createElement("tr");
-
-//                 var empresa = empresas[i]
-//                 console.log("idEmpresa= "+empresa.idEmpresa);
-//                 console.log("Ciudad Origen = "+empresa.ciudadOrigenServicio);
-//                 console.log("Ciudad Destino ="+empresa.ciudadDestinoServicio);
-
-//                 var logo = document.createElement("img");
-//                 logo.src = empresa.logoEmpresa;
-//                 logo.className = "logoEmpresa";
-//                 logo.setAttribute("onclick", "listarServicios('" + empresa.idEmpresa + "', '" + empresa.ciudadOrigenServicio + "', '" + empresa.ciudadDestinoServicio + "')");
-//                 // logo.onclick = function() {
-//                 //     listarServicios(empresa.idEmpresa, empresa.ciudadOrigenServicio, empresa.ciudadDestinoServicio);
-//                 // }
-//                 var nombre = document.createElement("p");
-//                 nombre.innerHTML = empresa.nombreEmpresa;
-//                 var pais = document.createElement("p");
-//                 pais.innerHTML = empresa.paisEmpresa;
-//                 var web = document.createElement("a");
-//                 web.innerHTML = empresa.webEmpresa;
-//                 var cantidadServicios = document.createElement("p");
-//                 cantidadServicios.innerHTML = empresa.cantidadServicios;
-
-//                 var tdLogo = document.createElement("td");
-//                 tdLogo.appendChild(logo);
-//                 tr.appendChild(tdLogo);
-
-//                 var tdNombre = document.createElement("td");
-//                 tdNombre.appendChild(nombre);
-//                 tr.appendChild(tdNombre);
-
-//                 var tdPais = document.createElement("td");
-//                 tdPais.appendChild(pais);
-//                 tr.appendChild(tdPais);
-
-//                 var tdWeb = document.createElement("td");
-//                 tdWeb.appendChild(web);
-//                 tr.appendChild(tdWeb);
-
-//                 var tdCantidadServicios = document.createElement("td");
-//                 tdCantidadServicios.appendChild(cantidadServicios);
-//                 tr.appendChild(tdCantidadServicios);
-
-//                 listarEmpresas.appendChild(tr);
-//             }
-//         }
-//     }
-// }
-
-// function listarServicios(idEmpresa, ciudadOrigen, ciudadDestino) {
-
-//     var peticion = new XMLHttpRequest();
-//     peticion.open("GET", "index_b.php?idEmpresa="+idEmpresa+"&ciudadOrigen="+ciudadOrigen+"&ciudadDestino="+ciudadDestino, true);
-//     peticion.onreadystatechange = cargarServicios;
-//     peticion.send(null);
-    
-//     function cargarServicios() {
-
-//     var listarServicios = document.getElementById("listaServicios");
-
-//     while (listarServicios.rows.length > 1) {
-//         listarServicios.deleteRow(1);
-//     }
-
-//     if ((peticion.readyState == 4) && (peticion.status==200))
-//         {	
-//             var servicios = JSON.parse(peticion.responseText);
-
-
-//             for (i = 0; i < servicios.length; i++) {
-//                 var tr = document.createElement("tr");
-
-//                 var servicio = servicios[i];
-
-//                 var nro = document.createElement("td");
-//                 nro.innerHTML = servicio.nroServicio;
-//                 var estacionOrigen = document.createElement("td");
-//                 estacionOrigen.innerHTML = servicio.estacionOrigenServicio;
-//                 var estacionDestino = document.createElement("td");
-//                 estacionDestino.innerHTML = servicio.estacionDestinoServicio;
-//                 var horaSalida = document.createElement("td");
-//                 horaSalida.innerHTML = servicio.horaSalidaServicio;
-//                 var horaLlegada = document.createElement("td");
-//                 horaLlegada.innerHTML = servicio.horaLlegadaServicio;
-//                 var frecuencia = document.createElement("td");
-//                 frecuencia.innerHTML = servicio.frecuenciaServicio;
-//                 var precio = document.createElement("td");
-//                 precio.innerHTML = servicio.precioServicio;
-
-//                 tr.appendChild(nro);
-//                 tr.appendChild(estacionOrigen);
-//                 tr.appendChild(estacionDestino);
-//                 tr.appendChild(horaSalida);
-//                 tr.appendChild(horaLlegada);
-//                 tr.appendChild(frecuencia);
-//                 tr.appendChild(precio);
-
-//                 listarServicios.appendChild(tr);
-//             }
-//         }
-//     }
 // }

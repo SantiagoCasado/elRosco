@@ -95,6 +95,7 @@ class Pregunta
                 $pregunta -> setLetra($registro -> letra);
                 $pregunta -> setDescripcion($registro -> descripcion);
                 $pregunta -> setDificultadPregunta($registro -> dificultadPregunta);
+
 			}
 
 			$resultadoConsulta->free();
