@@ -32,7 +32,7 @@ function vistaInteraccion(idPartida, jugador, rosco, turnoActual, enJuego) {
 
     if (enJuego) {
         // VISTA JUEGO
-
+        
         // Iniciar temporizador del jugador
         
         // Mostrar letra y descripcion del rosco
@@ -72,39 +72,12 @@ function vistaInteraccion(idPartida, jugador, rosco, turnoActual, enJuego) {
         formularioJuego.appendChild(document.createElement('br'));
         formularioJuego.appendChild(document.createElement('br'));
 
-
-        // Crear hidden con: idUsuario, idPartida y tiempoRestante para enviar en el formulario
-        // var hiddenIdUsuario = document.createElement('input');
-        // hiddenIdUsuario.type = 'hidden';
-        // hiddenIdUsuario.id = 'idJugador' + jugador.id;
-        // hiddenIdUsuario.name = 'idUsuario';
-        // hiddenIdUsuario.value = jugador.id;
-        // formularioJuego.appendChild(hiddenIdUsuario);
-
-
-        // var hiddenIdPartida = document.createElement('input');
-        // hiddenIdPartida.type = 'hidden';
-        // hiddenIdPartida.id = 'idPartida';
-        // hiddenIdPartida.name = 'idPartida';
-        // hiddenIdPartida.value = idPartida;
-        // formularioJuego.appendChild(hiddenIdPartida);
-        
-
-        // var hiddenTiempoRestante = document.createElement('input');
-        // hiddenTiempoRestante.type = 'hidden';
-        // hiddenTiempoRestante.id = 'idTiempoRestante';
-        // hiddenTiempoRestante.name = 'tiempoRestante';
-        // hiddenTiempoRestante.value = 0; // obtenerTiempoRestante();
-        // formularioJuego.appendChild(hiddenTiempoRestante);
-
-
         //Crear botones del formulario
         var botonArriesgar = document.createElement('button');
         botonArriesgar.type = 'button';
         botonArriesgar.innerHTML = 'Arriesgar';
         botonArriesgar.className = 'botonJuego' + turnoActual;
         botonArriesgar.onclick = function () {
-            event.preventDefault();
             enJuego = true;
             //Fijarse los parametros necesarios
             juegoRosco(idPartida, jugador.id, pregunta.idPregunta);
@@ -168,7 +141,12 @@ function juegoRosco(idPartida, idUsuario, idPregunta) {
     // enJuego = true
 
     var respuesta = document.getElementById('idRespuesta').value;
-    var parametros = "idPartida="+idPartida+"&idUsuario="+idUsuario+"&idPregunta="+idPregunta+"&respuesta="+respuesta;
+    // Ver que parametros son necesarios
+    var parametros = "idPartida=" + idPartida //???
+                    + "&idUsuario=" + idUsuario //
+                    + "&idPregunta=" + idPregunta //
+                    + "&respuesta=" + respuesta //
+                    + "&tiempoRestante=" + 0; //
     
     var peticion = new XMLHttpRequest();
     peticion.open("POST", "php/verificarRespuesta.php", true); // Relativo a la vista (rosco.php)
@@ -179,29 +157,28 @@ function juegoRosco(idPartida, idUsuario, idPregunta) {
     function mostrarResultado() {
 
         if ((peticion.readyState == 4) && (peticion.status==200)) {
-            var resultado = JSON.parse(peticion.responseText);
-
-            console.log('resultado:' + resultado);
-
-            // Obtener el label de la letra correspondiente y actualizo su estado
-            var letra = document.getElementById(resultado.pregunta.idPregunta);
-            letra.className = resultado.pregunta.estadoRespuesta;
-            
-
-            if (resultado.pregunta.estadoRespuesta == "correcto") {
-                // Actualizar puntaje
-                var puntaje = document.getElementById('puntaje' + resultado.jugador.idUsuario);
-                puntaje.innerHTML = resultado.partida.puntaje;
-
-            } else {
-                // Detener temporizador
-                detenerTemporizador();
-                // Cambiar turno                
+            console.log('resultado: ' + peticion.responseText);
+            try {
+                var resultado = JSON.parse(peticion.responseText);
+                // Obtener el label de la letra correspondiente y actualizo su estado
+                var letra = document.getElementById(resultado.pregunta.idPregunta);
+                letra.className = resultado.pregunta.estadoRespuesta;
+                
+                if (resultado.pregunta.estadoRespuesta == "correcto") {
+                    // Actualizar puntaje
+                    var puntaje = document.getElementById('puntaje' + resultado.jugador.idUsuario);
+                    puntaje.innerHTML = resultado.jugador.puntaje;
+    
+                } else {
+                    // Detener temporizador
+                    detenerTemporizador();
+                    // Cambiar turno                
+                }
+            } catch (e) {
+                console.error("Error al parsear JSON:", e);
             }
         } else {
-            // Poner alertas
-            console.log("peticion.readyState: " + peticion.readyState);
-            console.log("peticion.status: " + peticion.status);
+            // Poner mensaje de error
         }
     }
 }

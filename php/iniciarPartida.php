@@ -24,6 +24,7 @@ if (isset($_POST['botonComenzarPartida'])) {
         //Obtener los jugadores
         $jugadores = $_SESSION['vectorSesion'];
     }
+
     unset($_SESSION['partida']);
     if (!isset($_SESSION['partida'])) {
         //Instanciar la partida
@@ -55,8 +56,8 @@ if (isset($_POST['botonComenzarPartida'])) {
     // Agregar jugadores al JSON
     foreach ($partida->getJugadores() as $jugador) {
         $partidaJSON['jugadores'][] = array(
-            'id' => $jugador->getID(),
-            'nombreUsuario' => $jugador->getNombreUsuario(),
+            'id' => $jugador->getID(), //
+            'nombreUsuario' => $jugador->getNombreUsuario(), //
         );
     }
     
@@ -65,65 +66,34 @@ if (isset($_POST['botonComenzarPartida'])) {
         // Crear un nuevo arreglo temporal para cada rosco
         $roscoJSON = array(
             'idRosco' => $rosco->getIdRosco(),
-            'estadoRosco' => $rosco->getEstadoRosco(),
-            'preguntasPendientes' => array(),
+            'estadoRosco' => $rosco->getEstadoRosco(), //
+            'preguntasPendientes' => array(), // Solo las dos primeras
             'preguntasArriesgadas' => array()
         );
     
         // Agregar preguntas pendientes al rosco
         foreach ($rosco->getPreguntasPendientes() as $pregunta) {
             $roscoJSON['preguntasPendientes'][] = array(
-                'idPregunta' => $pregunta->getIdPregunta(),
-                'letra' => $pregunta->getLetra(),
-                'palabra' => $pregunta->getPalabra(),
-                'descripcion' => $pregunta->getDescripcion(),
+                'idPregunta' => $pregunta->getIdPregunta(), //
+                'letra' => $pregunta->getLetra(), //
+                'palabra' => $pregunta->getPalabra(), //
+                'descripcion' => $pregunta->getDescripcion(), //
                 'dificultadPregunta' => $pregunta->getDificultadPregunta(),
-                'estadoRespuesta' => $pregunta->getEstadoRespuesta()
+                'estadoRespuesta' => $pregunta->getEstadoRespuesta() //
             );
         }
 
-        // Agregar preguntas arriesgadas al rosco
-        foreach ($rosco->getPreguntasArriesgadas() as $pregunta) {
-            $roscoJSON['preguntasArriesgadas'][] = array(
-                'idPregunta' => $pregunta->getIdPregunta(),
-                'letra' => $pregunta->getLetra(),
-                'estadoRespuesta' => $pregunta->getEstadoRespuesta()
-            );
-        }
+        // // Agregar preguntas arriesgadas al rosco
+        // foreach ($rosco->getPreguntasArriesgadas() as $pregunta) {
+        //     $roscoJSON['preguntasArriesgadas'][] = array(
+        //         'idPregunta' => $pregunta->getIdPregunta(),
+        //         'letra' => $pregunta->getLetra(),
+        //         'estadoRespuesta' => $pregunta->getEstadoRespuesta()
+        //     );
+        // }
 
         // Asignar el rosco al jugador en partidaJSON
         $partidaJSON['roscos'][$idJugador] = $roscoJSON;
     }
-    
-
-    // // Preparar los roscos a objetos JSON
-    // $roscosJSON = array();
-    // foreach ($jugadores as $jugador) {
-    //     $rosco = $partida->getRoscos()[$jugador->getID()];
-
-    //     $preguntasPendientes = array();
-    //     foreach ($rosco -> getPreguntasPendientes() as $pregunta) {
-    //         $arregloTemporal = array(
-    //             'idPregunta' => $pregunta->getIdPregunta(), // id del Label
-    //             'letra' => $pregunta->getLetra(), // valor del Label
-    //             'estadoRespuesta' => $pregunta->getEstadoRespuesta() // clase del Label
-    //         );
-    //         $preguntasPendientes[] = $arregloTemporal;
-    //     }
-
-    //     $preguntasArriesgadas = array(
-    //         'idPregunta' => 0,
-    //         'letra' => '',
-    //         'estadoRespuesta');
-
-    // $roscosJSON[] = array(
-    //     'idJugador' => $jugador->getID(),
-    //     'preguntasPendientes' => $preguntasPendientes,
-    //     'preguntasArriesgadas' => $preguntasArriesgadas
-    // );
-    // }
-
-    $roscosDatos = json_encode($partidaJSON);
-
 }
 ?>

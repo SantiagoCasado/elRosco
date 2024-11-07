@@ -180,10 +180,24 @@ button:hover {
 
 .correcto {
     background-color: green;
+
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
 }
 
 .incorrecto {
     background-color: red;
+
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
 }
 
 /* ZONA DE JUEGO */

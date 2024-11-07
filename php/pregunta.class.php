@@ -93,6 +93,7 @@ class Pregunta
 
                 $pregunta -> setIdPregunta($registro -> idPregunta);
                 $pregunta -> setLetra($registro -> letra);
+                $pregunta -> setPalabra($registro -> palabra);
                 $pregunta -> setDescripcion($registro -> descripcion);
                 $pregunta -> setDificultadPregunta($registro -> dificultadPregunta);
 
