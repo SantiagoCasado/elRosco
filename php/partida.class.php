@@ -15,7 +15,11 @@ class Partida {
     private $turnoActual;
     private $ganador;
 
-    public function __construct($dificultad, $tiempoPartida, $ayuda, $jugadores) {
+    public function __construct() {
+    }
+
+    public function iniciarNuevaPartida($dificultad, $tiempoPartida, $ayuda, $jugadores) {
+        $this -> idPartida = 1; // Por defecto hasta obtener el generado en la BD
         $this->dificultad = $dificultad;
         $this->tiempoPartida = $tiempoPartida;
         $this->ayuda = $ayuda;
@@ -25,10 +29,10 @@ class Partida {
         $this->tiemposRestantes = array();
         $this->turnoActual = rand(0, 1);//Se define aleatoriamente quien inicia la partida
         $this->ganador = null;
-
+        
         //Inicializar datos
-        $this -> prepararJugadores($jugadores);
-        $this -> prepararRoscos();
+        $this->prepararJugadores($jugadores);
+        $this->prepararRoscos();
     }
 
     public function getIdPartida() {
@@ -149,7 +153,10 @@ class Partida {
             $sqlPartida = "INSERT INTO partida (tiempo, dificultadPartida, ayudaAdicional) 
                            VALUES ('$tiempoPartidaSQL', '$this->dificultad', '$this->ayuda')";
             $bd -> consulta($sqlPartida);
-            $idPartida = $conexion->insert_id; //Obtener el ID de la partida guardada
+
+            //Obtener el ID de la partida guardada y asignarselo al objeto
+            $idPartida = $conexion->insert_id;
+            $this -> setIdPartida($idPartida);
     
             // Guardar cada usuario y su respectivo rosco para la partida (PARTIDA_USUARIO)
             foreach ($this->jugadores as $jugador) {
@@ -159,9 +166,11 @@ class Partida {
                 $sqlRosco = "INSERT INTO rosco (estadoRosco) 
                             VALUES ('" . $rosco -> getEstadoRosco() . "')";
                 $bd -> consulta($sqlRosco);
-                $idRosco = $conexion -> insert_id;
 
-    
+                // Obtener el idRosco generado y asignarselo al objeto
+                $idRosco = $conexion -> insert_id;
+                $rosco -> setIdRosco($idRosco);
+
                 $sqlPartidaUsuario = "INSERT INTO partida_usuario (idPartida, idUsuario, tiempoRestante, idRosco) 
                                       VALUES ('$idPartida', '" . $jugador->getID() . "', '$tiempoPartidaSQL', '$idRosco')";
                 $bd -> consulta($sqlPartidaUsuario);
@@ -177,6 +186,8 @@ class Partida {
             // Confirmar la transacción
             $conexion->commit();
             $bd->cerrarBD();
+
+            return $idPartida;
             
         } catch (Exception $e) {
             // Revertir la transacción en caso de error
@@ -186,16 +197,105 @@ class Partida {
         }
     }
 
+    public function cargarPartidaBD($idPartida) {
+        $bd = new BaseDatos();
+        $conexion = $bd->conectarBD();
+
+        $sqlPartida = "SELECT *
+                FROM partida
+                WHERE idPartida = $idPartida";
+
+        $resultadoPartida = $bd -> consulta($sqlPartida);
+
+        if ($resultadoPartida) {
+            // Cargar atributos de Partida
+            $this -> idPartida = $resultadoPartida['idPartida'];
+            $this -> dificultad = $resultadoPartida['dificultad'];
+            $this -> tiempoPartida = $resultadoPartida['tiempoPartida'];
+            $this -> ayuda = $resultadoPartida['ayuda'];
+            $this -> turnoActual = $resultadoPartida['turnoActual'];
+            $this -> ganador = $resultadoPartida['ganador'];
+
+            $this -> cargarJugadores($idPartida);
+
+            $this -> cargarEstadoPartida($idPartida, $this -> jugadores);
+        }
+    }
+
+    public function cargarJugadores($idPartida) {
+        $jugador1 = new Usuario();
+        $jugador1 -> cargarJugadorBD($idPartida);
+        $jugador2 = new Usuario();
+        $jugador2 -> cargarJugadorBD($idPartida);
+        $this -> setJugadores([$jugador1, $jugador2]);
+    }
+
+    public function cargarEstadoPartida($idPartida, $jugadores) {
+        // Obtener puntaje, tiempoRestante y el idRosco por jugador
+    }
+
+    public function cargarRoscos() {
+        // Obtener Rosco
+    }
+    
+    public function verificarRespuesta($idUsuario, $idPregunta, $respuesta, $tiempoRestante) {
+        
+        // Obtengo el rosco correspondiente para el jugador
+        $rosco = $this-> getRoscos()[$idUsuario];
+
+        $estadoRespuesta = $rosco -> verificarRespuestaRosco($respuesta);
+
+        // Verificar el estado del rosco
+
+        // Si coincide y la respuesta es correcta
+        if ($estadoRespuesta == 'correcto') {
+            // Si la respuesta es correcta
+            $this -> incrementarPuntaje($idUsuario);         
+
+            return $estadoRespuesta;
+        } else {
+            // Respuesta incorrecta
+            $this -> cambiarTurno();
+            $this -> actualizarEstadoPartida($this->getIdPartida(), $idUsuario, $tiempoRestante, $this->getPuntajes()[$idUsuario]);
+
+            return $estadoRespuesta;
+        }
+    }
+
+    public function incrementarPuntaje($idUsuario) {
+        $this -> puntajes[$idUsuario]++;
+    }
+
+    public function actualizarEstadoPartida($idPartida, $idUsuario, $tiempoRestante, $puntaje) {
+        // Antes de cambiar turno se actualiza la BD para tener un back up
+        try {
+            $bd = new BaseDatos();
+            $conexion = $bd->conectarBD();
+            
+            // Actualizar tiempo restante y puntaje (PARTIDA_USUARIO)
+            $minutos = $tiempoRestante / 60;
+            $segundos = $tiempoRestante % 60;
+            $tiempoRestanteSQL = sprintf('%02d:%02d:%02d', 0, $minutos, $segundos); // Se pasa de entero a minutos y segundos
+            $sqlPartidaUsuario = 
+                                "UPDATE partida_usuario 
+                                SET tiempoRestante = '$tiempoRestanteSQL', puntaje = $puntaje
+                                WHERE idPartida = $idPartida AND idUsuario = $idUsuario";
+            $bd -> consulta($sqlPartidaUsuario);
+
+            $bd->cerrarBD();
+            
+        } catch (Exception $e) {
+            $bd->cerrarBD();
+            return error_log("Error al guardar la partida: " . $e->getMessage());
+        } // Agregar finally para cerrar siempre la bd
+    }
+
     public function cambiarTurno() {
         if ($this->turnoActual == 0) {
             $this -> turnoActual = 1;
         } else {
             $this -> turnoActual = 0;
         }
-    }
-
-    public function guardarPartidaSesion() {
-        
     }
 }
 ?>

@@ -1,4 +1,7 @@
 <?php
+include_once("php/partida.class.php");
+session_start();
+
 if (isset($_POST['botonComenzarPartida'])) {
 
     //Obtener caracteristicas de la partida
@@ -10,24 +13,43 @@ if (isset($_POST['botonComenzarPartida'])) {
         $ayudaAdicional = 0;
     }
 
-    //Obtener los jugadores
-    $jugadores = $_SESSION['vectorSesion'];
+    
+    if (!isset($_SESSION['vectorSesion']) || count($_SESSION['vectorSesion']) < 2) {
+        //Redirigir si no hay dos sesiones iniciadas
+        $mensaje = 'Deben haber dos usuarios con sesion iniciada';
+        $_SESSION['mensaje'] = $mensaje;
+        header("location:index.php");
+        exit;
+    } else {
+        //Obtener los jugadores
+        $jugadores = $_SESSION['vectorSesion'];
+    }
+    unset($_SESSION['partida']);
+    if (!isset($_SESSION['partida'])) {
+        //Instanciar la partida
+        $partida = new Partida();
+        $partida -> iniciarNuevaPartida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
 
-    //Instanciar la partida
-    $partida = new Partida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
+        // Guardar partida en sesion
+        $_SESSION['partida'] = serialize($partida);
 
-    // Guardar la partida en la base de datos
-    //$partida -> guardarPartidaBD();
+        // Guardar la partida y el idPartida generado en la base de datos y en sesion respectivamente
+        //$idPartida = $partida -> guardarPartidaBD();
+        //$_SESSION['idPartida'] = $idPartida;
+    }
 
+
+    //Agragar un if por si la partida no se puedo crear
+    
     //Preparar los objetos JSON para el juego
     $partidaJSON = array(
-        'idPartida' => $partida->getIdPartida(),
-        'dificultad' => $partida->getDificultad(),
-        'tiempoPartida' => $partida->getTiempoPartida(),
-        'ayuda' => $partida->getAyuda(),
-        'turnoActual' => $partida->getTurnoActual(),
-        'jugadores' => array(),
-        'roscos' => array()
+        'idPartida' => $partida->getIdPartida(), //
+        'dificultad' => $partida->getDificultad(), //
+        'tiempoPartida' => $partida->getTiempoPartida(), //
+        'ayuda' => $partida->getAyuda(), //
+        'turnoActual' => $partida->getTurnoActual(), //
+        'jugadores' => array(), //
+        'roscos' => array() //
     );
     
     // Agregar jugadores al JSON
@@ -101,7 +123,7 @@ if (isset($_POST['botonComenzarPartida'])) {
     // );
     // }
 
-    // $roscosDatos = json_encode($partidaJSON);
+    $roscosDatos = json_encode($partidaJSON);
 
 }
 ?>

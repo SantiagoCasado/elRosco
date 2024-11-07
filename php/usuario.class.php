@@ -106,5 +106,9 @@ class Usuario
     public function validarContrasenia($contraseniaFormulario) {
 		return password_verify($contraseniaFormulario, $this-> contraseniaUsuario);
     }
+
+	public function cargarJugadorBD($idUsuario) {
+		// Aprovechar getUsuario();
+	}
 }
 ?>

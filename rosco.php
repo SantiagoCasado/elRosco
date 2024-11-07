@@ -1,20 +1,9 @@
 <?php
-include_once("php/partida.class.php");
-session_start();
-
 if (isset($_SESSION['mensaje'])) {
     $mensaje = $_SESSION['mensaje'];
     echo "<script type='text/javascript'>alert('$mensaje');</script>";
     unset($_SESSION['mensaje']);
 }
-
-//Redirigir si no hay dos sesiones iniciadas
-if (!isset($_SESSION['vectorSesion']) || count($_SESSION['vectorSesion']) < 2) {
-    $mensaje = 'Deben haber dos usuarios con sesion iniciada';
-    $_SESSION['mensaje'] = $mensaje;
-    header("location:index.php");
-    exit;
-    }
 
 //Crear Partida
 include_once("php/iniciarPartida.php");
@@ -50,6 +39,16 @@ include_once("php/iniciarPartida.php");
 
     </section>
     <section>
+        <article>
+            <div id="idZonaInteraccion" class="itemsCentrados">
+                <h2>TURNO DE <strong id="idTurnoDe"></strong></h2>
+                <div>
+                    <form id="idFormularioJuego" class="formularioJuego" method="POST">
+                        <!-- formulario generado en JS -->
+                    </form>
+                </div>
+            </div>                
+        </article>
         <div class="zonaSeccion">
             <article class="zonaIzquierda" id="idZonaJugador<?php echo $jugadores[0]->getID(); ?>">
                 <div class="nombreJugador1">
@@ -65,22 +64,6 @@ include_once("php/iniciarPartida.php");
                 <div id="idLetrasJugador<?php echo $jugadores[1]->getID(); ?>" class="letras"></div>
             </article>
         </div>
-
-        <article>
-                <div id="idZonaInteraccion" class="itemsCentrados">
-                    <h2>TURNO DE <strong id="idTurnoDe"></strong></h2>
-                    <p>
-                        <strong>Siguiente letra: 
-                            <span id="idSiguienteLetra"></span>
-                        </strong>
-                    </p>
-                    <div>
-                        <form id="idFormularioJuego" class="formularioJuego">
-                            <!-- formulario generado en JS -->
-                        </form>
-                    </div>
-                </div>                
-        </article>
     </section>
 
     <section>

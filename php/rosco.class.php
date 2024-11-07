@@ -8,6 +8,8 @@ class Rosco
     private $preguntasPendientes;
     private $preguntasArriesgadas;
 
+    
+    // Cambiar constructor = igual que Partida
     public function __construct($dificultadRosco)
     {
         $this->estadoRosco = 'incompleto';
@@ -86,6 +88,28 @@ class Rosco
                 $mensaje = 'No hay más preguntas para la letra '. $letra; //Ver la manera de usar este mensaje
             }
         }
+    }
+
+    public function cargarRoscoBD($idRosco) {
+        // Obtener el estadoRosco
+
+        // Cargar las 27 preguntas
+        $pregunta = new Pregunta();
+        //$pregunta -> cargarPreguntaBD($idPregunta);
+    }
+
+    public function verificarRespuestaRosco($respuesta) {
+        // Obtener la pregunta a evaluar e insertarla en el otro arreglo
+        $pregunta = array_shift($this -> getPreguntasPendientes());
+        
+        $estadoRespuesta = $pregunta -> actualizarEstadoPregunta($respuesta);
+
+        array_push($this -> getPreguntasArriesgadas(), $pregunta);
+
+        // Fijarse la cantidad de preguntas arriesgadas (=27 se respondió el rosco completo)
+
+        // Retornar estadoRespuesta y estadoRosco
+        return $estadoRespuesta;
     }
 }
 ?>
