@@ -2,7 +2,7 @@ function crearVistaJuego(partida) {
     crearVistaRoscos(partida.roscos);
 
     var enJuego = true;
-    vistaInteraccion(partida.idPartida, partida.jugadores[partida.turnoActual], partida.roscos[partida.jugadores[partida.turnoActual].id], partida.turnoActual, enJuego);
+    vistaInteraccion(partida.jugadores[partida.turnoActual], partida.roscos[partida.jugadores[partida.turnoActual].id], partida.turnoActual, enJuego);
 }
 
 function crearVistaRoscos(roscos) {
@@ -25,14 +25,14 @@ function crearVistaRoscos(roscos) {
     });
 }
 
-function vistaInteraccion(idPartida, jugador, rosco, turnoActual, enJuego) {
+function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
 
     var h2Turno = document.getElementById('idTurnoDe');
     h2Turno.innerHTML = jugador.nombreUsuario;
 
     if (enJuego) {
         // VISTA JUEGO
-        
+
         // Iniciar temporizador del jugador
         
         // Mostrar letra y descripcion del rosco
@@ -41,12 +41,16 @@ function vistaInteraccion(idPartida, jugador, rosco, turnoActual, enJuego) {
         var formularioJuego = document.getElementById('idFormularioJuego');
         formularioJuego.innerHTML = '';
 
+        // Creo la letra actual
         var h3Letra = document.createElement('h3');
+        h3Letra.id = 'idLetra';
         h3Letra.innerHTML = 'Letra ' + pregunta.letra;
         formularioJuego.appendChild(h3Letra);
         formularioJuego.appendChild(document.createElement('br'));
         
+        // Creo el
         var labelDescripcion = document.createElement('label');
+        labelDescripcion.id = 'idDescripcion'
         labelDescripcion.htmlFor = 'idRespuesta';
         labelDescripcion.className = 'labelFormulario';
         labelDescripcion.innerHTML = pregunta.descripcion;
@@ -55,6 +59,7 @@ function vistaInteraccion(idPartida, jugador, rosco, turnoActual, enJuego) {
         if (false) {
         // if (ayudaAdicional) {
             var labelAyuda = document.createElement('label');
+            labelAyuda.id = 'idAyudaAdicional';
             labelAyuda.htmlFor = 'idRespuesta';
             labelAyuda.className = 'labelFormulario';
             labelAyuda.innerHTML = '<br>Contiene ' + pregunta.palabra.length + ' letras';
@@ -74,13 +79,14 @@ function vistaInteraccion(idPartida, jugador, rosco, turnoActual, enJuego) {
 
         //Crear botones del formulario
         var botonArriesgar = document.createElement('button');
+        botonArriesgar.id = 'idBotonArriesgar';
         botonArriesgar.type = 'button';
         botonArriesgar.innerHTML = 'Arriesgar';
         botonArriesgar.className = 'botonJuego' + turnoActual;
         botonArriesgar.onclick = function () {
             enJuego = true;
             //Fijarse los parametros necesarios
-            juegoRosco(idPartida, jugador.id, pregunta.idPregunta);
+            juegoRosco(jugador.id, pregunta.idPregunta);
         }
         formularioJuego.appendChild(botonArriesgar);
         formularioJuego.appendChild(document.createElement('br'));
@@ -98,6 +104,7 @@ function vistaInteraccion(idPartida, jugador, rosco, turnoActual, enJuego) {
         formularioJuego.appendChild(document.createElement('br'));
 
         var strLetra = document.createElement('p');
+        strLetra.id = 'idLetraSiguiente';
         strLetra.innerHTML = 'Siguiente letra: ' + rosco.preguntasPendientes[1].letra;
         formularioJuego.appendChild(strLetra);
 
@@ -129,7 +136,7 @@ function vistaInteraccion(idPartida, jugador, rosco, turnoActual, enJuego) {
     }
 }
 
-function juegoRosco(idPartida, idUsuario, idPregunta) {
+function juegoRosco(idUsuario, idPregunta) {
 
     // Verificar estado del juego para ver si mostrar cambio de turno o el juego
 
@@ -142,8 +149,7 @@ function juegoRosco(idPartida, idUsuario, idPregunta) {
 
     var respuesta = document.getElementById('idRespuesta').value;
     // Ver que parametros son necesarios
-    var parametros = "idPartida=" + idPartida //???
-                    + "&idUsuario=" + idUsuario //
+    var parametros = "idUsuario=" + idUsuario //
                     + "&idPregunta=" + idPregunta //
                     + "&respuesta=" + respuesta //
                     + "&tiempoRestante=" + 0; //
@@ -160,19 +166,22 @@ function juegoRosco(idPartida, idUsuario, idPregunta) {
             console.log('resultado: ' + peticion.responseText);
             try {
                 var resultado = JSON.parse(peticion.responseText);
-                // Obtener el label de la letra correspondiente y actualizo su estado
-                var letra = document.getElementById(resultado.pregunta.idPregunta);
-                letra.className = resultado.pregunta.estadoRespuesta;
+
+                // Actualizar vista rosco para el jugador
+                actualizarVistaRosco(resultado.respuesta.idPregunta, resultado.respuesta.estadoRespuesta);
                 
-                if (resultado.pregunta.estadoRespuesta == "correcto") {
+                if (resultado.respuesta.estadoRespuesta == "correcto") {
+                    // Actualizar pregunta
+                    actualizarPregunta(resultado.jugador.idUsuario, resultado.pregunta.preguntaNueva, resultado.pregunta.letraSiguiente)
+
                     // Actualizar puntaje
-                    var puntaje = document.getElementById('puntaje' + resultado.jugador.idUsuario);
-                    puntaje.innerHTML = resultado.jugador.puntaje;
+                    actualizarPuntaje(resultado.jugador.idUsuario, resultado.jugador.puntaje);
     
                 } else {
                     // Detener temporizador
                     detenerTemporizador();
-                    // Cambiar turno                
+                    // Cambiar turno      
+                    vistaInteraccion()
                 }
             } catch (e) {
                 console.error("Error al parsear JSON:", e);
@@ -181,6 +190,54 @@ function juegoRosco(idPartida, idUsuario, idPregunta) {
             // Poner mensaje de error
         }
     }
+}
+
+function actualizarVistaRosco(idPregunta, estadoRespuesta) {
+    var letra = document.getElementById(idPregunta);
+    letra.className = estadoRespuesta;
+}
+
+function actualizarPregunta(idJugador, pregunta, letraSiguiente) {
+    // Actualizar letra actual
+    var h3Letra = document.getElementById('idLetra');
+    h3Letra.innerHTML = 'Letra ' + pregunta.letra;
+    
+    var labelDescripcion = document.getElementById('idDescripcion');
+    labelDescripcion.innerHTML = pregunta.descripcion;
+    
+    if (false) {
+    // if (ayudaAdicional) {
+        // Actualizar la cantidad de letras de la palabra
+        var labelAyuda = document.getElementById('idAyudaAdicional');
+        labelAyuda.innerHTML = '<br>Contiene ' + pregunta.palabra.length + ' letras';
+    }
+    
+    var respuesta = document.getElementById('idRespuesta');
+    respuesta.value = ''; 
+    respuesta.focus();
+
+    // Actualizar la funcion a llamar
+    var botonArriesgar = document.getElementById('idBotonArriesgar');
+    botonArriesgar.onclick = function () {
+        enJuego = true;
+        //Fijarse los parametros necesarios
+        juegoRosco(idJugador, pregunta.idPregunta);
+    }
+
+    // Actualizar la siguiente letra
+    var strLetra = document.getElementById('idLetraSiguiente');
+    strLetra.innerHTML = 'Siguiente letra: ' + letraSiguiente;
+}
+
+function actualizarPuntaje(idUsuario, puntaje) {
+    var puntaje = document.getElementById('puntajeJugador' + idUsuario);
+    puntaje.innerHTML = puntaje;
+
+}
+
+function actualizarTemporizador(idJugador, tiempo) {
+    var temporizador = document.getElementById('tiempoJugador' + idUsuario);
+    temporizador.innerHTML = tiempo;
 }
 
 function iniciarTemporizador(segundos) {

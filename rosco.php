@@ -54,6 +54,11 @@ include_once("php/iniciarPartida.php");
                 <div class="nombreJugador1">
                     <h1>Rosco de <?php echo $partida -> getJugadores()[0] -> getNombreUsuario() ?></h1>
                 </div>
+                <div class="estadoJugador">
+                    <div id="tiempoJugador<?php echo $jugadores[0]->getID(); ?>"></div>
+                    <div id="puntajeJugador<?php echo $jugadores[0]->getID(); ?>"></div>
+                </div>
+                
                 <div id="idLetrasJugador<?php echo $jugadores[0]->getID(); ?>" class="letras"></div>
             </article>
             
@@ -61,6 +66,11 @@ include_once("php/iniciarPartida.php");
                 <div class="nombreJugador2">
                     <h1>Rosco de <?php echo $partida -> getJugadores()[1] -> getNombreUsuario() ?></h1>
                 </div>
+                <div class="estadoJugador">
+                    <div id="tiempoJugador<?php echo $jugadores[1]->getID(); ?>"></div>
+                    <div id="puntajeJugador<?php echo $jugadores[1]->getID(); ?>"></div>
+                </div>
+
                 <div id="idLetrasJugador<?php echo $jugadores[1]->getID(); ?>" class="letras"></div>
             </article>
         </div>
