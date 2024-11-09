@@ -13,7 +13,7 @@ class Rosco
     public function __construct($dificultadRosco)
     {
         $this->estadoRosco = 'incompleto';
-        $this->preguntasPendientes = array();
+        $this->preguntasPendientes = array(); // Preguntas sin responder
         $this->preguntasArriesgadas = array();
         $this->dificultadRosco = $dificultadRosco;
 
@@ -114,6 +114,14 @@ class Rosco
 
         // Retornar la pregunta con el estado de respuesta
         return $pregunta;
+    }
+
+    public function pasapalabra() {
+        // Lleva la primer pregunta del arreglo al final
+        $preguntasPendientes = $this -> getPreguntasPendientes();
+        $pregunta = array_shift($preguntasPendientes);
+        array_push($preguntasPendientes, $pregunta);
+        $this -> setPreguntasPendientes($preguntasPendientes);
     }
 }
 ?>
