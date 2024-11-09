@@ -24,57 +24,52 @@ if (isset($_POST['respuesta'])) {
     $tiempoRestante = $_POST['tiempoRestante'];
     $respuesta = $_POST['respuesta'];
 
+    // Obtengo el estado de respuestas, actualizo el objeto Partida y guardo en sesion
     $estadoRespuesta = $partida->verificarRespuesta($idUsuario, $idPregunta, $respuesta, $tiempoRestante);
-    $_SESSION['partida'] = $partida;
+    $_SESSION['partida'] = serialize($partida);
 
     if (is_null($estadoRespuesta) || empty($estadoRespuesta)) {
         // Sin respuesta del servidor
         $resultadoJSON = array('error' => 'Sin respuesta del servidor');
     } else {
-        // Datos necesarios para actualizar la vista del juego:
 
-        // idPregunta y estadoRespuesta para el label de la letra
+        $turnoActual = $partida->getTurnoActual();
 
-        // SI LA RESPUESTA ES CORRECTA
-        // Nueva letra, palabra a responder, decripcion y letra siguiente
-        // idUsuario y puntaje del usuario
-
-        // SI LA RESPUESTA ES INCORRECTA
-
-        $respuesta = array(
-            'idPregunta' => $idPregunta, // Si o si
-            'estadoRespuesta' => $estadoRespuesta, // si o si 
+        $estadoPartida = array(
+            'turnoActual' => $turnoActual,
+            'ayudaAdicional' => $partida -> getAyuda()
         );
+
+        // Actualizar la vistsa del rosco
+        $respuesta = array(
+            'idPregunta' => $idPregunta,
+            'estadoRespuesta' => $estadoRespuesta,
+        );
+
+        // Actualizar el usuario
+        $usuario = $partida -> getJugadores()[$turnoActual];
 
         $jugador = array(
-            'idUsuario' => $idUsuario,
-            'nombreUsuario' => $partida -> getJugadores()[$partida -> getTurnoActual()] -> getNombreUsuario(),
-            'puntaje' => $partida->getPuntajes()[$idUsuario]
+            'idUsuario' => $usuario -> getId(),
+            'nombreUsuario' => $usuario -> getNombreUsuario(),
+            'puntaje' => $partida->getPuntajes()[$usuario -> getId()]
         );
 
-        
-        if ($estadoRespuesta == 'correcto') {
-            $preguntaNueva = array(
-                'idPregunta' => $partida->getRoscos()[$idUsuario]->getPreguntasPendientes()[0]->getidPregunta(),
-                'letra' => $partida->getRoscos()[$idUsuario]->getPreguntasPendientes()[0]->getLetra(),
-                'descripcion' => $partida->getRoscos()[$idUsuario]->getPreguntasPendientes()[0]->getDescripcion(),
-            );
+        // Actualizar la pregunta
+        $preguntaNueva = array(
+            'idPregunta' => $partida->getRoscos()[$usuario -> getId()]->getPreguntasPendientes()[0]->getidPregunta(),
+            'letra' => $partida->getRoscos()[$usuario -> getId()]->getPreguntasPendientes()[0]->getLetra(),
+            'descripcion' => $partida->getRoscos()[$usuario -> getId()]->getPreguntasPendientes()[0]->getDescripcion(),
+            'letraSiguiente' => $partida->getRoscos()[$usuario -> getId()]->getPreguntasPendientes()[1]->getLetra()
+        );
 
-            $pregunta = array(
-                'preguntaNueva' => $preguntaNueva,
-                'letraSiguiente' => $partida->getRoscos()[$idUsuario]->getPreguntasPendientes()[1]->getLetra()
-            );
-            $resultadoJSON = array(
-                'respuesta' => $respuesta,
-                'pregunta' => $pregunta,
-                'jugador' => $jugador
-            );
-        } else {
-            $resultadoJSON = array(
-                'respuesta' => $respuesta,
-                'jugador' => $jugador
-            );
-        }
+        $resultadoJSON = array(
+            'estadoPartida' => $estadoPartida,
+            'respuesta' => $respuesta,
+            'pregunta' => $preguntaNueva,
+            'jugador' => $jugador
+        );
+
     }
     echo json_encode($resultadoJSON);
 }

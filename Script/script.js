@@ -2,13 +2,16 @@ function crearVistaJuego(partida) {
     crearVistaRoscos(partida.roscos);
 
     var enJuego = true;
-    vistaInteraccion(partida.jugadores[partida.turnoActual], partida.roscos[partida.jugadores[partida.turnoActual].id], partida.turnoActual, enJuego);
+    jugadorActual = partida.jugadores[partida.turnoActual];
+    pregunta = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0];
+    letraSiguiente = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0].letra
+    vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, enJuego);
 }
 
 function crearVistaRoscos(roscos) {
-    Object.entries(roscos).forEach(([idJugador, rosco]) => {
+    Object.entries(roscos).forEach(([idUsuario, rosco]) => {
         // Se obtiene la zona del jugador
-        var zonaJugador = document.getElementById('idLetrasJugador' + idJugador);
+        var zonaJugador = document.getElementById('idLetrasJugador' + idUsuario);
 
         // Se obtienen las preguntas del rosco
         var preguntas = rosco.preguntasPendientes;
@@ -25,7 +28,7 @@ function crearVistaRoscos(roscos) {
     });
 }
 
-function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
+function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego) {
 
     var h2Turno = document.getElementById('idTurnoDe');
     h2Turno.innerHTML = jugador.nombreUsuario;
@@ -36,8 +39,6 @@ function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
         // Iniciar temporizador del jugador
         
         // Mostrar letra y descripcion del rosco
-        var pregunta = rosco.preguntasPendientes[0];
-
         var formularioJuego = document.getElementById('idFormularioJuego');
         formularioJuego.innerHTML = '';
 
@@ -73,7 +74,15 @@ function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
         respuesta.id = 'idRespuesta';
         respuesta.name = 'respuesta';
         formularioJuego.appendChild(respuesta);
-        respuesta.focus(); // Para escribir directamente sin seleccionar el input
+        // Escribir directamente sin seleccionar el input
+        respuesta.focus();
+        // Evitar envio de formulario (recarga de pagina) al presionar enter
+        respuesta.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                juegoRosco(jugador.idUsuario, pregunta.idPregunta);
+            }
+        });
         formularioJuego.appendChild(document.createElement('br'));
         formularioJuego.appendChild(document.createElement('br'));
 
@@ -86,7 +95,7 @@ function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
         botonArriesgar.onclick = function () {
             enJuego = true;
             //Fijarse los parametros necesarios
-            juegoRosco(jugador.id, pregunta.idPregunta);
+            juegoRosco(jugador.idUsuario, pregunta.idPregunta);
         }
         formularioJuego.appendChild(botonArriesgar);
         formularioJuego.appendChild(document.createElement('br'));
@@ -97,7 +106,7 @@ function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
         botonPasapalabra.innerHTML = 'Pasapalabra';
         botonPasapalabra.onclick = function () {
             enJuego = false;
-            vistaInteraccion(jugador, rosco, turnoActual, enJuego);
+            vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego);
         }
         formularioJuego.appendChild(botonPasapalabra);
         formularioJuego.appendChild(document.createElement('br'));
@@ -105,7 +114,7 @@ function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
 
         var strLetra = document.createElement('p');
         strLetra.id = 'idLetraSiguiente';
-        strLetra.innerHTML = 'Siguiente letra: ' + rosco.preguntasPendientes[1].letra;
+        strLetra.innerHTML = 'Siguiente letra: ' + letraSiguiente;
         formularioJuego.appendChild(strLetra);
 
     } else {
@@ -117,7 +126,7 @@ function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
 
         // Vista cambio turno
         var strLetra = document.createElement('p');
-        strLetra.innerHTML = 'Siguiente letra: ' + rosco.preguntasPendientes[0].letra;
+        strLetra.innerHTML = 'Siguiente letra: ' + pregunta.letra;
         h2Turno.appendChild(document.createElement('br'));
         h2Turno.appendChild(strLetra);
 
@@ -130,7 +139,7 @@ function vistaInteraccion(jugador, rosco, turnoActual, enJuego) {
         botonComenzarTurno.className = 'botonJuego' + turnoActual;
         botonComenzarTurno.onclick = function () {
             enJuego = true;
-            vistaInteraccion(jugador, rosco, turnoActual, enJuego);
+            vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego)
         }
         contenidoFormulario.appendChild(botonComenzarTurno);
     }
@@ -148,11 +157,11 @@ function juegoRosco(idUsuario, idPregunta) {
     // enJuego = true
 
     var respuesta = document.getElementById('idRespuesta').value;
-    // Ver que parametros son necesarios
-    var parametros = "idUsuario=" + idUsuario //
-                    + "&idPregunta=" + idPregunta //
+
+    var parametros = "idUsuario=" + idUsuario
+                    + "&idPregunta=" + idPregunta
                     + "&respuesta=" + respuesta //
-                    + "&tiempoRestante=" + 0; //
+                    + "&tiempoRestante=" + 0;
     
     var peticion = new XMLHttpRequest();
     peticion.open("POST", "php/verificarRespuesta.php", true); // Relativo a la vista (rosco.php)
@@ -172,7 +181,7 @@ function juegoRosco(idUsuario, idPregunta) {
                 
                 if (resultado.respuesta.estadoRespuesta == "correcto") {
                     // Actualizar pregunta
-                    actualizarPregunta(resultado.jugador.idUsuario, resultado.pregunta.preguntaNueva, resultado.pregunta.letraSiguiente)
+                    actualizarPregunta(resultado.jugador.idUsuario, resultado.pregunta, resultado.pregunta.letraSiguiente)
 
                     // Actualizar puntaje
                     actualizarPuntaje(resultado.jugador.idUsuario, resultado.jugador.puntaje);
@@ -180,8 +189,9 @@ function juegoRosco(idUsuario, idPregunta) {
                 } else {
                     // Detener temporizador
                     detenerTemporizador();
-                    // Cambiar turno      
-                    vistaInteraccion()
+                    // Cambiar turno
+                    enJuego = false;     
+                    vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, enJuego);
                 }
             } catch (e) {
                 console.error("Error al parsear JSON:", e);
@@ -197,7 +207,7 @@ function actualizarVistaRosco(idPregunta, estadoRespuesta) {
     letra.className = estadoRespuesta;
 }
 
-function actualizarPregunta(idJugador, pregunta, letraSiguiente) {
+function actualizarPregunta(idUsuario, pregunta, letraSiguiente) {
     // Actualizar letra actual
     var h3Letra = document.getElementById('idLetra');
     h3Letra.innerHTML = 'Letra ' + pregunta.letra;
@@ -215,13 +225,17 @@ function actualizarPregunta(idJugador, pregunta, letraSiguiente) {
     var respuesta = document.getElementById('idRespuesta');
     respuesta.value = ''; 
     respuesta.focus();
+    respuesta.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            juegoRosco(idUsuario, pregunta.idPregunta);
+        }
+    });
 
     // Actualizar la funcion a llamar
     var botonArriesgar = document.getElementById('idBotonArriesgar');
     botonArriesgar.onclick = function () {
         enJuego = true;
-        //Fijarse los parametros necesarios
-        juegoRosco(idJugador, pregunta.idPregunta);
+        juegoRosco(idUsuario, pregunta.idPregunta);
     }
 
     // Actualizar la siguiente letra
@@ -232,10 +246,9 @@ function actualizarPregunta(idJugador, pregunta, letraSiguiente) {
 function actualizarPuntaje(idUsuario, puntaje) {
     var puntaje = document.getElementById('puntajeJugador' + idUsuario);
     puntaje.innerHTML = puntaje;
-
 }
 
-function actualizarTemporizador(idJugador, tiempo) {
+function actualizarTemporizador(idUsuario, tiempo) {
     var temporizador = document.getElementById('tiempoJugador' + idUsuario);
     temporizador.innerHTML = tiempo;
 }
@@ -252,7 +265,7 @@ function detenerTemporizador() {
 // function crearVistaRosco(roscos) {
 //     roscos.forEach(rosco => {
 //         // Se obtiene la zona del jugador
-//         var zonaJugador = document.getElementById('idLetrasJugador' + rosco.idJugador);
+//         var zonaJugador = document.getElementById('idLetrasJugador' + rosco.idUsuario);
 //         var preguntas = rosco.preguntasPendientes;
 //         var totalPreguntas = preguntas.length;
 //         var radioCirculo = 300;

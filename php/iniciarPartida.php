@@ -56,7 +56,7 @@ if (isset($_POST['botonComenzarPartida'])) {
     // Agregar jugadores al JSON
     foreach ($partida->getJugadores() as $jugador) {
         $partidaJSON['jugadores'][] = array(
-            'id' => $jugador->getID(), //
+            'idUsuario' => $jugador->getID(), //
             'nombreUsuario' => $jugador->getNombreUsuario(), //
         );
     }
@@ -67,7 +67,7 @@ if (isset($_POST['botonComenzarPartida'])) {
         $roscoJSON = array(
             'idRosco' => $rosco->getIdRosco(),
             'estadoRosco' => $rosco->getEstadoRosco(), //
-            'preguntasPendientes' => array(), // Solo las dos primeras
+            'preguntasPendientes' => array(),
             'preguntasArriesgadas' => array()
         );
     
