@@ -61,7 +61,7 @@ include_once("php/iniciarPartida.php");
                             </tr>
                     </table>
                 </div>
-                <div id="idLetrasJugador<?php echo $jugadores[0]->getID(); ?>" class="letras"></div>
+                <div id="idLetrasJugador<?php echo $jugadores[0]->getID(); ?>" class="letrasRosco"></div>
             </article>
             
             <article class="zonaDerecha" id="idZonaJugador<?php echo $jugadores[1]->getID(); ?>">

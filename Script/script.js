@@ -8,25 +8,73 @@ function crearVistaJuego(partida) {
     vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, enJuego);
 }
 
+// function crearVistaRoscos(roscos) {
+//     Object.entries(roscos).forEach(([idUsuario, rosco]) => {
+//         // Se obtiene la zona del jugador
+//         var zonaJugador = document.getElementById('idLetrasJugador' + idUsuario);
+
+//         // Se obtienen las preguntas del rosco
+//         var preguntas = rosco.preguntasPendientes;
+
+//         // Se crea el Label para cada letra (pregunta) del rosco
+//         preguntas.forEach(pregunta => {
+//             var label = document.createElement("label");
+//             label.id = pregunta.idPregunta;
+//             label.className = pregunta.estadoRespuesta;
+//             label.innerHTML = pregunta.letra;
+
+//             zonaJugador.appendChild(label);
+
+//             var h3palabra = document.createElement("h3");
+//             h3palabra.id = 'palabra' + pregunta.idPregunta;
+
+//             zonaJugador.appendChild(h3palabra);
+//         });
+//     });
+// }
+
 function crearVistaRoscos(roscos) {
     Object.entries(roscos).forEach(([idUsuario, rosco]) => {
-        // Se obtiene la zona del jugador
+        // Crear la tabla para las letras y palabras del rosco
         var zonaJugador = document.getElementById('idLetrasJugador' + idUsuario);
-
-        // Se obtienen las preguntas del rosco
-        var preguntas = rosco.preguntasPendientes;
-
-        // Se crea el Label para cada letra (pregunta) del rosco
-        preguntas.forEach(pregunta => {
-            var label = document.createElement("label");
-            label.id = pregunta.idPregunta;
-            label.className = pregunta.estadoRespuesta;
-            label.innerHTML = pregunta.letra;
-
-            zonaJugador.appendChild(label);
-        });
+        var tablaRosco = document.createElement('table');
+        tablaRosco.className = 'tablaRosco';
+        
+        // Agregar las filas y las celdas (9x3)
+        for (i = 0; i < 9; i++) {
+            var fila = document.createElement('tr');
+            
+            // Cada fila contiene tres letra/palabras
+            for (j = 0; j < 3; j++) {
+                var celdaLetra = document.createElement('td');
+                var celdaPalabra = document.createElement('td');
+                celdaLetra.className = 'celdaLetra';
+                celdaPalabra.className = 'celdaPalabra';
+                
+                var pregunta = rosco.preguntasPendientes[i * 3 + j];
+                if (pregunta) {
+                    var label = document.createElement("label");
+                    label.id = pregunta.idPregunta;
+                    label.className = pregunta.estadoRespuesta;
+                    label.innerHTML = pregunta.letra;
+                    celdaLetra.appendChild(label);
+                    
+                    var h3palabra = document.createElement("h3");
+                    h3palabra.id = 'palabra' + pregunta.idPregunta;
+                    celdaPalabra.appendChild(h3palabra);
+                }
+                
+                fila.appendChild(celdaLetra);
+                fila.appendChild(celdaPalabra);
+            }
+            
+            tablaRosco.appendChild(fila);
+        }
+        
+        zonaJugador.appendChild(tablaRosco);
     });
 }
+
 
 function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego) {
 
@@ -160,7 +208,7 @@ function juegoRosco(idUsuario, idPregunta) {
 
     var parametros = "idUsuario=" + idUsuario
                     + "&idPregunta=" + idPregunta
-                    + "&respuesta=" + respuesta //
+                    + "&respuesta=" + respuesta
                     + "&tiempoRestante=" + 0;
     
     var peticion = new XMLHttpRequest();
@@ -177,7 +225,7 @@ function juegoRosco(idUsuario, idPregunta) {
                 var resultado = JSON.parse(peticion.responseText);
 
                 // Actualizar vista rosco para el jugador
-                actualizarVistaRosco(resultado.respuesta.idPregunta, resultado.respuesta.estadoRespuesta);
+                actualizarVistaRosco(resultado.respuesta.idPregunta, resultado.respuesta.estadoRespuesta, resultado.respuesta.palabra);
                 
                 if (resultado.respuesta.estadoRespuesta == "correcto") {
                     // Actualizar pregunta
@@ -203,9 +251,12 @@ function juegoRosco(idUsuario, idPregunta) {
     }
 }
 
-function actualizarVistaRosco(idPregunta, estadoRespuesta) {
+function actualizarVistaRosco(idPregunta, estadoRespuesta, palabra) {
     var letra = document.getElementById(idPregunta);
     letra.className = estadoRespuesta;
+
+    var h3palabra = document.getElementById('palabra' + idPregunta);
+    h3palabra.innerHTML = palabra;
 }
 
 function actualizarPregunta(idUsuario, pregunta, letraSiguiente) {

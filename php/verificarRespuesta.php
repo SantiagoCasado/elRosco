@@ -25,10 +25,10 @@ if (isset($_POST['respuesta'])) {
     $respuesta = $_POST['respuesta'];
 
     // Obtengo el estado de respuestas, actualizo el objeto Partida y guardo en sesion
-    $estadoRespuesta = $partida->verificarRespuesta($idUsuario, $idPregunta, $respuesta, $tiempoRestante);
+    $preguntaRespondida = $partida->verificarRespuesta($idUsuario, $idPregunta, $respuesta, $tiempoRestante); //FIJARSE DE SACAR O NO EL IDPARTIDA
     $_SESSION['partida'] = serialize($partida);
 
-    if (is_null($estadoRespuesta) || empty($estadoRespuesta)) {
+    if (is_null($preguntaRespondida) || empty($preguntaRespondida)) {
         // Sin respuesta del servidor
         $resultadoJSON = array('error' => 'Sin respuesta del servidor');
     } else {
@@ -43,7 +43,8 @@ if (isset($_POST['respuesta'])) {
         // Actualizar la vistsa del rosco
         $respuesta = array(
             'idPregunta' => $idPregunta,
-            'estadoRespuesta' => $estadoRespuesta,
+            'estadoRespuesta' => $preguntaRespondida -> getEstadoRespuesta(),
+            'palabra' => $preguntaRespondida -> getPalabra()
         );
 
         // Actualizar el usuario

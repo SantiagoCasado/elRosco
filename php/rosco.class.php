@@ -99,21 +99,21 @@ class Rosco
     }
 
     public function verificarRespuestaRosco($respuesta) {
-        // Obtener la pregunta a evaluar e insertarla en el otro arreglo y actualizarlos
+        // Obtener la pregunta a evaluar, insertarla en el otro arreglo y actualizarlos
         $preguntasPendientes = $this -> getPreguntasPendientes();
         $pregunta = array_shift($preguntasPendientes);
         $this -> setPreguntasPendientes($preguntasPendientes);
         
-        $estadoRespuesta = $pregunta -> actualizarEstadoPregunta($respuesta);
+        $pregunta -> actualizarEstadoPregunta($respuesta);
 
-        $preguntasArriesgadas = $this -> getPreguntasArriesgadas($estadoRespuesta);
+        $preguntasArriesgadas = $this -> getPreguntasArriesgadas();
         array_push($preguntasArriesgadas, $pregunta);
         $this -> setPreguntasArriesgadas($preguntasArriesgadas);
 
         // Fijarse la cantidad de preguntas arriesgadas (=27 se respondió el rosco completo)
 
-        // Retornar estadoRespuesta y estadoRosco
-        return $estadoRespuesta;
+        // Retornar la pregunta con el estado de respuesta
+        return $pregunta;
     }
 }
 ?>

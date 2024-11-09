@@ -138,7 +138,7 @@ button:hover {
 /* ZONA DE INFORMACION DE LA PARTIDA */
 
 
-/* ZONA DE ROSCO */
+/* ZONA DE ESTADO PARTIDA */
 
 .nombreJugador1 {
     background-color: #FF7F50;
@@ -193,51 +193,62 @@ button:hover {
     font-weight: bold;
     color: white;
   }
-  
-  
 
-.letras {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    max-height: auto;
+/* ZONA DE LETRAS/PALABRAS */
 
-    font-size: x-large;
-    color: white;
+.tablaRosco {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
 }
 
-.sinResponder {
-    background-color: blue;
+.celdaLetra,
+.celdaPalabra {
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+    margin: 0;
+    height: 40px;
+}
 
+.celdaLetra {
+    width: 40px;
+}
+
+.celdaPalabra {
+    width: calc(100% / 3 - 40px);
+}
+
+.celdaPalabra h3 {
+    color: black;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos para las letras */
+.sinResponder,
+.correcto,
+.incorrecto {
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 40px;
     height: 40px;
+    color: white;
+    font-size: x-large;
+}
+.sinResponder {
+    background-color: blue;
 }
 
 .correcto {
     background-color: green;
-
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
 }
 
 .incorrecto {
     background-color: red;
-
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
 }
 
 /* ZONA DE JUEGO */
@@ -261,23 +272,6 @@ button:hover {
     background-color: #50BFFF;
     font-size: large;
 }
-
-/* Estilos para tablas */
-/* table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-} */
 
 /* Estilos para listas */
 ul, ol {

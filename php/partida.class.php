@@ -238,27 +238,29 @@ class Partida {
         // Obtener Rosco
     }
     
+
+    //FIJARSE DE SACAR O NO EL IDPARTIDA
     public function verificarRespuesta($idUsuario, $idPregunta, $respuesta, $tiempoRestante) {
         
         // Obtengo el rosco correspondiente para el jugador
         $rosco = $this-> getRoscos()[$idUsuario];
 
-        $estadoRespuesta = $rosco -> verificarRespuestaRosco($respuesta);
+        $preguntaRespondida = $rosco -> verificarRespuestaRosco($respuesta);
 
         // Verificar el estado del rosco
 
         // Si coincide y la respuesta es correcta
-        if ($estadoRespuesta == 'correcto') {
+        if ($preguntaRespondida -> getEstadoRespuesta() == 'correcto') {
             // Si la respuesta es correcta
             $this -> incrementarPuntaje($idUsuario);         
 
-            return $estadoRespuesta;
+            return $preguntaRespondida;
         } else {
             // Respuesta incorrecta
             $this -> cambiarTurno();
             $this -> actualizarEstadoPartida($this->getIdPartida(), $idUsuario, $tiempoRestante, $this->getPuntajes()[$idUsuario]);
 
-            return $estadoRespuesta;
+            return $preguntaRespondida;
         }
     }
 
