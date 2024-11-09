@@ -184,6 +184,7 @@ function juegoRosco(idUsuario, idPregunta) {
                     actualizarPregunta(resultado.jugador.idUsuario, resultado.pregunta, resultado.pregunta.letraSiguiente)
 
                     // Actualizar puntaje
+                    console.log('resultado: ' + resultado.jugador.puntaje);
                     actualizarPuntaje(resultado.jugador.idUsuario, resultado.jugador.puntaje);
     
                 } else {
@@ -244,8 +245,8 @@ function actualizarPregunta(idUsuario, pregunta, letraSiguiente) {
 }
 
 function actualizarPuntaje(idUsuario, puntaje) {
-    var puntaje = document.getElementById('puntajeJugador' + idUsuario);
-    puntaje.innerHTML = puntaje;
+    var textoPuntaje = document.getElementById('puntajeJugador' + idUsuario);
+    textoPuntaje.innerHTML = puntaje;
 }
 
 function actualizarTemporizador(idUsuario, tiempo) {

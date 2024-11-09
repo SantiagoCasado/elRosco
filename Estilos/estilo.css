@@ -142,19 +142,59 @@ button:hover {
 
 .nombreJugador1 {
     background-color: #FF7F50;
-    padding: 5px;
+    padding: 15px;
     border-radius: 20px;
-    height: 100px;
-    margin-bottom: 50px;
+    height: auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }
+
+.nombreJugador1 h1 {
+    margin: 0;
+    font-size: 36px;
+    color: white;
+    font-weight: bold; 
+  }
 
 .nombreJugador2 {
     background-color: #50BFFF;
-    padding: 5px;
+    padding: 15px;
     border-radius: 20px;
-    height: 100px;
-    margin-bottom: 50px;
-}
+    height: auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .nombreJugador2 h1 {
+    margin: 0;
+    font-size: 36px;
+    color: white;
+    font-weight: bold; 
+  }
+  
+  .tablaEstadoJugador {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  
+  .celdaEstadoJugador {
+    max-width: 50%;
+    height: auto;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  
 
 .letras {
     display: flex;
@@ -223,7 +263,7 @@ button:hover {
 }
 
 /* Estilos para tablas */
-table {
+/* table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
@@ -237,7 +277,7 @@ th, td {
 
 th {
     background-color: #f2f2f2;
-}
+} */
 
 /* Estilos para listas */
 ul, ol {

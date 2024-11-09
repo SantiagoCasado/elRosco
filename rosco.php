@@ -52,25 +52,28 @@ include_once("php/iniciarPartida.php");
         <div class="zonaSeccion">
             <article class="zonaIzquierda" id="idZonaJugador<?php echo $jugadores[0]->getID(); ?>">
                 <div class="nombreJugador1">
-                    <h1>Rosco de <?php echo $partida -> getJugadores()[0] -> getNombreUsuario() ?></h1>
-                </div>
-                <div class="estadoJugador">
-                    <div id="tiempoJugador<?php echo $jugadores[0]->getID(); ?>"></div>
-                    <div id="puntajeJugador<?php echo $jugadores[0]->getID(); ?>"></div>
-                </div>
+                    <h1><?php echo $partida -> getJugadores()[0] -> getNombreUsuario() ?></h1>
                 
+                    <table class="tablaEstadoJugador">
+                            <tr>
+                                <td class="celdaEstadoJugador" id="tiempoJugador<?php echo $jugadores[0]->getID(); ?>"><?php echo $partida -> getTiempoPartida(); ?></td>
+                                <td class="celdaEstadoJugador" id="puntajeJugador<?php echo $jugadores[0]->getID(); ?>"><?php echo $partida -> getPuntajes()[$jugadores[0]->getID()]; ?></td>
+                            </tr>
+                    </table>
+                </div>
                 <div id="idLetrasJugador<?php echo $jugadores[0]->getID(); ?>" class="letras"></div>
             </article>
             
             <article class="zonaDerecha" id="idZonaJugador<?php echo $jugadores[1]->getID(); ?>">
                 <div class="nombreJugador2">
-                    <h1>Rosco de <?php echo $partida -> getJugadores()[1] -> getNombreUsuario() ?></h1>
+                    <h1><?php echo $partida -> getJugadores()[1] -> getNombreUsuario() ?></h1>
+                    <table class="tablaEstadoJugador">
+                            <tr>
+                                <td class="celdaEstadoJugador" id="tiempoJugador<?php echo $jugadores[1]->getID(); ?>"><?php echo $partida -> getTiempoPartida(); ?></td>
+                                <td class="celdaEstadoJugador" id="puntajeJugador<?php echo $jugadores[1]->getID(); ?>"><?php echo $partida -> getPuntajes()[$jugadores[1]->getID()]; ?></td>
+                            </tr>
+                    </table>
                 </div>
-                <div class="estadoJugador">
-                    <div id="tiempoJugador<?php echo $jugadores[1]->getID(); ?>"></div>
-                    <div id="puntajeJugador<?php echo $jugadores[1]->getID(); ?>"></div>
-                </div>
-
                 <div id="idLetrasJugador<?php echo $jugadores[1]->getID(); ?>" class="letras"></div>
             </article>
         </div>
