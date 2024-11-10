@@ -39,13 +39,22 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
     
     // Actualizar la pregunta
     $rosco = $partida->getRoscos()[$usuario -> getId()];
-    $preguntaNueva = array(
-        'idPregunta' => $rosco->getPreguntasPendientes()[0]->getidPregunta(),
-        'letra' => $rosco->getPreguntasPendientes()[0]->getLetra(),
-        'descripcion' => $rosco->getPreguntasPendientes()[0]->getDescripcion(),
-        // Vericar cuantas palabras quedan pendientes para asignar siguiente letra
-        'letraSiguiente' => count($rosco->getPreguntasPendientes()) > 1 ? $rosco->getPreguntasPendientes()[1]->getLetra() : $rosco->getPreguntasPendientes()[0]->getLetra()
-    );
+    if ($rosco -> getEstadoRosco() != 'completo') {
+        $preguntaNueva = array(
+            'idPregunta' => $rosco->getPreguntasPendientes()[0]->getidPregunta(),
+            'letra' => $rosco->getPreguntasPendientes()[0]->getLetra(),
+            'descripcion' => $rosco->getPreguntasPendientes()[0]->getDescripcion(),
+            // Vericar cuantas palabras quedan pendientes para asignar siguiente letra
+            'letraSiguiente' => count($rosco->getPreguntasPendientes()) > 1 ? $rosco->getPreguntasPendientes()[1]->getLetra() : $rosco->getPreguntasPendientes()[0]->getLetra()
+        );
+    } else {
+        $preguntaNueva = array(
+            'idPregunta' => '',
+            'letra' => '',
+            'descripcion' => 'El jugador ya respondio todas las preguntas',
+            'letraSiguiente' => ''
+        );
+    }
 
     if ($idPregunta == null && $preguntaRespondida == null) {
         // Pasapalabra

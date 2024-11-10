@@ -172,7 +172,6 @@ function pasapalabra(idUsuario) {
     detenerTemporizador(idUsuario);
 
     var parametros = "idUsuario=" + idUsuario;
-    console.log('idUsuario = ' + idUsuario);
     var peticion = new XMLHttpRequest();
     peticion.open("POST", "php/pasapalabra.php", true); // Relativo a la vista (rosco.php)
     peticion.onreadystatechange = cambiarTurno;

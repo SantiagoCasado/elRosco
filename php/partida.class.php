@@ -244,26 +244,32 @@ class Partida {
         
         // Obtengo el rosco correspondiente para el jugador
         $rosco = $this-> getRoscos()[$idUsuario];
-
+        // Obtengo la pregunta con el estado de la respuestas (correcto o incorrecto)
         $preguntaRespondida = $rosco -> verificarRespuestaRosco($respuesta);
-
-        // Verificar el estado del rosco
 
         // Si coincide y la respuesta es correcta
         if ($preguntaRespondida -> getEstadoRespuesta() == 'correcto') {
             // Si la respuesta es correcta
-            $this -> incrementarPuntaje($idUsuario);         
+            $this -> incrementarPuntaje($idUsuario);
 
-            return $preguntaRespondida;
+            // Verificar el estado del rosco
+            if ($rosco -> getEstadoRosco() == 'completo') {
+                // Rosco completo - No quedan preguntas por responder
+                $this -> verificarJuegoFinalizado();
+                if ($this -> getGanador() == null) {
+                    // Juego no finalizado
+                    $this -> cambiarTurno();
+                }
+            }
         } else {
             // Respuesta incorrecta
             $this -> cambiarTurno();
             $this -> verificarCambioTurno();
             $this -> actualizarEstadoPartida($this->getIdPartida(), $idUsuario, $tiempoRestante, $this->getPuntajes()[$idUsuario]);
-
-            return $preguntaRespondida;
         }
+        return $preguntaRespondida;
     }
+
 
     public function pasapalabra($idUsuarioActual) {
         // Actualizar el rosco del jugador que paso la palabra
@@ -327,6 +333,43 @@ class Partida {
             // Sigue el jugador actual
             $this -> cambiarTurno();
         } 
+    }
+
+    public function verificarJuegoFinalizado() {
+        // Ver los estados de los roscos
+        $jugador1 = $this->getJugadores()[0];
+        $jugador2 = $this->getJugadores()[1];
+        $roscoJugador1 = $this->getRoscos()[$jugador1->getID()];
+        $roscoJugador2 = $this->getRoscos()[$jugador2->getID()];
+
+        if ($roscoJugador1->getEstadoRosco() == 'completo' && $roscoJugador2->getEstadoRosco() == 'completo') {
+            $this->definirGanador($jugador1, $jugador2);
+        }
+    }
+
+    public function definirGanador($jugador1, $jugador2) {
+        $puntosJugador1 = $this -> getPuntajes()[$jugador1 -> getID()];
+        $puntosJugador2 = $this -> getPuntajes()[$jugador2 -> getID()];
+
+        if ($puntosJugador1 > $puntosJugador2) {
+            $this -> setGanador($jugador1);
+        } elseif ($puntosJugador2 > $puntosJugador1) {
+            $this -> setGanador($jugador2);
+        } else {
+            $tiempoJugador1 = $this -> getTiemposRestantes()[$jugador1 -> getID()];
+            $tiempoJugador2 = $this -> getTiemposRestantes()[$jugador2 -> getID()];
+
+            if ($tiempoJugador1 > $tiempoJugador2) {
+                $this -> setGanador($jugador1);
+            } elseif ($tiempoJugador2 > $tiempoJugador1) {
+                $this -> setGanador($jugador2);
+            } else {
+                // Si estan empatados en puntos y tiempo, se decide aleatoriamente
+                $arregloJugadores = shuffle([$jugador1, $jugador2]);
+                $ganador = $arregloJugadores[0];
+                $this -> setGanador($ganador);
+            }
+        }
     }
 }
 ?>

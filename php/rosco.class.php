@@ -54,11 +54,11 @@ class Rosco
 
     public function asignarPreguntas() {
         //Se obtenienen las preguntas para cada letra del abecedario desde la base de datos
-        $abecedario = [
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-            'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-        ];
-        //$abecedario = ['A'];
+        // $abecedario = [
+        //     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+        //     'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+        // ];
+        $abecedario = ['A'];
 
         foreach ($abecedario as $letra) {
 
@@ -111,8 +111,8 @@ class Rosco
         array_push($preguntasArriesgadas, $pregunta);
         $this -> setPreguntasArriesgadas($preguntasArriesgadas);
 
-        // Fijarse la cantidad de preguntas arriesgadas (=27 se respondió el rosco completo)
-        if (count($preguntasArriesgadas) == 27) {
+        // Fijarse la cantidad de preguntas pendiente (=0 se respondió el rosco completo)
+        if (count($preguntasPendientes) == 0) {
             // No quedan preguntas por responder
             $this -> setEstadoRosco('completo');
         }
