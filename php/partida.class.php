@@ -258,6 +258,7 @@ class Partida {
         } else {
             // Respuesta incorrecta
             $this -> cambiarTurno();
+            $this -> verificarCambioTurno();
             $this -> actualizarEstadoPartida($this->getIdPartida(), $idUsuario, $tiempoRestante, $this->getPuntajes()[$idUsuario]);
 
             return $preguntaRespondida;
@@ -271,20 +272,7 @@ class Partida {
         
         // Cambiar turno
         $this -> cambiarTurno();
-        $turnoActual = $this->getTurnoActual();
-
-        // Si el rosco del otro jugador tiene preguntas pendientes, se hace efectivo el cambio de turno
-        $usuarioSiguiente = $this -> getJugadores()[$turnoActual];
-        $idUsuarioSiguiente = $usuarioSiguiente -> getID();
-
-        $roscoSiguiente = $this -> getRoscos()[$idUsuarioSiguiente];
-        
-        // Si el siguiente jugador no tiene preguntas pendientes, el turno vuelve al jugador actual
-        if (count($roscoSiguiente->getPreguntasPendientes()) == 0) {
-            // No tiene preguntas pendientes, termino su juego
-            // Sigue el jugador actual
-            $this -> cambiarTurno();
-        }
+        $this -> verificarCambioTurno();
     }
 
     public function incrementarPuntaje($idUsuario) {
@@ -321,6 +309,24 @@ class Partida {
         } else {
             $this -> turnoActual = 0;
         }
+    }
+
+    public function verificarCambioTurno() {
+        $turnoActual = $this->getTurnoActual();
+
+        // Si el rosco del otro jugador tiene preguntas pendientes, se hace efectivo el cambio de turno
+        $usuarioSiguiente = $this -> getJugadores()[$turnoActual];
+        $idUsuarioSiguiente = $usuarioSiguiente -> getID();
+
+        $roscoSiguiente = $this -> getRoscos()[$idUsuarioSiguiente];
+        
+        // Si el siguiente jugador no tiene preguntas pendientes, el turno vuelve al jugador actual
+        // if (count($roscoSiguiente->getPreguntasPendientes()) == 0) {
+        if ($roscoSiguiente -> getEstadoRosco() == 'completo') {
+            // No tiene preguntas pendientes, termino su juego
+            // Sigue el jugador actual
+            $this -> cambiarTurno();
+        } 
     }
 }
 ?>

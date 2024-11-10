@@ -1,7 +1,7 @@
 function crearVistaJuego(partida) {
     crearVistaRoscos(partida.roscos);
 
-    var enJuego = true;
+    var enJuego = false;
     jugadorActual = partida.jugadores[partida.turnoActual];
     pregunta = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0];
     letraSiguiente = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0].letra
@@ -180,7 +180,6 @@ function pasapalabra(idUsuario) {
     peticion.send(parametros);
 
         function cambiarTurno() {
-            console.log(peticion.responseText)
 
             if ((peticion.readyState == 4) && (peticion.status==200)) {
                 console.log(peticion.responseText);

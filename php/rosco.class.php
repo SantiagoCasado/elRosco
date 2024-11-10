@@ -58,6 +58,7 @@ class Rosco
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
             'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
         ];
+        //$abecedario = ['A'];
 
         foreach ($abecedario as $letra) {
 
@@ -111,13 +112,17 @@ class Rosco
         $this -> setPreguntasArriesgadas($preguntasArriesgadas);
 
         // Fijarse la cantidad de preguntas arriesgadas (=27 se respondió el rosco completo)
+        if (count($preguntasArriesgadas) == 27) {
+            // No quedan preguntas por responder
+            $this -> setEstadoRosco('completo');
+        }
 
         // Retornar la pregunta con el estado de respuesta
         return $pregunta;
     }
 
     public function pasapalabra() {
-        // Lleva la primer pregunta del arreglo al final
+        // Llevar la primer pregunta del arreglo al final
         $preguntasPendientes = $this -> getPreguntasPendientes();
         $pregunta = array_shift($preguntasPendientes);
         array_push($preguntasPendientes, $pregunta);
