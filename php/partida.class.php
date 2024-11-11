@@ -397,7 +397,8 @@ class Partida {
                 $this -> setGanador($jugador2);
             } else {
                 // Si estan empatados en puntos y tiempo, se decide aleatoriamente
-                $arregloJugadores = shuffle([$jugador1, $jugador2]);
+                $arregloJugadores = [$jugador1, $jugador2];
+                shuffle($arregloJugadores);
                 $ganador = $arregloJugadores[0];
                 $this -> setGanador($ganador);
             }

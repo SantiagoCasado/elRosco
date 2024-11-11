@@ -52,7 +52,7 @@ function crearVistaRoscos(roscos) {
 
 
 function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego) {
-
+    // Poner adentro del formulario?
     var h2Turno = document.getElementById('idTurnoDe');
     h2Turno.innerHTML = jugador.nombreUsuario;
 
@@ -212,28 +212,30 @@ function juegoRosco(idUsuario, idPregunta) {
             try {
                 var resultado = JSON.parse(peticion.responseText);
 
-                // Actualizar vista rosco para el jugador
+                // Actualizar vista rosco para el jugador que respondio
                 actualizarVistaRosco(resultado.respuesta.idPregunta, resultado.respuesta.estadoRespuesta, resultado.respuesta.palabra);
                 
+                // Actualizar puntaje de ambos jugadores
+                puntajeJugador1 = resultado.estadoPartida.puntajes.puntajeJugador1;
+                actualizarPuntaje(puntajeJugador1.idUsuario, puntajeJugador1.puntaje);
+                puntajeJugador2 = resultado.estadoPartida.puntajes.puntajeJugador2;
+                actualizarPuntaje(puntajeJugador2.idUsuario, puntajeJugador2.puntaje);
+                
                 // Verificar si hay ganador
-
-                // Si la respuesta es correcta y el rosco no esta completo
-                // if (resultado.respuesta.estadoRespuesta == "correcto") {
-                if (resultado.estadoPartida.enJuego) {
-                    // Actualizar pregunta
-                    actualizarPregunta(resultado.jugador.idUsuario, resultado.pregunta, resultado.pregunta.letraSiguiente)
-
-                    // Actualizar puntaje de ambos jugadores
-                    puntajeJugador1 = resultado.estadoPartida.puntajes.puntajeJugador1;
-                    actualizarPuntaje(puntajeJugador1.idUsuario, puntajeJugador1.puntaje);
-                    puntajeJugador2 = resultado.estadoPartida.puntajes.puntajeJugador2;
-                    actualizarPuntaje(puntajeJugador2.idUsuario, puntajeJugador2.puntaje);
-    
+                if (resultado.ganador != null) {
+                    mostrarGanador(resultado.ganador);
                 } else {
-                    // Detener temporizador
-                    detenerTemporizador();
-                    // Cambiar turno   
-                    vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, resultado.estadoPartida.enJuego);
+                    // Si la respuesta es correcta y el rosco no esta completo
+                    if (resultado.estadoPartida.enJuego) {
+                        // Actualizar pregunta
+                        actualizarPregunta(resultado.jugador.idUsuario, resultado.pregunta, resultado.pregunta.letraSiguiente)
+    
+                    } else {
+                        // Detener temporizador
+                        detenerTemporizador();
+                        // Cambiar turno   
+                        vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, resultado.estadoPartida.enJuego);
+                    }
                 }
             } catch (e) {
                 console.error("Error al parsear JSON:", e);
@@ -304,4 +306,21 @@ function actualizarTemporizador(idUsuario, tiempo) {
 
 function detenerTemporizador(idUsuario) {
     //console.log("Detener Temporizador");
+}
+
+function mostrarGanador(jugador) {
+    // Esto es temporal hasta acomodar la vista del formulario?
+    var h2Turno = document.getElementById('idTurnoDe');
+    h2Turno.innerHTML = '';
+
+    var formularioJuego = document.getElementById('idFormularioJuego');
+    formularioJuego.innerHTML = '';
+
+    var h1ganador = document.createElement('h1');
+    h1ganador.innerHTML = "FELICIDADES " + jugador.nombreUsuario + "!";
+    formularioJuego.appendChild(h1ganador);
+
+    var h3puntaje = document.createElement('h3');
+    h3puntaje.innerHTML = "Ganaste el juego con un puntaje de X";
+    formularioJuego.appendChild(h3puntaje);
 }
