@@ -184,8 +184,8 @@ function pasapalabra(idUsuario) {
                 console.log(peticion.responseText);
                 resultado = JSON.parse(peticion.responseText);
             
-                enJuego = false;
-                vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, enJuego);
+                //enJuego = false;
+                vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, resultado.estadoPartida.enJuego);
             }
         }
 }
@@ -215,20 +215,25 @@ function juegoRosco(idUsuario, idPregunta) {
                 // Actualizar vista rosco para el jugador
                 actualizarVistaRosco(resultado.respuesta.idPregunta, resultado.respuesta.estadoRespuesta, resultado.respuesta.palabra);
                 
-                if (resultado.respuesta.estadoRespuesta == "correcto") {
+                // Verificar si hay ganador
+
+                // Si la respuesta es correcta y el rosco no esta completo
+                // if (resultado.respuesta.estadoRespuesta == "correcto") {
+                if (resultado.estadoPartida.enJuego) {
                     // Actualizar pregunta
                     actualizarPregunta(resultado.jugador.idUsuario, resultado.pregunta, resultado.pregunta.letraSiguiente)
 
-                    // Actualizar puntaje
-                    console.log('resultado: ' + resultado.jugador.puntaje);
-                    actualizarPuntaje(resultado.jugador.idUsuario, resultado.jugador.puntaje);
+                    // Actualizar puntaje de ambos jugadores
+                    puntajeJugador1 = resultado.estadoPartida.puntajes.puntajeJugador1;
+                    actualizarPuntaje(puntajeJugador1.idUsuario, puntajeJugador1.puntaje);
+                    puntajeJugador2 = resultado.estadoPartida.puntajes.puntajeJugador2;
+                    actualizarPuntaje(puntajeJugador2.idUsuario, puntajeJugador2.puntaje);
     
                 } else {
                     // Detener temporizador
                     detenerTemporizador();
-                    // Cambiar turno
-                    enJuego = false;     
-                    vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, enJuego);
+                    // Cambiar turno   
+                    vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, resultado.estadoPartida.enJuego);
                 }
             } catch (e) {
                 console.error("Error al parsear JSON:", e);

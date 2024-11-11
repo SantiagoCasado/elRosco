@@ -24,17 +24,35 @@ function cargarPartidaSesion() {
 
 function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
     $turnoActual = $partida->getTurnoActual();
+    
+    // Se pasa el puntaje de ambos jugadores para que no dependa del jugador que tiene el turno
+    $puntajeJugador1 = array(
+        'idUsuario' => $partida -> getJugadores()[0] -> getID(),
+        'puntaje' => $partida -> getPuntajes()[$partida -> getJugadores()[0] -> getID()]
+    );
+    $puntajeJugador2 = array(
+        'idUsuario' => $partida -> getJugadores()[1] -> getID(),
+        'puntaje' => $partida -> getPuntajes()[$partida -> getJugadores()[1] -> getID()]
+    );
+    $puntajes = array(
+        'puntajeJugador1' => $puntajeJugador1,
+        'puntajeJugador2' => $puntajeJugador2,
+    );
+
+    $enJuego = $partida -> getEnJuego();
+
     $estadoPartida = array(
         'turnoActual' => $turnoActual,
-        'ayudaAdicional' => $partida -> getAyuda()
+        'ayudaAdicional' => $partida -> getAyuda(),
+        'puntajes' => $puntajes,
+        'enJuego' => $enJuego
     );
 
     // Actualizar el usuario
     $usuario = $partida->getJugadores()[$turnoActual];
     $jugador = array(
         'idUsuario' => $usuario -> getId(),
-        'nombreUsuario' => $usuario -> getNombreUsuario(),
-        'puntaje' => $partida->getPuntajes()[$usuario -> getId()]
+        'nombreUsuario' => $usuario -> getNombreUsuario()
     );
     
     // Actualizar la pregunta
@@ -57,27 +75,47 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
     }
 
     if ($idPregunta == null && $preguntaRespondida == null) {
-        // Pasapalabra
+        // PASAPALABRA
         $resultadoJSON = array(
             'estadoPartida' => $estadoPartida,
             'pregunta' => $preguntaNueva,
             'jugador' => $jugador
         );
     } else {
-        // Respuesta
+        // RESPUESTA
         // Actualizar la vistsa del rosco
         $respuesta = array(
             'idPregunta' => $idPregunta,
             'estadoRespuesta' => $preguntaRespondida -> getEstadoRespuesta(),
             'palabra' => $preguntaRespondida -> getPalabra()
         );
-    
-        $resultadoJSON = array(
-            'estadoPartida' => $estadoPartida,
-            'respuesta' => $respuesta,
-            'pregunta' => $preguntaNueva,
-            'jugador' => $jugador
-        );
+
+        if ($partida -> getGanador() != null) {
+            // Termino el juego
+
+            // Obtener el ganador
+            $ganador = $partida -> getGanador();
+            $ganador = array(
+                'idUsuario' => $ganador -> getId(),
+                'nombreUsuario' => $ganador -> getNombreUsuario()
+            );
+
+            $resultadoJSON = array(
+                'estadoPartida' => $estadoPartida,
+                'respuesta' => $respuesta,
+                'pregunta' => $preguntaNueva,
+                'jugador' => $jugador,
+                'ganador' => $ganador
+            );
+        } else {
+            $resultadoJSON = array(
+                'estadoPartida' => $estadoPartida,
+                'respuesta' => $respuesta,
+                'pregunta' => $preguntaNueva,
+                'jugador' => $jugador,
+                'ganador' => null
+            );
+        }
     }
 
     return $resultadoJSON;

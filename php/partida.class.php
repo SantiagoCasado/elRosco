@@ -14,6 +14,7 @@ class Partida {
     private $ayuda;
     private $turnoActual;
     private $ganador;
+    private $enJuego;
 
     public function __construct() {
     }
@@ -29,6 +30,7 @@ class Partida {
         $this->tiemposRestantes = array();
         $this->turnoActual = rand(0, 1);//Se define aleatoriamente quien inicia la partida
         $this->ganador = null;
+        $this->enJuego = false;
         
         //Inicializar datos
         $this->prepararJugadores($jugadores);
@@ -75,6 +77,10 @@ class Partida {
         return $this->ganador;
     }
 
+    public function getEnJuego() {
+        return $this->enJuego;
+    }
+
     public function setIdPartida($idPartida) {
         $this->idPartida = $idPartida;
     }
@@ -113,6 +119,10 @@ class Partida {
 
     public function setGanador($ganador) {
         $this->ganador = $ganador;
+    }
+
+    public function setEnJuego($enJuego) {
+        $this -> enJuego = $enJuego;
     }
 
     public function prepararJugadores($jugadores) {
@@ -234,42 +244,57 @@ class Partida {
         // Obtener puntaje, tiempoRestante y el idRosco por jugador
     }
 
+    public function actualizarEstadoPartidaBD() {
+        //
+    }
+
     public function cargarRoscos() {
         // Obtener Rosco
     }
     
 
-    //FIJARSE DE SACAR O NO EL IDPARTIDA
-    public function verificarRespuesta($idUsuario, $idPregunta, $respuesta, $tiempoRestante) {
+    //FIJARSE DE SACAR O NO EL IDPregunta
+    public function verificarRespuesta($idUsuario, $idPregunta, $respuesta) {
         
         // Obtengo el rosco correspondiente para el jugador
         $rosco = $this-> getRoscos()[$idUsuario];
         // Obtengo la pregunta con el estado de la respuestas (correcto o incorrecto)
         $preguntaRespondida = $rosco -> verificarRespuestaRosco($respuesta);
 
-        // Si coincide y la respuesta es correcta
-        if ($preguntaRespondida -> getEstadoRespuesta() == 'correcto') {
-            // Si la respuesta es correcta
-            $this -> incrementarPuntaje($idUsuario);
-
-            // Verificar el estado del rosco
-            if ($rosco -> getEstadoRosco() == 'completo') {
-                // Rosco completo - No quedan preguntas por responder
-                $this -> verificarJuegoFinalizado();
-                if ($this -> getGanador() == null) {
-                    // Juego no finalizado
-                    $this -> cambiarTurno();
-                }
-            }
-        } else {
-            // Respuesta incorrecta
-            $this -> cambiarTurno();
-            $this -> verificarCambioTurno();
-            $this -> actualizarEstadoPartida($this->getIdPartida(), $idUsuario, $tiempoRestante, $this->getPuntajes()[$idUsuario]);
-        }
         return $preguntaRespondida;
     }
 
+    public function actualizarEstadoJugador($idUsuario, $estadoRosco, $estadoRespuesta, $tiempoRestante) {
+            // Si coincide y la respuesta es correcta
+            if ($estadoRespuesta == 'correcto') {
+                // Si la respuesta es correcta
+                $this -> incrementarPuntaje($idUsuario);
+                $this -> setEnjuego(true);
+                
+                
+                
+                // Verificar el estado del rosco
+                if ($estadoRosco == 'completo') {
+                    // Rosco completo - No quedan preguntas por responder
+                    // Se debe detener el juego
+                    $this -> setEnJuego(false);
+                    if (!($this -> verificarJuegoFinalizado())) {
+                        // Juego no finalizado
+                        $this -> cambiarTurno();
+                    }
+                }
+            } else {
+            // Respuesta incorrecta
+            // Se debe detener el juego
+            $this -> setEnJuego(false);
+            if (!$this -> verificarJuegoFinalizado()) {
+                $this -> cambiarTurno();
+                $this -> verificarCambioTurno();
+                        
+                $this -> actualizarEstadoJugadorBD($this->getIdPartida(), $idUsuario, $tiempoRestante, $this->getPuntajes()[$idUsuario]);
+            }
+        }
+    }    
 
     public function pasapalabra($idUsuarioActual) {
         // Actualizar el rosco del jugador que paso la palabra
@@ -277,6 +302,7 @@ class Partida {
         $roscoActual -> pasapalabra();
         
         // Cambiar turno
+        $this -> setEnJuego(false);
         $this -> cambiarTurno();
         $this -> verificarCambioTurno();
     }
@@ -285,7 +311,7 @@ class Partida {
         $this -> puntajes[$idUsuario]++;
     }
 
-    public function actualizarEstadoPartida($idPartida, $idUsuario, $tiempoRestante, $puntaje) {
+    public function actualizarEstadoJugadorBD($idPartida, $idUsuario, $tiempoRestante, $puntaje) {
         // Antes de cambiar turno se actualiza la BD para tener un back up
         try {
             $bd = new BaseDatos();
@@ -327,7 +353,6 @@ class Partida {
         $roscoSiguiente = $this -> getRoscos()[$idUsuarioSiguiente];
         
         // Si el siguiente jugador no tiene preguntas pendientes, el turno vuelve al jugador actual
-        // if (count($roscoSiguiente->getPreguntasPendientes()) == 0) {
         if ($roscoSiguiente -> getEstadoRosco() == 'completo') {
             // No tiene preguntas pendientes, termino su juego
             // Sigue el jugador actual
@@ -344,6 +369,13 @@ class Partida {
 
         if ($roscoJugador1->getEstadoRosco() == 'completo' && $roscoJugador2->getEstadoRosco() == 'completo') {
             $this->definirGanador($jugador1, $jugador2);
+
+            // Actualizar partida en BD
+            $this -> actualizarEstadoPartidaBD();
+            
+            return true;
+        } else {
+            return false;
         }
     }
 
