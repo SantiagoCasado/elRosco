@@ -1,12 +1,6 @@
 <?php
-if (isset($_SESSION['mensaje'])) {
-    $mensaje = $_SESSION['mensaje'];
-    echo "<script type='text/javascript'>alert('$mensaje');</script>";
-    unset($_SESSION['mensaje']);
-}
+include_once('php/iniciarPartida.php');
 
-//Crear Partida
-include_once("php/iniciarPartida.php");
 ?>
 
 <!DOCTYPE html>

@@ -7,7 +7,8 @@ if (isset($_POST['respuesta'])) {
     $idUsuario = $_POST['idUsuario'];
     $idPregunta = $_POST['idPregunta'];
     $tiempoRestante = $_POST['tiempoRestante'];
-    $respuesta = $_POST['respuesta'];
+    //$respuesta = $_POST['respuesta'];
+    $respuesta = htmlspecialchars(trim($_POST['respuesta']));
 
     // Obtengo el estado de respuestas, actualizo el objeto Partida y guardo en sesion
     $preguntaRespondida = $partida->verificarRespuesta($idUsuario, $idPregunta, $respuesta); //FIJARSE DE SACAR O NO EL IDPREGUNTA

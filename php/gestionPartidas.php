@@ -97,7 +97,8 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
             $ganador = $partida -> getGanador();
             $ganador = array(
                 'idUsuario' => $ganador -> getId(),
-                'nombreUsuario' => $ganador -> getNombreUsuario()
+                'nombreUsuario' => $ganador -> getNombreUsuario(),
+                'puntaje' => $partida -> getPuntajes()[$ganador -> getID()]
             );
 
             $resultadoJSON = array(

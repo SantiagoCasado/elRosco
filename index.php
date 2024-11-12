@@ -47,7 +47,7 @@ exit;
         <article>
         <?php
             if (isset($_POST['botonInicio'])) {
-                $nombreFormulario = $_POST['nombreFormulario'];
+                $nombreFormulario = htmlspecialchars(trim($_POST['nombreFormulario'])); //Evitar inyecciones HTML y espacios
 
                 $usuario = new Usuario();
                        

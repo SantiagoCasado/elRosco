@@ -7,6 +7,12 @@ if (isset($_SESSION['mensaje'])) {
     echo "<script type='text/javascript'>alert('$mensaje');</script>";
     unset($_SESSION['mensaje']);
 }
+
+//Redirigir si hay dos sesiones iniciadas
+if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
+    header("location:crearPartida.php");
+    exit;
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,13 +31,6 @@ if (isset($_SESSION['mensaje'])) {
     <section>
         <article>
         <?php
-            
-            //Redirigir si hay dos sesiones iniciadas
-            // if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
-            //     header("location:crearPartida.php");
-            //     exit;
-            // }
-
             if (isset($_POST['botonRegistro'])) {
                 //Obtener los datos ingresados en el formulario
                 $nombreUsuario = htmlspecialchars(trim($_POST['nombreUsuario'])); //Evitar inyecciones HTML y espacios

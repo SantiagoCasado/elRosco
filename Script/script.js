@@ -321,6 +321,17 @@ function mostrarGanador(jugador) {
     formularioJuego.appendChild(h1ganador);
 
     var h3puntaje = document.createElement('h3');
-    h3puntaje.innerHTML = "Ganaste el juego con un puntaje de X";
+    h3puntaje.innerHTML = "Ganaste el juego con un puntaje de " + jugador.puntaje;
     formularioJuego.appendChild(h3puntaje);
+
+    var botonJuegoNuevo = document.createElement('button');
+    botonJuegoNuevo.id = 'idBotonResultadoPartida';
+    botonJuegoNuevo.type = 'button';
+    botonJuegoNuevo.innerHTML = 'Jugar de nuevo';
+    botonJuegoNuevo.className = 'botonAceptar';
+    botonJuegoNuevo.onclick = function () {
+        window.location.href = 'crearPartida.php'
+    }
+
+    formularioJuego.appendChild(botonJuegoNuevo);
 }

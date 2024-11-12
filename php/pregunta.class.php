@@ -106,15 +106,31 @@ class Pregunta
       	  	error_log("Error al buscar la pregunta: " . $e->getMessage());
    		}
     }
-
+   
     public function actualizarEstadoPregunta($respuesta) {
-        if ($this -> palabra == $respuesta) {
+        $respuestaNormalizada = $this->normalizarPalabra($respuesta);
+        $palabraNormalizada = $this->normalizarPalabra($this->palabra);
+    
+        // Realiza la comparación
+        if ($palabraNormalizada === $respuestaNormalizada) {
             $estadoRespuesta = 'correcto';
         } else {
             $estadoRespuesta = 'incorrecto';
         }
-        $this -> setEstadoRespuesta($estadoRespuesta);
+    
+        $this->setEstadoRespuesta($estadoRespuesta);
         return $estadoRespuesta;
+    }
+
+    private function normalizarPalabra($palabra) {
+        // Llevar palabra a minuscula
+        $palabra = mb_strtolower($palabra, 'UTF-8');
+    
+        // Reemplazar acentos y eliminar caracteres especialespara hacer el juego mas versatil
+        $palabra = iconv('UTF-8', 'ASCII//TRANSLIT', $palabra); // Transformar caracteres en su version sin acento
+        $palabra = preg_replace('/[^a-z]/i', '', $palabra); // Eliminar caracteres especiales
+    
+        return $palabra;
     }
 
     public function cargarPreguntaBD($idPregunta) {

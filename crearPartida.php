@@ -14,6 +14,21 @@ if (isset($_SESSION['mensaje'])) {
     echo "<script type='text/javascript'>alert('$mensaje');</script>";
     unset($_SESSION['mensaje']);
 }
+
+
+unset($_SESSION['partida']);
+if (isset($_SESSION['partida'])) {
+    // Hay partida en juego
+    $partida = unserialize($_SESSION['partida']); 
+    if ($partida -> getGanador() == null) {
+        // No hay ganador, se redirige al juego
+        header("location:rosco.php");
+        exit;
+    } else {
+        // Hay ganador, se crea una nueva partida
+        unset($_SESSION['partida']);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -46,11 +61,11 @@ if (isset($_SESSION['mensaje'])) {
                         <option value="media">Media</option>
                         <option value="alta">Alta</option>
                     </select> -->
-                    <input type="radio" name = "radioNivelPartida" value="baja"><span class="radioLabel">Baja</span>
+                    <input type="radio" name = "radioNivelPartida" value="baja" required><span class="radioLabel">Baja</span>
                     <br>
-                    <input type="radio" name = "radioNivelPartida" value="media"><span class="radioLabel">Media</span>
+                    <input type="radio" name = "radioNivelPartida" value="media" required><span class="radioLabel">Media</span>
                     <br>
-                    <input type="radio" name = "radioNivelPartida" value="alta"><span class="radioLabel">Alta</span>
+                    <input type="radio" name = "radioNivelPartida" value="alta" required><span class="radioLabel">Alta</span>
                     <br><br>
                     <label class="labelFormulario" for="radioDuracionPartida">Seleccioná el <strong>tiempo</strong></label>
                     <!-- <select id="comboBox" name="comboBoxTiempoPartida">
@@ -59,11 +74,11 @@ if (isset($_SESSION['mensaje'])) {
                         <option value="3">3 minutos</option>
                         <option value="5">5 minutos</option>
                     </select>  -->
-                    <input type="radio" name = "radioDuracionPartida" value="2"><span class="radioLabel">2 minutos</span>
+                    <input type="radio" name = "radioDuracionPartida" value="2" required><span class="radioLabel">2 minutos</span>
                     <br>
-                    <input type="radio" name = "radioDuracionPartida" value="3"><span class="radioLabel">3 minutos</span>
+                    <input type="radio" name = "radioDuracionPartida" value="3" required><span class="radioLabel">3 minutos</span>
                     <br>
-                    <input type="radio" name = "radioDuracionPartida" value="5"><span class="radioLabel">5 minutos</span>
+                    <input type="radio" name = "radioDuracionPartida" value="5" required><span class="radioLabel">5 minutos</span>
                     
                     <br><br>
                     <label class="labelFormulario" for="checkboxAyuda">Marcá esta opción si deseas <strong>ayuda adicional</strong></label>
