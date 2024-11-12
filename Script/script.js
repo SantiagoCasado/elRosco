@@ -110,23 +110,14 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         formularioJuego.appendChild(respuesta);
         // Escribir directamente sin seleccionar el input
         respuesta.focus();
-        // Evitar envio de formulario (recarga de pagina) al presionar enter
-        // function eventoTeclaEnter(event) {
-        //     if (event.key === "Enter") {
-        //         event.preventDefault();
-        //         juegoRosco(jugador.idUsuario, pregunta.idPregunta);
-        //     }
-        // }
-        idUsuarioGlobal = jugador.idUsuario;
-        idPreguntaGlobal = pregunta.idPregunta;
-        respuesta.addEventListener('keydown', eventoTeclaEnter);
-        // respuesta.addEventListener("keydown", function(event) {
-        //     if (event.key === "Enter") {
-        //         event.preventDefault();
-        //         //enJuego = true;
-        //         juegoRosco(jugador.idUsuario, pregunta.idPregunta);
-        //     }
-        // });
+        // Llamar evento con la tecla enter - Evitar recargar pagina
+        respuesta.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                //enJuego = true;
+                juegoRosco(jugador.idUsuario, pregunta.idPregunta);
+            }
+        });
         formularioJuego.appendChild(document.createElement('br'));
         formularioJuego.appendChild(document.createElement('br'));
 
@@ -175,16 +166,6 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
             vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego)
         }
         formularioJuego.appendChild(botonComenzarTurno);
-    }
-}
-
-
-let idUsuarioGlobal;
-let idPreguntaGlobal;
-function eventoTeclaEnter(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        juegoRosco(idUsuarioGlobal, idPreguntaGlobal);
     }
 }
 
@@ -289,34 +270,33 @@ function actualizarPregunta(idUsuario, pregunta, letraSiguiente) {
         labelAyuda.innerHTML = '<br>Contiene ' + pregunta.palabra.length + ' letras';
     }
     
-    var respuesta = document.getElementById('idRespuesta');
-    respuesta.value = ''; 
-    respuesta.focus();
-    idUsuarioGlobal = idUsuario;
-    idPreguntaGlobal = pregunta.idPregunta;
-    // // Eliminar el evento anterior para actualizar correctamente el idPregunta
-    // respuesta.removeEventListener("keydown", eventoTeclaEnter);
-    // // function eventoTeclaEnter(event) {
-    // //     if (event.key === "Enter") {
-    // //         event.preventDefault();
-    // //         juegoRosco(idUsuario, pregunta.idPregunta);
-    // //     }
-    // // }
-    // respuesta.addEventListener('keydown', eventoTeclaEnter(idUsuario, pregunta.idPregunta));
-    // // respuesta.addEventListener("keydown", function(event) {
-    // //     if (event.key === "Enter") {
-    // //         juegoRosco(idUsuario, pregunta.idPregunta);
-    // //     }
-    // // });
-    
-    
 
-    // Actualizar la funcion a llamar
+    // Actualizar los parametros de la funcion a llamar en el boton Arriesgar
     var botonArriesgar = document.getElementById('idBotonArriesgar');
     botonArriesgar.onclick = function () {
         enJuego = true;
         juegoRosco(idUsuario, pregunta.idPregunta);
     }
+
+    // Eliminar el input anterior para actualizar correctamente el idPregunta
+    var formularioJuego = document.getElementById('idFormularioJuego');
+    formularioJuego.removeChild(document.getElementById('idRespuesta'));
+
+    // Crear un nuevo input
+    var respuesta = document.createElement('input');
+    respuesta.type = 'text'; 
+    respuesta.id = 'idRespuesta';
+    respuesta.name = 'respuesta';
+    respuesta.setAttribute('required', 'true');
+    formularioJuego.insertBefore(respuesta, botonArriesgar);
+    respuesta.focus();
+    respuesta.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            //enJuego = true;
+            juegoRosco(idUsuario, pregunta.idPregunta);
+        }
+    });    
 
     // Actualizar la siguiente letra
     var strLetra = document.getElementById('idLetraSiguiente');
