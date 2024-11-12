@@ -16,7 +16,6 @@ if (isset($_SESSION['mensaje'])) {
 }
 
 
-unset($_SESSION['partida']);
 if (isset($_SESSION['partida'])) {
     // Hay partida en juego
     $partida = unserialize($_SESSION['partida']); 

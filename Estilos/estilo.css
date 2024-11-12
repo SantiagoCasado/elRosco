@@ -273,6 +273,17 @@ button:hover {
     font-size: large;
 }
 
+.turnoDe0 {
+    color: #FF7F50;
+    font-weight: bold;
+
+}
+
+.turnoDe1 {
+    color: #50BFFF;
+    font-weight: bold;
+}
+
 /* Estilos para listas */
 ul, ol {
     padding-left: 20px;

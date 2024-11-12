@@ -52,9 +52,14 @@ function crearVistaRoscos(roscos) {
 
 
 function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego) {
-    // Poner adentro del formulario?
-    var h2Turno = document.getElementById('idTurnoDe');
-    h2Turno.innerHTML = jugador.nombreUsuario;
+
+    var formularioJuego = document.getElementById('idFormularioJuego');
+    formularioJuego.innerHTML = '';
+
+    var h2Turno = document.createElement('h2');
+    h2Turno.innerHTML = 'Turno de ' + jugador.nombreUsuario;
+    h2Turno.className = 'turnoDe' + turnoActual;
+    formularioJuego.appendChild(h2Turno);
 
     if (enJuego) {
         // VISTA FORMULARIO JUEGO
@@ -63,15 +68,13 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         iniciarTemporizador(jugador.idUsuario);
         
         // Mostrar letra y descripcion del rosco
-        var formularioJuego = document.getElementById('idFormularioJuego');
-        formularioJuego.innerHTML = '';
+
 
         // Creo la letra actual
         var h3Letra = document.createElement('h3');
         h3Letra.id = 'idLetra';
         h3Letra.innerHTML = 'Letra ' + pregunta.letra;
         formularioJuego.appendChild(h3Letra);
-        formularioJuego.appendChild(document.createElement('br'));
         
         // Creo el
         var labelDescripcion = document.createElement('label');
@@ -91,7 +94,6 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
             formularioJuego.appendChild(labelAyuda);
         }
         
-        formularioJuego.appendChild(document.createElement('br'));
         formularioJuego.appendChild(document.createElement('br'));
         var respuesta = document.createElement('input');
         respuesta.type = 'text'; 
@@ -133,7 +135,6 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         }
         formularioJuego.appendChild(botonPasapalabra);
         formularioJuego.appendChild(document.createElement('br'));
-        formularioJuego.appendChild(document.createElement('br'));
 
         var strLetra = document.createElement('p');
         strLetra.id = 'idLetraSiguiente';
@@ -142,20 +143,10 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
 
     } else {
         // VISTA CAMBIO TURNO
-        
-        // Detener temporizador Jugador actual
 
-        // Cambiar turno al siguiente jugador
-
-        // Vista cambio turno
         var strLetra = document.createElement('p');
         strLetra.innerHTML = 'Siguiente letra: ' + pregunta.letra;
-        h2Turno.appendChild(document.createElement('br'));
-        h2Turno.appendChild(strLetra);
-
-        var contenidoFormulario = document.getElementById('idFormularioJuego');
-        contenidoFormulario.innerHTML = '';
-        contenidoFormulario.method = 'GET';
+        formularioJuego.appendChild(strLetra);
 
         var botonComenzarTurno = document.createElement('button');
         botonComenzarTurno.innerHTML = 'Comenzar Turno';
@@ -164,7 +155,7 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
             enJuego = true;
             vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego)
         }
-        contenidoFormulario.appendChild(botonComenzarTurno);
+        formularioJuego.appendChild(botonComenzarTurno);
     }
 }
 
