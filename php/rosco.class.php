@@ -54,11 +54,11 @@ class Rosco
 
     public function asignarPreguntas() {
         //Se obtenienen las preguntas para cada letra del abecedario desde la base de datos
-        // $abecedario = [
-        //     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-        //     'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-        // ];
-        $abecedario = ['A'];
+        $abecedario = [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+            'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+        ];
+        //$abecedario = ['A'];
 
         foreach ($abecedario as $letra) {
 

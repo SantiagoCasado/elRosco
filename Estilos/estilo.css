@@ -92,6 +92,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .radioLabel {
@@ -119,6 +120,7 @@ button:hover {
 .botonAceptar {
     background-color: forestgreen;
     font-size: large;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* SECCIONES DEL JUEGO */
@@ -266,10 +268,16 @@ button:hover {
 .botonJuego0 {
     background-color: #FF7F50;
     font-size: large;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .botonJuego1 {
     background-color: #50BFFF;
+    font-size: large;
+}
+
+.botonPasapalabra {
+    background-color: #4caf50;
     font-size: large;
 }
 

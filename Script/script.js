@@ -56,6 +56,13 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
     var formularioJuego = document.getElementById('idFormularioJuego');
     formularioJuego.innerHTML = '';
 
+    // document.addEventListener('keydown', function(event) {
+    //     if (event.key === "Enter" && document.activeElement.closest('#idFormularioJuego')) {
+    //         event.preventDefault(); // Previene cualquier acción predeterminada asociada a `Enter`
+
+    //     }
+    // });
+
     var h2Turno = document.createElement('h2');
     h2Turno.innerHTML = 'Turno de ' + jugador.nombreUsuario;
     h2Turno.className = 'turnoDe' + turnoActual;
@@ -76,7 +83,7 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         h3Letra.innerHTML = 'Letra ' + pregunta.letra;
         formularioJuego.appendChild(h3Letra);
         
-        // Creo el
+        // Creo el label con la descripcion
         var labelDescripcion = document.createElement('label');
         labelDescripcion.id = 'idDescripcion'
         labelDescripcion.htmlFor = 'idRespuesta';
@@ -93,22 +100,33 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
             labelAyuda.innerHTML = '<br>Contiene ' + pregunta.palabra.length + ' letras';
             formularioJuego.appendChild(labelAyuda);
         }
-        
         formularioJuego.appendChild(document.createElement('br'));
+
         var respuesta = document.createElement('input');
         respuesta.type = 'text'; 
         respuesta.id = 'idRespuesta';
         respuesta.name = 'respuesta';
+        respuesta.setAttribute('required', 'true');
         formularioJuego.appendChild(respuesta);
         // Escribir directamente sin seleccionar el input
         respuesta.focus();
         // Evitar envio de formulario (recarga de pagina) al presionar enter
-        respuesta.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                juegoRosco(jugador.idUsuario, pregunta.idPregunta);
-            }
-        });
+        // function eventoTeclaEnter(event) {
+        //     if (event.key === "Enter") {
+        //         event.preventDefault();
+        //         juegoRosco(jugador.idUsuario, pregunta.idPregunta);
+        //     }
+        // }
+        idUsuarioGlobal = jugador.idUsuario;
+        idPreguntaGlobal = pregunta.idPregunta;
+        respuesta.addEventListener('keydown', eventoTeclaEnter);
+        // respuesta.addEventListener("keydown", function(event) {
+        //     if (event.key === "Enter") {
+        //         event.preventDefault();
+        //         //enJuego = true;
+        //         juegoRosco(jugador.idUsuario, pregunta.idPregunta);
+        //     }
+        // });
         formularioJuego.appendChild(document.createElement('br'));
         formularioJuego.appendChild(document.createElement('br'));
 
@@ -129,6 +147,7 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         var botonPasapalabra = document.createElement('button');
         botonPasapalabra.type = 'button';
         botonPasapalabra.innerHTML = 'Pasapalabra';
+        botonPasapalabra.className = 'botonPasapalabra';
         botonPasapalabra.onclick = function () {
             enJuego = false;
             pasapalabra(jugador.idUsuario);
@@ -156,6 +175,16 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
             vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego)
         }
         formularioJuego.appendChild(botonComenzarTurno);
+    }
+}
+
+
+let idUsuarioGlobal;
+let idPreguntaGlobal;
+function eventoTeclaEnter(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        juegoRosco(idUsuarioGlobal, idPreguntaGlobal);
     }
 }
 
@@ -263,11 +292,24 @@ function actualizarPregunta(idUsuario, pregunta, letraSiguiente) {
     var respuesta = document.getElementById('idRespuesta');
     respuesta.value = ''; 
     respuesta.focus();
-    respuesta.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            juegoRosco(idUsuario, pregunta.idPregunta);
-        }
-    });
+    idUsuarioGlobal = idUsuario;
+    idPreguntaGlobal = pregunta.idPregunta;
+    // // Eliminar el evento anterior para actualizar correctamente el idPregunta
+    // respuesta.removeEventListener("keydown", eventoTeclaEnter);
+    // // function eventoTeclaEnter(event) {
+    // //     if (event.key === "Enter") {
+    // //         event.preventDefault();
+    // //         juegoRosco(idUsuario, pregunta.idPregunta);
+    // //     }
+    // // }
+    // respuesta.addEventListener('keydown', eventoTeclaEnter(idUsuario, pregunta.idPregunta));
+    // // respuesta.addEventListener("keydown", function(event) {
+    // //     if (event.key === "Enter") {
+    // //         juegoRosco(idUsuario, pregunta.idPregunta);
+    // //     }
+    // // });
+    
+    
 
     // Actualizar la funcion a llamar
     var botonArriesgar = document.getElementById('idBotonArriesgar');
