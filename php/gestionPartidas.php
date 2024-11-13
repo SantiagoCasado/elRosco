@@ -94,13 +94,27 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
         );
     }
 
+    if ($partida -> getGanador() != null) {
+        // Termino el juego - Obtener el ganador
+        $ganador = $partida -> getGanador();
+        $ganador = array(
+            'idUsuario' => $ganador -> getId(),
+            'nombreUsuario' => $ganador -> getNombreUsuario(),
+            'puntaje' => $partida -> getPuntajes()[$ganador -> getID()],
+            'tiempo' => $partida -> getTIemposRestantes()[$ganador -> getID()]
+        );
+    } else {
+        $ganador = null;    
+    }
+
     if ($idPregunta == null && $preguntaRespondida == null) {
-        // PASAPALABRA
+        // PASAPALABRA O FIN DE TIEMPO (SIN RESPUESTA DEL JUGADOR)
         $resultadoJSON = array(
             'estadoPartida' => $estadoPartida,
             'pregunta' => $preguntaNueva,
             'jugadorActual' => $jugadorActual,
-            'jugadorAnterior' => $jugadorAnterior
+            'jugadorAnterior' => $jugadorAnterior,
+            'ganador' => $ganador
         );
     } else {
         // RESPUESTA
@@ -111,35 +125,15 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
             'palabra' => $preguntaRespondida -> getPalabra()
         );
 
-        if ($partida -> getGanador() != null) {
-            // Termino el juego - Obtener el ganador
-            $ganador = $partida -> getGanador();
-            $ganador = array(
-                'idUsuario' => $ganador -> getId(),
-                'nombreUsuario' => $ganador -> getNombreUsuario(),
-                'puntaje' => $partida -> getPuntajes()[$ganador -> getID()]
-            );
-
-            $resultadoJSON = array(
-                'estadoPartida' => $estadoPartida,
-                'respuesta' => $respuesta,
-                'pregunta' => $preguntaNueva,
-                'jugadorActual' => $jugadorActual,
-                'jugadorAnterior' => $jugadorAnterior,
-                'ganador' => $ganador
-            );
-        } else {
-            $resultadoJSON = array(
-                'estadoPartida' => $estadoPartida,
-                'respuesta' => $respuesta,
-                'pregunta' => $preguntaNueva,
-                'jugadorActual' => $jugadorActual,
-                'jugadorAnterior' => $jugadorAnterior,
-                'ganador' => null
-            );
-        }
-    }
-
+        $resultadoJSON = array(
+            'estadoPartida' => $estadoPartida,
+            'respuesta' => $respuesta,
+            'pregunta' => $preguntaNueva,
+            'jugadorActual' => $jugadorActual,
+            'jugadorAnterior' => $jugadorAnterior,
+            'ganador' => $ganador
+        );
+    } 
     return $resultadoJSON;
 }
 ?>

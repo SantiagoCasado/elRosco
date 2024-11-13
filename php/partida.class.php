@@ -22,7 +22,8 @@ class Partida {
     public function iniciarNuevaPartida($dificultad, $tiempoPartida, $ayuda, $jugadores) {
         $this -> idPartida = 1; // Por defecto hasta obtener el generado en la BD
         $this->dificultad = $dificultad;
-        $this->tiempoPartida = 60 * $tiempoPartida;
+        // $this->tiempoPartida = 60 * $tiempoPartida;
+        $this->tiempoPartida = $tiempoPartida;
         $this->ayuda = $ayuda;
         $this->jugadores = $jugadores;
         $this->roscos = array();
@@ -264,26 +265,46 @@ class Partida {
         return $preguntaRespondida;
     }
 
+    public function pasapalabra($idUsuarioActual, $tiempoRestante) {
+        // Guardar el tiempo restante
+        //$this -> actualizarTiempoJugador($idUsuarioActual, $tiempoRestante);
+
+        if ($tiempoRestante > 0) {
+            // El jugador paso palabra - sigue en juego
+            // Actualizar el rosco del jugador que paso la palabra
+            $roscoActual = $this -> getRoscos()[$idUsuarioActual];
+            $roscoActual -> pasapalabra();
+        }
+ 
+        // // Cambiar turno
+        // $this -> setEnJuego(false);
+        // $this -> cambiarTurno();
+        // $this -> verificarCambioTurno();
+    }
+
     public function actualizarEstadoJugador($idUsuario, $estadoRosco, $estadoRespuesta, $tiempoRestante) {
             // Si coincide y la respuesta es correcta
             if ($estadoRespuesta == 'correcto') {
                 // Si la respuesta es correcta
                 $this -> incrementarPuntaje($idUsuario);
-                $this -> setEnjuego(true);
                 
                 // Verificar el estado del rosco
                 if ($estadoRosco == 'completo') {
                     // Rosco completo - No quedan preguntas por responder
-                    // Se debe detener el juego
+                    // Se debe detener el juego del jugador actual
                     $this -> setEnJuego(false);
                     $this -> actualizarTiempoJugador($idUsuario, $tiempoRestante);
+
                     if (!($this -> verificarJuegoFinalizado())) {
                         // Juego no finalizado
                         $this -> cambiarTurno();
                     }
+                } else {
+                    // Contnua el jugador actual
+                    $this -> setEnjuego(true);
                 }
             } else {
-            // Respuesta incorrecta
+            // Respuesta incorrecta o jugador sin tiempo
             // Se debe detener el juego
             $this -> setEnJuego(false);
             $this -> actualizarTiempoJugador($idUsuario, $tiempoRestante);
@@ -296,20 +317,6 @@ class Partida {
             }
         }
     }    
-
-    public function pasapalabra($idUsuarioActual, $tiempoRestante) {
-        // Guardar el tiempo restante
-        $this -> actualizarTiempoJugador($idUsuarioActual, $tiempoRestante);
-
-        // Actualizar el rosco del jugador que paso la palabra
-        $roscoActual = $this -> getRoscos()[$idUsuarioActual];
-        $roscoActual -> pasapalabra();
-        
-        // Cambiar turno
-        $this -> setEnJuego(false);
-        $this -> cambiarTurno();
-        $this -> verificarCambioTurno();
-    }
 
     public function incrementarPuntaje($idUsuario) {
         $this -> puntajes[$idUsuario]++;
@@ -359,10 +366,11 @@ class Partida {
         $idUsuarioSiguiente = $usuarioSiguiente -> getID();
 
         $roscoSiguiente = $this -> getRoscos()[$idUsuarioSiguiente];
+        $tiempoSiguiente = $this -> getTiemposRestantes()[$idUsuarioSiguiente];
         
         // Si el siguiente jugador no tiene preguntas pendientes, el turno vuelve al jugador actual
-        if ($roscoSiguiente -> getEstadoRosco() == 'completo') {
-            // No tiene preguntas pendientes, termino su juego
+        if ($roscoSiguiente -> getEstadoRosco() == 'completo' || $tiempoSiguiente == 0) {
+            // No tiene preguntas pendientes o se le termino el tiempo: termino su juego
             // Sigue el jugador actual
             $this -> cambiarTurno();
         } 
@@ -371,19 +379,25 @@ class Partida {
     public function verificarJuegoFinalizado() {
         // Ver los estados de los roscos y el tiempo por jugador
         $jugador1 = $this->getJugadores()[0];
+        $roscoJugador1 = $this->getRoscos()[$jugador1->getID()]->getEstadoRosco();
+        $tiempoJugador1 = $this->getTiemposRestantes()[$jugador1->getID()];
+
         $jugador2 = $this->getJugadores()[1];
+        $roscoJugador2 = $this->getRoscos()[$jugador2->getID()]->getEstadoRosco();
+        $tiempoJugador2 = $this->getTiemposRestantes()[$jugador2->getID()];
+
 
         // Si el rosco esta completo => verdadero
         // Rosco Jugador 1
-        $r1 = $this->getRoscos()[$jugador1->getID()]->getEstadoRosco() == 'completo';
+        $r1 = $roscoJugador1 == 'completo';
         // Rosco Jugador 2
-        $r2 = $this->getRoscos()[$jugador2->getID()]->getEstadoRosco() == 'completo';
+        $r2 = $roscoJugador2 == 'completo';
         
         // Si el tiempo finalizo => verdadero
         // Tiempo Jugador 1
-        $t1 = $this->getTiemposRestantes()[$jugador1->getID()] == 0;
+        $t1 = $tiempoJugador1 == 0;
         // Tiempo Jugador 2
-        $t2 = $this->getTiemposRestantes()[$jugador2->getID()] == 0;
+        $t2 = $tiempoJugador2 == 0;
 
         // Para que la partida este finalizada:
         // F = R1*R2 + R1*T1 + R2*T1 + T1*T2

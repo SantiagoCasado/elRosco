@@ -73,7 +73,7 @@ if (isset($_SESSION['partida'])) {
                         <option value="3">3 minutos</option>
                         <option value="5">5 minutos</option>
                     </select>  -->
-                    <input type="radio" name = "radioDuracionPartida" value="2" required><span class="radioLabel">2 minutos</span>
+                    <input type="radio" name = "radioDuracionPartida" value="10" required><span class="radioLabel">2 minutos</span>
                     <br>
                     <input type="radio" name = "radioDuracionPartida" value="3" required><span class="radioLabel">3 minutos</span>
                     <br>

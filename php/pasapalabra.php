@@ -9,6 +9,10 @@ if (isset($_POST['idUsuario'], $_POST['idUsuario'])) {
     
     // Actualizar el estado de la partida - Cambiar turno y arreglo de las preguntas
     $partida -> pasapalabra($idUsuario, $tiempoRestante);
+    $partida -> actualizarEstadoJugador($idUsuario,
+                                        null,
+                                        null,
+                                        $tiempoRestante); // no hay respuesta ni estado rosco (null)
     $_SESSION['partida'] = serialize($partida);
     
     if (is_null($partida) || empty($partida)) {

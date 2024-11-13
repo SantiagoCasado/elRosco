@@ -52,11 +52,11 @@ function crearVistaRoscos(roscos) {
 
 function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego) {
 
-
     var formularioJuego = document.getElementById('idFormularioJuego');
     formularioJuego.innerHTML = '';
 
     var h2Turno = document.createElement('h2');
+    h2Turno.id = 'idTurnoDe'
     h2Turno.innerHTML = 'Turno de ' + jugador.nombreUsuario;
     h2Turno.className = 'turnoDe' + turnoActual;
     formularioJuego.appendChild(h2Turno);
@@ -134,7 +134,7 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         botonPasapalabra.className = 'botonPasapalabra';
         botonPasapalabra.onclick = function () {
             enJuego = false;
-            pasapalabra(jugador.idUsuario);
+            cambiarTurno(jugador.idUsuario);
         }
         formularioJuego.appendChild(botonPasapalabra);
         formularioJuego.appendChild(document.createElement('br'));
@@ -162,7 +162,7 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
     }
 }
 
-function pasapalabra(idUsuario) {
+function cambiarTurno(idUsuario) {
     // Detener temporizador
     correrTiempo = false;
     controlTemporizador(idUsuario, null, correrTiempo);
@@ -174,23 +174,28 @@ function pasapalabra(idUsuario) {
 
     var peticion = new XMLHttpRequest();
     peticion.open("POST", "php/pasapalabra.php", true); // Relativo a la vista (rosco.php)
-    peticion.onreadystatechange = cambiarTurno;
+    peticion.onreadystatechange = respuestaCambioTurno;
     peticion.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     peticion.send(parametros);
 
-        function cambiarTurno() {
+        function respuestaCambioTurno() {
 
             if ((peticion.readyState == 4) && (peticion.status==200)) {
                 console.log(peticion.responseText);
                 resultado = JSON.parse(peticion.responseText);
 
-                vistaInteraccion(resultado.jugadorActual,
-                                resultado.pregunta, 
-                                resultado.pregunta.letraSiguiente, 
-                                resultado.estadoPartida.turnoActual, 
-                                resultado.estadoPartida.ayudaAdicional, 
-                                resultado.jugadorActual.tiempoRestante,
-                                resultado.estadoPartida.enJuego);
+                // Verificar si hay ganador
+                if (resultado.ganador != null) {
+                    mostrarGanador(resultado.ganador);
+                } else {
+                    vistaInteraccion(resultado.jugadorActual,
+                        resultado.pregunta, 
+                        resultado.pregunta.letraSiguiente, 
+                        resultado.estadoPartida.turnoActual, 
+                        resultado.estadoPartida.ayudaAdicional, 
+                        resultado.jugadorActual.tiempoRestante,
+                        resultado.estadoPartida.enJuego);
+                }
             }
         }
 }
@@ -337,8 +342,10 @@ function controlTemporizador(idUsuario, segundos, correrTiempo) {
 
             if (--tiempo < 0) {
                 // Termino el juego del jugador
+                temporizadorVista.innerHTML = 0;
                 clearInterval(temporizador);
-                jugadorSinTiempo(idUsuario);
+
+                cambiarTurno(idUsuario);
             } 
         }, 1000);
         temporizadorVista.dataset.temporizador = temporizador;
@@ -351,16 +358,7 @@ function actualizarVistaTemporizador(temporizador, tiempo) {
     temporizador.innerHTML = tiempo;
 }
 
-function detenerTemporizador(idUsuario) {
-    //console.log("Detener Temporizador");
-}
-
-function jugadorSinTiempo(idUsuario) {
-    console.log('jugador sin tiempo: ' + idUsuario);
-}
-
 function mostrarGanador(jugador) {
-    // Esto es temporal hasta acomodar la vista del formulario?
     var h2Turno = document.getElementById('idTurnoDe');
     h2Turno.innerHTML = '';
 
