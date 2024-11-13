@@ -42,7 +42,10 @@ class BaseDatos
         return $resultado;
     }
 
-
+    public function getIdInsertado() {
+        return $this -> conexion -> insert_id;
+    }
+    
     public function cerrarBD() {
         $this -> conexion -> close();
     }

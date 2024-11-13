@@ -40,20 +40,6 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
         'puntajeJugador2' => $puntajeJugador2,
     );
 
-    // $tiempoJugador1 = array(
-    //     'idUsuario' => $partida -> getJugadores()[0] -> getID(),
-    //     'tiempo' => $partida -> getTiemposRestantes()[$partida -> getJugadores()[0] -> getID()]
-    // );
-    // $tiempoJugador2 = array(
-    //     'idUsuario' => $partida -> getJugadores()[1] -> getID(),
-    //     'tiempo' => $partida -> getTiemposRestantes()[$partida -> getJugadores()[1] -> getID()]
-    // );
-    
-    // $tiempoRestantes = array(
-    //     'tiempoJugador1' => $tiempoJugador1,
-    //     'tiempoJugador2' => $tiempoJugador2
-    // );
-
     $enJuego = $partida -> getEnJuego();
 
     $estadoPartida = array(

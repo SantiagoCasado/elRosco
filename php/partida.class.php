@@ -20,7 +20,6 @@ class Partida {
     }
 
     public function iniciarNuevaPartida($dificultad, $tiempoPartida, $ayuda, $jugadores) {
-        $this -> idPartida = 1; // Por defecto hasta obtener el generado en la BD
         $this->dificultad = $dificultad;
         $this->tiempoPartida = 60 * $tiempoPartida;
         $this->ayuda = $ayuda;
@@ -149,8 +148,8 @@ class Partida {
         }
     }
     
-    public function guardarPartidaBD() {
-        //Guardar partida en la base de datos
+    public function crearPartidaBD() {
+        //Crear partida en la base de datos
         try {
             $bd = new BaseDatos();
             $conexion = $bd->conectarBD();
@@ -165,9 +164,17 @@ class Partida {
             $bd -> consulta($sqlPartida);
 
             //Obtener el ID de la partida guardada y asignarselo al objeto
-            $idPartida = $conexion->insert_id;
-            $this -> setIdPartida($idPartida);
-    
+            //$idPartida = $bd -> getIdInsertado();
+            $sqlUltimoIDInsertado = "SELECT LAST_INSERT_ID()"; // Consulta para obtener el ultimo id generado en la bd
+            $resultadoConsulta = $bd->consulta($sqlUltimoIDInsertado);
+             if ($registro = $resultadoConsulta->fetch_assoc()) {
+                $idPartida = $registro['LAST_INSERT_ID()'];
+                $this -> setIdPartida($idPartida);
+                // echo 'idPartida: ' . $idPartida;
+                // echo '<br> partida -> idPartida ' . $this -> getIdPartida();
+             }
+            $resultadoConsulta -> free();
+
             // Guardar cada usuario y su respectivo rosco para la partida (PARTIDA_USUARIO)
             foreach ($this->jugadores as $jugador) {
                 // Obtener rosco para cada usuario
@@ -178,21 +185,46 @@ class Partida {
                 $bd -> consulta($sqlRosco);
 
                 // Obtener el idRosco generado y asignarselo al objeto
-                $idRosco = $conexion -> insert_id;
-                $rosco -> setIdRosco($idRosco);
+                $sqlUltimoIDInsertado = "SELECT LAST_INSERT_ID()"; // Consulta para obtener el ultimo id generado en la bd
+                $resultadoConsulta = $bd->consulta($sqlUltimoIDInsertado);
+                if ($registro = $resultadoConsulta->fetch_assoc()) {
+                    
+                    $idRosco = $registro['LAST_INSERT_ID()'];
+                    $rosco -> setIdRosco($idRosco);
+
+                    // echo '<br>idRosco: ' . $idRosco;
+                    // echo '<br> rosco -> idRosco ' . $rosco -> getIdRosco();
+                }
+                $resultadoConsulta -> free();
 
                 $sqlPartidaUsuario = "INSERT INTO partida_usuario (idPartida, idUsuario, tiempoRestante, idRosco) 
                                       VALUES ('$idPartida', '" . $jugador->getID() . "', '$tiempoPartidaSQL', '$idRosco')";
                 $bd -> consulta($sqlPartidaUsuario);
     
                 // Guardar las preguntas asignadas al rosco (ROSCO_PREGUNTA)
-                $resultadoRoscoPregunta = array();
                 foreach ($rosco->getPreguntasPendientes() as $pregunta) {
-                    $sqlPartidaUsuario = "INSERT INTO rosco_pregunta (idRosco, idPregunta, estadoRespuesta) 
+                    $sqlRoscoPregunta = "INSERT INTO rosco_pregunta (idRosco, idPregunta, estadoRespuesta) 
                                         VALUES ('$idRosco', '" . $pregunta->getIdPregunta() . "', 'sinResponder')";
-                    $bd -> consulta($sqlPartidaUsuario);
+                    $bd -> consulta($sqlRoscoPregunta);
                 }
             }
+
+            // HISTORIAL
+            $idUsuario1 = $this -> getJugadores()[0] -> getID();
+            $idUsuario2 = $this -> getJugadores()[1] -> getID();
+
+            $sqlExisteHistorial = "SELECT * FROM HISTORIAL
+                                WHERE (idUsuario1 = '$idUsuario1' AND idUsuario2 = '$idUsuario2')
+                                OR (idUsuario1 = '$idUsuario2' AND idUsuario2 = '$idUsuario1')";
+            $resultadoConsulta = $bd -> consulta($sqlExisteHistorial);
+
+            if ($resultadoConsulta->num_rows == 0) {
+                $sqlHistorial = "INSERT INTO HISTORIAL (idUsuario1, idUsuario2, victoriasJugador1, victoriasJugador2)
+                                VALUES ('$idUsuario1', '$idUsuario2', 0, 0);";
+                $bd -> consulta($sqlHistorial);
+            }
+            $resultadoConsulta -> free();
+
             // Confirmar la transacción
             $conexion->commit();
             $bd->cerrarBD();
@@ -202,9 +234,107 @@ class Partida {
         } catch (Exception $e) {
             // Revertir la transacción en caso de error
             $conexion->rollback();
-            return error_log("Error al guardar la partida: " . $e->getMessage());
-            //return "Hubo un error al guardar la partida.";
+            return error_log("Error al crear la partida en la base de datos: " . $e->getMessage());
         }
+    }
+
+    public function guardarPartidaBD() {
+        //Guardar partida en la base de datos
+        try {
+            $bd = new BaseDatos();
+            $conexion = $bd->conectarBD();
+            
+            // Iniciar la transacción
+            $conexion->begin_transaction();
+            
+            // Guardar la partida (PARTIDA)
+            $idGanador = $this -> getGanador() -> getID();
+            $idPartida = $this -> getIdPartida();
+            $sqlPartida = "UPDATE partida 
+                            SET ganador = '$idGanador'
+                            WHERE idPartida = '$idPartida'";
+            $bd -> consulta($sqlPartida);
+            error_log("Partida actualizada con id: $idPartida y ganador: $idGanador");
+            
+            // Guardar cada usuario y su respectivo rosco para la partida (PARTIDA_USUARIO)
+            foreach ($this->jugadores as $jugador) {
+                // Obtener rosco para cada usuario
+                $idUsuario = $jugador -> getID();
+                $rosco = $this -> roscos[$idUsuario];
+                
+                // ROSCO
+                $idRosco = $rosco -> getIdRosco();
+                $sqlRosco = "UPDATE rosco 
+                            SET estadoRosco = 'completo'
+                            WHERE idRosco = '$idRosco'";
+                $bd -> consulta($sqlRosco);
+                error_log("Rosco actualizado con id: $idRosco");
+                
+                $puntaje = $this -> getPuntajes()[$idUsuario];
+                $tiempoRestante = $this -> getTiemposRestantes()[$idUsuario];
+                $minutos = $tiempoRestante / 60;
+                $segundos = $tiempoRestante % 60;
+
+                // PARTIDA_USUARI0
+                $tiempoRestanteSQL = sprintf('%02d:%02d:%02d', 0, $minutos, $segundos);
+                $sqlPartidaUsuario = "UPDATE partida_usuario
+                                    SET 
+                                        puntaje = '$puntaje',
+                                        tiempoRestante = '$tiempoRestanteSQL'
+                                    WHERE
+                                        idPartida = '$idPartida' AND
+                                        idUsuario = '$idUsuario'";
+                $bd -> consulta($sqlPartidaUsuario);
+                error_log("Partida_usuario actualizada para usuario: $idUsuario");
+
+                // Guardar las preguntas asignadas al rosco (ROSCO_PREGUNTA)
+                // Se actualizan solo las preguntas arriesgadas por que son las que cambiaron de estado (correcto o incorrecto)
+                foreach ($rosco->getPreguntasArriesgadas() as $pregunta) {
+                    $estadoRespuesta = $pregunta -> getEstadoRespuesta();
+                    $idPregunta = $pregunta -> getIdPregunta();
+
+                    // ROSCO_PREGUNTA
+                    $sqlRoscoPregunta = "UPDATE rosco_pregunta
+                                        SET estadoRespuesta = '$estadoRespuesta'
+                                        WHERE
+                                            idPregunta = '$idPregunta' AND
+                                            idRosco = '$idRosco'";
+                    $bd -> consulta($sqlRoscoPregunta);
+                    error_log("Rosco_pregunta actualizada con idPregunta: $idPregunta para idRosco: $idRosco");
+                }
+            }
+
+            // HISTORIAL
+            $idGanador = $this -> getGanador() -> getID();
+            $idUsuario1 = $this -> getJugadores()[0] -> getID();
+            $idUsuario2 = $this -> getJugadores()[1] -> getID();
+
+
+            $sqlHistorial = "UPDATE HISTORIAL 
+                            SET victoriasJugador1 = CASE
+                                WHEN idUsuario1 = '$idGanador' THEN victoriasJugador1 + 1
+                                ELSE victoriasJugador1
+                                END,
+                                victoriasJugador2 = CASE
+                                WHEN idUsuario2 = '$idGanador' THEN victoriasJugador2 + 1
+                                ELSE victoriasJugador2
+                                END
+                            WHERE (idUsuario1 = '$idUsuario1' AND idUsuario2 = '$idUsuario2') 
+                                OR (idUsuario1 = '$idUsuario2' AND idUsuario2 = '$idUsuario1');";
+            $bd -> consulta($sqlHistorial);
+            error_log("Historial actualizado para usuarios: $idUsuario1 y $idUsuario2");
+
+            // Confirmar la transacción
+            $conexion->commit();
+            error_log("Transacción completada");
+            $bd->cerrarBD();                 
+        } catch (Exception $e) {
+            // Revertir la transacción en caso de error
+            $conexion->rollback();
+            
+            return error_log("Error al guardar la partida en la base de datos: " . $e->getMessage());
+        }
+                
     }
 
     public function cargarPartidaBD($idPartida) {
@@ -274,11 +404,6 @@ class Partida {
             $roscoActual = $this -> getRoscos()[$idUsuarioActual];
             $roscoActual -> pasapalabra();
         }
- 
-        // // Cambiar turno
-        // $this -> setEnJuego(false);
-        // $this -> cambiarTurno();
-        // $this -> verificarCambioTurno();
     }
 
     public function actualizarEstadoJugador($idUsuario, $estadoRosco, $estadoRespuesta, $tiempoRestante) {
@@ -436,6 +561,7 @@ class Partida {
                 $this -> setGanador($ganador);
             }
         }
+        $this -> guardarPartidaBD();
     }
 }
 ?>

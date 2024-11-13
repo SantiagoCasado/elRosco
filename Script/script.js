@@ -242,6 +242,11 @@ function juegoRosco(idUsuario, idPregunta) {
                 
                 // Verificar si hay ganador
                 if (resultado.ganador != null) {
+                    // Detener temporizador
+                    correrTiempo = false;
+                    controlTemporizador(resultado.jugadorAnterior.idUsuario, null, correrTiempo);
+                    controlTemporizador(resultado.jugadorActual.idUsuario, null, correrTiempo);
+                         
                     mostrarGanador(resultado.ganador);
                 } else {
                     if (resultado.estadoPartida.enJuego) {

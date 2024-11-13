@@ -32,18 +32,18 @@ if (!isset($_SESSION['partida'])) {
             $ayudaAdicional = 0;
         }
         
-        // if (!isset($_SESSION['partida'])) {
-            //Instanciar la partida
+            // if (!isset($_SESSION['partida'])) {
+        //Instanciar la partida
         $partida = new Partida();
         $partida -> iniciarNuevaPartida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
             
-            // Guardar partida en sesion
+        //Guardar la partida y el idPartida generado en la base de datos y en sesion respectivamente
+        $idPartida = $partida -> crearPartidaBD();
+        $_SESSION['idPartida'] = $idPartida;
+
+        // Guardar partida en sesion
         $_SESSION['partida'] = serialize($partida);
-            
-        // Guardar la partida y el idPartida generado en la base de datos y en sesion respectivamente
-        //$idPartida = $partida -> guardarPartidaBD();
-        //$_SESSION['idPartida'] = $idPartida;
-        // }
+        //}
     } else {
         $mensaje = 'Debe crear una partida para jugar';
         $_SESSION['mensaje'] = $mensaje;
