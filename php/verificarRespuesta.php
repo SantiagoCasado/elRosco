@@ -7,12 +7,14 @@ if (isset($_POST['respuesta'])) {
     $idUsuario = $_POST['idUsuario'];
     $idPregunta = $_POST['idPregunta'];
     $tiempoRestante = $_POST['tiempoRestante'];
-    //$respuesta = $_POST['respuesta'];
     $respuesta = htmlspecialchars(trim($_POST['respuesta']));
 
     // Obtengo el estado de respuestas, actualizo el objeto Partida y guardo en sesion
     $preguntaRespondida = $partida->verificarRespuesta($idUsuario, $idPregunta, $respuesta); //FIJARSE DE SACAR O NO EL IDPREGUNTA
-    $partida -> actualizarEstadoJugador($idUsuario, $partida -> getRoscos()[$idUsuario] -> getEstadoRosco(), $preguntaRespondida -> getEstadoRespuesta(), $tiempoRestante); //actualizarEstadoJugador($idUsuario, $estadoRosco, $estadoRespuesta, $tiempoRestante)
+    $partida -> actualizarEstadoJugador($idUsuario,
+                                        $partida -> getRoscos()[$idUsuario] -> getEstadoRosco(),
+                                        $preguntaRespondida -> getEstadoRespuesta(),
+                                        $tiempoRestante);
     $_SESSION['partida'] = serialize($partida);
 
     if (is_null($preguntaRespondida) || empty($preguntaRespondida)) {

@@ -271,13 +271,12 @@ class Partida {
                 $this -> incrementarPuntaje($idUsuario);
                 $this -> setEnjuego(true);
                 
-                
-                
                 // Verificar el estado del rosco
                 if ($estadoRosco == 'completo') {
                     // Rosco completo - No quedan preguntas por responder
                     // Se debe detener el juego
                     $this -> setEnJuego(false);
+                    $this -> actualizarTiempoJugador($idUsuario, $tiempoRestante);
                     if (!($this -> verificarJuegoFinalizado())) {
                         // Juego no finalizado
                         $this -> cambiarTurno();
@@ -287,6 +286,8 @@ class Partida {
             // Respuesta incorrecta
             // Se debe detener el juego
             $this -> setEnJuego(false);
+            $this -> actualizarTiempoJugador($idUsuario, $tiempoRestante);
+            
             if (!$this -> verificarJuegoFinalizado()) {
                 $this -> cambiarTurno();
                 $this -> verificarCambioTurno();
@@ -296,7 +297,10 @@ class Partida {
         }
     }    
 
-    public function pasapalabra($idUsuarioActual) {
+    public function pasapalabra($idUsuarioActual, $tiempoRestante) {
+        // Guardar el tiempo restante
+        $this -> actualizarTiempoJugador($idUsuarioActual, $tiempoRestante);
+
         // Actualizar el rosco del jugador que paso la palabra
         $roscoActual = $this -> getRoscos()[$idUsuarioActual];
         $roscoActual -> pasapalabra();
@@ -311,6 +315,10 @@ class Partida {
         $this -> puntajes[$idUsuario]++;
     }
 
+    public function actualizarTiempoJugador($idUsuario, $tiempoRestante) {
+        $this -> tiemposRestantes[$idUsuario] = $tiempoRestante;
+    }
+
     public function actualizarEstadoJugadorBD($idPartida, $idUsuario, $tiempoRestante, $puntaje) {
         // Antes de cambiar turno se actualiza la BD para tener un back up
         try {
@@ -318,8 +326,8 @@ class Partida {
             $conexion = $bd->conectarBD();
             
             // Actualizar tiempo restante y puntaje (PARTIDA_USUARIO)
-            $minutos = $tiempoRestante / 60;
-            $segundos = $tiempoRestante % 60;
+            $minutos = (int)$tiempoRestante / 60;
+            $segundos = (int)$tiempoRestante % 60;
             $tiempoRestanteSQL = sprintf('%02d:%02d:%02d', 0, $minutos, $segundos); // Se pasa de entero a minutos y segundos
             $sqlPartidaUsuario = 
                                 "UPDATE partida_usuario 
@@ -361,13 +369,25 @@ class Partida {
     }
 
     public function verificarJuegoFinalizado() {
-        // Ver los estados de los roscos
+        // Ver los estados de los roscos y el tiempo por jugador
         $jugador1 = $this->getJugadores()[0];
         $jugador2 = $this->getJugadores()[1];
-        $roscoJugador1 = $this->getRoscos()[$jugador1->getID()];
-        $roscoJugador2 = $this->getRoscos()[$jugador2->getID()];
 
-        if ($roscoJugador1->getEstadoRosco() == 'completo' && $roscoJugador2->getEstadoRosco() == 'completo') {
+        // Si el rosco esta completo => verdadero
+        // Rosco Jugador 1
+        $r1 = $this->getRoscos()[$jugador1->getID()]->getEstadoRosco() == 'completo';
+        // Rosco Jugador 2
+        $r2 = $this->getRoscos()[$jugador2->getID()]->getEstadoRosco() == 'completo';
+        
+        // Si el tiempo finalizo => verdadero
+        // Tiempo Jugador 1
+        $t1 = $this->getTiemposRestantes()[$jugador1->getID()] == 0;
+        // Tiempo Jugador 2
+        $t2 = $this->getTiemposRestantes()[$jugador2->getID()] == 0;
+
+        // Para que la partida este finalizada:
+        // F = R1*R2 + R1*T1 + R2*T1 + T1*T2
+        if (($r1 && $r2) || ($r1 && $t1) || ($r2 && $t1) || ($t1 && $t2)) {
             $this->definirGanador($jugador1, $jugador2);
 
             // Actualizar partida en BD

@@ -24,6 +24,7 @@ function cargarPartidaSesion() {
 
 function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
     $turnoActual = $partida->getTurnoActual();
+    $turnoAnterior = $turnoActual == 1 ? 0 : 1; // Se pasa el jugador contrario al jugador actual
     
     // Se pasa el puntaje de ambos jugadores para que no dependa del jugador que tiene el turno
     $puntajeJugador1 = array(
@@ -39,6 +40,20 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
         'puntajeJugador2' => $puntajeJugador2,
     );
 
+    // $tiempoJugador1 = array(
+    //     'idUsuario' => $partida -> getJugadores()[0] -> getID(),
+    //     'tiempo' => $partida -> getTiemposRestantes()[$partida -> getJugadores()[0] -> getID()]
+    // );
+    // $tiempoJugador2 = array(
+    //     'idUsuario' => $partida -> getJugadores()[1] -> getID(),
+    //     'tiempo' => $partida -> getTiemposRestantes()[$partida -> getJugadores()[1] -> getID()]
+    // );
+    
+    // $tiempoRestantes = array(
+    //     'tiempoJugador1' => $tiempoJugador1,
+    //     'tiempoJugador2' => $tiempoJugador2
+    // );
+
     $enJuego = $partida -> getEnJuego();
 
     $estadoPartida = array(
@@ -50,9 +65,14 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
 
     // Actualizar el usuario
     $usuario = $partida->getJugadores()[$turnoActual];
-    $jugador = array(
+    $jugadorActual = array(
         'idUsuario' => $usuario -> getId(),
-        'nombreUsuario' => $usuario -> getNombreUsuario()
+        'nombreUsuario' => $usuario -> getNombreUsuario(),
+        'tiempoRestante' => $partida -> getTiemposRestantes()[$usuario -> getID()]
+    );
+
+    $jugadorAnterior = array(
+        'idUsuario' => $partida->getJugadores()[$turnoAnterior] -> getID()
     );
     
     // Actualizar la pregunta
@@ -79,7 +99,8 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
         $resultadoJSON = array(
             'estadoPartida' => $estadoPartida,
             'pregunta' => $preguntaNueva,
-            'jugador' => $jugador
+            'jugadorActual' => $jugadorActual,
+            'jugadorAnterior' => $jugadorAnterior
         );
     } else {
         // RESPUESTA
@@ -91,9 +112,7 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
         );
 
         if ($partida -> getGanador() != null) {
-            // Termino el juego
-
-            // Obtener el ganador
+            // Termino el juego - Obtener el ganador
             $ganador = $partida -> getGanador();
             $ganador = array(
                 'idUsuario' => $ganador -> getId(),
@@ -105,7 +124,8 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
                 'estadoPartida' => $estadoPartida,
                 'respuesta' => $respuesta,
                 'pregunta' => $preguntaNueva,
-                'jugador' => $jugador,
+                'jugadorActual' => $jugadorActual,
+                'jugadorAnterior' => $jugadorAnterior,
                 'ganador' => $ganador
             );
         } else {
@@ -113,7 +133,8 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
                 'estadoPartida' => $estadoPartida,
                 'respuesta' => $respuesta,
                 'pregunta' => $preguntaNueva,
-                'jugador' => $jugador,
+                'jugadorActual' => $jugadorActual,
+                'jugadorAnterior' => $jugadorAnterior,
                 'ganador' => null
             );
         }

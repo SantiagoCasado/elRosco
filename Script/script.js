@@ -5,7 +5,7 @@ function crearVistaJuego(partida) {
     jugadorActual = partida.jugadores[partida.turnoActual];
     pregunta = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0];
     letraSiguiente = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0].letra
-    vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, enJuego);
+    vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
 }
 
 function crearVistaRoscos(roscos) {
@@ -50,18 +50,11 @@ function crearVistaRoscos(roscos) {
     });
 }
 
+function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego) {
 
-function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego) {
 
     var formularioJuego = document.getElementById('idFormularioJuego');
     formularioJuego.innerHTML = '';
-
-    // document.addEventListener('keydown', function(event) {
-    //     if (event.key === "Enter" && document.activeElement.closest('#idFormularioJuego')) {
-    //         event.preventDefault(); // Previene cualquier acción predeterminada asociada a `Enter`
-
-    //     }
-    // });
 
     var h2Turno = document.createElement('h2');
     h2Turno.innerHTML = 'Turno de ' + jugador.nombreUsuario;
@@ -72,10 +65,10 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         // VISTA FORMULARIO JUEGO
 
         // Iniciar temporizador del jugador
-        iniciarTemporizador(jugador.idUsuario);
+        correrTiempo = true;
+        controlTemporizador(jugador.idUsuario, tiempoRestante, correrTiempo);
         
         // Mostrar letra y descripcion del rosco
-
 
         // Creo la letra actual
         var h3Letra = document.createElement('h3');
@@ -163,16 +156,22 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         botonComenzarTurno.className = 'botonJuego' + turnoActual;
         botonComenzarTurno.onclick = function () {
             enJuego = true;
-            vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, enJuego)
+            vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego)
         }
         formularioJuego.appendChild(botonComenzarTurno);
     }
 }
 
 function pasapalabra(idUsuario) {
-    detenerTemporizador(idUsuario);
+    // Detener temporizador
+    correrTiempo = false;
+    controlTemporizador(idUsuario, null, correrTiempo);
 
-    var parametros = "idUsuario=" + idUsuario;
+    var tiempoRestante = document.getElementById('tiempoJugador' + idUsuario).innerHTML;
+
+    var parametros = "idUsuario=" + idUsuario
+                    + "&tiempoRestante=" + tiempoRestante;
+
     var peticion = new XMLHttpRequest();
     peticion.open("POST", "php/pasapalabra.php", true); // Relativo a la vista (rosco.php)
     peticion.onreadystatechange = cambiarTurno;
@@ -184,9 +183,14 @@ function pasapalabra(idUsuario) {
             if ((peticion.readyState == 4) && (peticion.status==200)) {
                 console.log(peticion.responseText);
                 resultado = JSON.parse(peticion.responseText);
-            
-                //enJuego = false;
-                vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, resultado.estadoPartida.enJuego);
+
+                vistaInteraccion(resultado.jugadorActual,
+                                resultado.pregunta, 
+                                resultado.pregunta.letraSiguiente, 
+                                resultado.estadoPartida.turnoActual, 
+                                resultado.estadoPartida.ayudaAdicional, 
+                                resultado.jugadorActual.tiempoRestante,
+                                resultado.estadoPartida.enJuego);
             }
         }
 }
@@ -194,11 +198,12 @@ function pasapalabra(idUsuario) {
 function juegoRosco(idUsuario, idPregunta) {
 
     var respuesta = document.getElementById('idRespuesta').value;
+    var tiempoRestante = document.getElementById('tiempoJugador' + idUsuario).innerHTML;
 
     var parametros = "idUsuario=" + idUsuario
                     + "&idPregunta=" + idPregunta
                     + "&respuesta=" + respuesta
-                    + "&tiempoRestante=" + 0;
+                    + "&tiempoRestante=" + tiempoRestante;
     
     var peticion = new XMLHttpRequest();
     peticion.open("POST", "php/verificarRespuesta.php", true); // Relativo a la vista (rosco.php)
@@ -226,16 +231,26 @@ function juegoRosco(idUsuario, idPregunta) {
                 if (resultado.ganador != null) {
                     mostrarGanador(resultado.ganador);
                 } else {
-                    // Si la respuesta es correcta y el rosco no esta completo
                     if (resultado.estadoPartida.enJuego) {
-                        // Actualizar pregunta
-                        actualizarPregunta(resultado.jugador.idUsuario, resultado.pregunta, resultado.pregunta.letraSiguiente)
+                        // Si la respuesta es correcta y el rosco no esta completo
+                        
+                        //Actualizar pregunta
+                        actualizarPregunta(resultado.jugadorActual.idUsuario, resultado.pregunta, resultado.pregunta.letraSiguiente)
     
                     } else {
+                        // Respuesta incorrecta
+
                         // Detener temporizador
-                        detenerTemporizador();
+                        correrTiempo = false;
+                        controlTemporizador(resultado.jugadorAnterior.idUsuario, null, correrTiempo);
                         // Cambiar turno   
-                        vistaInteraccion(resultado.jugador, resultado.pregunta, resultado.pregunta.letraSiguiente, resultado.estadoPartida.turnoActual, resultado.estadoPartida.ayudaAdicional, resultado.estadoPartida.enJuego);
+                        vistaInteraccion(resultado.jugadorActual, 
+                                        resultado.pregunta, 
+                                        resultado.pregunta.letraSiguiente, 
+                                        resultado.estadoPartida.turnoActual, 
+                                        resultado.estadoPartida.ayudaAdicional, 
+                                        resultado.jugadorActual.tiempoRestante, 
+                                        resultado.estadoPartida.enJuego);
                     }
                 }
             } catch (e) {
@@ -308,17 +323,40 @@ function actualizarPuntaje(idUsuario, puntaje) {
     textoPuntaje.innerHTML = puntaje;
 }
 
-function iniciarTemporizador(segundos) {
-    //console.log("Iniciar Temporizador");
+function controlTemporizador(idUsuario, segundos, correrTiempo) {   
+    // Se obtiene el elemento que muestra el tiempo del jugador
+    var temporizadorVista = document.getElementById('tiempoJugador' + idUsuario);
+
+    if (correrTiempo) {
+        
+
+        tiempo = parseInt(segundos);
+        // Se repite la funcion cada un segundo
+        temporizador = setInterval (function () {
+            actualizarVistaTemporizador(temporizadorVista, tiempo);
+
+            if (--tiempo < 0) {
+                // Termino el juego del jugador
+                clearInterval(temporizador);
+                jugadorSinTiempo(idUsuario);
+            } 
+        }, 1000);
+        temporizadorVista.dataset.temporizador = temporizador;
+    } else {
+        clearInterval(temporizadorVista.dataset.temporizador);
+    }
 }
 
-function actualizarTemporizador(idUsuario, tiempo) {
-    var temporizador = document.getElementById('tiempoJugador' + idUsuario);
+function actualizarVistaTemporizador(temporizador, tiempo) {
     temporizador.innerHTML = tiempo;
 }
 
 function detenerTemporizador(idUsuario) {
     //console.log("Detener Temporizador");
+}
+
+function jugadorSinTiempo(idUsuario) {
+    console.log('jugador sin tiempo: ' + idUsuario);
 }
 
 function mostrarGanador(jugador) {
