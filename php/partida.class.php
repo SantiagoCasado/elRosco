@@ -22,8 +22,7 @@ class Partida {
     public function iniciarNuevaPartida($dificultad, $tiempoPartida, $ayuda, $jugadores) {
         $this -> idPartida = 1; // Por defecto hasta obtener el generado en la BD
         $this->dificultad = $dificultad;
-        // $this->tiempoPartida = 60 * $tiempoPartida;
-        $this->tiempoPartida = $tiempoPartida;
+        $this->tiempoPartida = 60 * $tiempoPartida;
         $this->ayuda = $ayuda;
         $this->jugadores = $jugadores;
         $this->roscos = array();

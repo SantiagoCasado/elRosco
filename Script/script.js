@@ -159,6 +159,14 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
             vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego)
         }
         formularioJuego.appendChild(botonComenzarTurno);
+        botonComenzarTurno.focus();
+        botonComenzarTurno.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                //event.preventDefault();
+                enJuego = true;
+                vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego)
+            }
+        });
     }
 }
 
