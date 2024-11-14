@@ -20,15 +20,28 @@ include_once('php/iniciarPartida.php');
             <article class="zonaIzquierda" id="idZonaInformacionPartida" class="ZonaInformacionPartida">
                 <div class="itemsCentrados"><h2>Información de la partida</h2></div>
                 <p><strong>Dificultad: </strong> <?php echo $partida -> getDificultad() ?> </p>
-                <p><strong>Tiempo por jugador: </strong> <?php echo $partida -> getTiempoPartida() ?> minutos </p>
+                <p><strong>Tiempo por jugador: </strong> <?php echo $partida -> getTiempoPartida() / 60 ?> minutos </p>
                 <p><strong>Ayuda adicional: </strong> <?php echo $partida -> getAyuda() == 1 ? "Si" : "No" ?> </p>
-                <p><strong>Primero en jugar: </strong> <?php echo $partida -> getTurnoActual() == 0 ? $jugadores[0] -> getNombreUsuario() : $jugadores[1] -> getNombreUsuario() ?></p>
-                <p><strong>Turno actual: </strong> <?php echo $partida -> getTurnoActual() == 0 ? $jugadores[0] -> getNombreUsuario() : $jugadores[1] -> getNombreUsuario() ?> </p>        
+                <!-- <p><strong>Primero en jugar: </strong> <?php //echo $partida -> getTurnoActual() == 0 ? $jugadores[0] -> getNombreUsuario() : $jugadores[1] -> getNombreUsuario() ?></p>
+                <p><strong>Turno actual: </strong> <?php //echo $partida -> getTurnoActual() == 0 ? $jugadores[0] -> getNombreUsuario() : $jugadores[1] -> getNombreUsuario() ?> </p>         -->
             </article>
             <article class="zonaDerecha" id="idZonaHistorial">
-                <div class="itemsCentrados"><h2>Historal entre <?php echo $historial -> getNombreUsuario1() ?> y <?php echo $historial -> getNombreUsuario2() ?> </h2></div>
-                <?php echo $historial -> getVictoriasJugador1() ?>
-                <?php echo $historial -> getVictoriasJugador2() ?>
+                <div class="itemsCentrados">
+                    <h2>Historial entre <?php echo $historial -> getNombreUsuario1() ?> y <?php echo $historial -> getNombreUsuario2() ?> </h2>
+                    <table id="idTablaHistorial" class="tablaHistorial">
+                        <tr>
+                            <th class="celdaHistorialH">Jugador</th>
+                            <th class="celdaHistorialJ1"><?php echo $historial -> getNombreUsuario1() ?></th>
+                            <th class="celdaHistorialJ2"><?php echo $historial -> getNombreUsuario2() ?></th>
+                        </tr>
+                        <tr>
+                            <th class="celdaHistorialH">Victorias</th>
+                            <td class="celdaHistorialD"><?php echo $historial -> getVictoriasJugador1() ?></td>
+                            <td class="celdaHistorialD"><?php echo $historial -> getVictoriasJugador2() ?></td>
+                        </tr>
+                    </table>
+            
+                </div>
             </article>
         </div>
 

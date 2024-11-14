@@ -2,7 +2,7 @@ function crearVistaJuego(partida) {
     crearVistaRoscos(partida.roscos);
 
     crearTablaHistorial(partida.historial);
-
+    //console.log(partida.historial.victorias.nombreUsuario1);
     var enJuego = false;
     jugadorActual = partida.jugadores[partida.turnoActual];
     pregunta = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0];
@@ -13,7 +13,11 @@ function crearVistaJuego(partida) {
 }
 
 function crearTablaHistorial(historial) {
-    //
+    var tablaHistorial = document.getElementById('idTablaHistorial');
+
+    var h1 = document.createElement('h1');
+    h1.innerHTML = historial.victorias.nombreUsuario1;
+    tablaHistorial.appendChild(h1);
 }
 
 function crearVistaRoscos(roscos) {

@@ -62,7 +62,7 @@ class Historial
         $this -> victoriasJugador2 = $victoriasJugador2;
     }
 
-    public function getHistorial() {
+    public function getHistorialVictorias() {
         try {
 			$bd = new BaseDatos();
 			$conexion = $bd -> conectarBD();

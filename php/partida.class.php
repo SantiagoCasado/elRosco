@@ -322,6 +322,58 @@ class Partida {
                 
     }
 
+    public function cargarHistorialPartidas($jugadores) {
+        // Se obtienen las ultimas partidas jugadas
+        try {
+            $bd = new BaseDatos();
+            $conexion = $bd->conectarBD();
+            
+            $idUsuario1 = $jugadores[0] -> getID();
+            $idUsuario2 = $jugadores[1] -> getID();
+            // Ganador, dificultad, tiempo, ayuda, nombreUsuario1, puntos1, tiempo1, nombreUsuario2, puntos2, tiempo2
+            $sqlHistorialPartidas = "SELECT p.ganador, p.dificultadPartida,
+                                            p.tiempo, p.ayudaAdicional, 
+                                            u1.puntaje AS puntos1, u1.tiempoRestante AS tiempo1,
+                                            u2.puntaje AS puntos2, u2.tiempoRestante AS tiempo2 
+                                    FROM partida_usuario u1 
+                                        INNER JOIN partida_usuario u2 ON u1.idPartida = u2.idPartida 
+                                        INNER JOIN partida p ON p.idPartida = u2.idPartida 
+                                    WHERE (u1.idUsuario = '$idUsuario1' AND u2.idUsuario = '$idUsuario2')
+                                    ORDER BY p.idPartida DESC 
+                                    LIMIT 5;";
+    
+            $resultadoPartida = $bd -> consulta($sqlHistorialPartidas);
+    		
+            $listadoPartidas = array();
+            while ($registro = $resultadoPartida->fetch_object()) {	
+                $partida = new Partida();
+                $partida->setGanador($registro->ganador);
+                $partida->setTiempoPartida($registro->tiempo);
+                $partida->setAyuda($registro->ayudaAdicional);
+                $partida->setJugadores($jugadores);
+
+                $puntajes = array();
+                $puntajes[$idUsuario1] = $registro->puntos1;
+                $puntajes[$idUsuario2] = $registro->puntos2;
+                $partida->setPuntajes($puntajes);
+
+                $tiemposRestantes = array();
+                $tiemposRestantes[$idUsuario1] = $registro->tiempo1;
+                $tiemposRestantes[$idUsuario2] = $registro->tiempo2;
+                $partida->setTiemposRestantes($tiemposRestantes);
+
+                $listadoPartidas[]=$partida;
+            }
+            $resultadoPartida->free();
+            $bd->cerrarBD();
+            
+            error_log('Se cargó correctamente el historial de partidas');
+            return $listadoPartidas;
+        } catch (Exception $e) {
+            return error_log("Error al cargar las ultimas partidas: " . $e->getMessage());
+        }
+    }
+
     public function cargarPartidaBD($idPartida) {
         $bd = new BaseDatos();
         $conexion = $bd->conectarBD();

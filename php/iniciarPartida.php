@@ -53,7 +53,14 @@ if (!isset($_SESSION['partida'])) {
 
         // Cargar el historial entre los jugadores
         $historial = new historial($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
-        $historial -> getHistorial();
+        $historial -> getHistorialVictorias();
+        $_SESSION['historial'] = serialize($historial);
+
+        $partidaHistorial = new Partida();
+        $listadoPartidas = $partidaHistorial -> cargarHistorialPartidas($jugadores);
+        if ($listadoPartidas != null) {
+            $_SESSION['historialPartidas'] = serialize($listadoPartidas);
+        }
 
     } else {
         $mensaje = 'Debe crear una partida para jugar';
@@ -63,10 +70,15 @@ if (!isset($_SESSION['partida'])) {
     }         
 } else {
     // PARTIDA EN SESION
+    // unset($_SESSION['partida']);
+    // unset($_SESSION['historial']);
+    // unset($_SESSION['historialPartidas']);
     $partida = unserialize($_SESSION['partida']);
+    $historial = unserialize($_SESSION['historial']);
+    $listadoPartidas = unserialize($_SESSION['historialPartidas']);
 }
 
-//Preparar los objetos JSON para la vista
+//Preparar los objetos JSON para la vista del juego
 $partidaJSON = array(
     'idPartida' => $partida->getIdPartida(), //
     'dificultad' => $partida->getDificultad(), //
@@ -74,7 +86,8 @@ $partidaJSON = array(
     'ayuda' => $partida->getAyuda(), //
     'turnoActual' => $partida->getTurnoActual(), //
     'jugadores' => array(), //
-    'roscos' => array(), //
+    'roscos' => array(),
+    'historial' => array()
 );
         
 // Agregar jugadores al JSON
@@ -111,4 +124,50 @@ foreach ($partida->getRoscos() as $idJugador => $rosco) {
 $partidaJSON['roscos'][$idJugador] = $roscoJSON;
 }
 
+
+
+// Agregar el historial al JSON
+if (is_null($listadoPartidas) || empty($listadoPartidas) || is_null($historial) || empty($historial)){	
+
+    $victorias = array(
+        'nombreUsuario1' => $jugadores[0] -> getNombreUsuario(),
+        'victoriasJugador1' => '0',
+        'nombreUsuario2' => $jugadores[1] -> getNombreUsuario(),
+        'victoriasJugador2' => '0',
+    );
+
+    $ultimasPartidas = new StdClass();
+	$objTemp->ganador = 'No hay historial entre los jugadores';
+	$objTemp->tiempoPartida = '';
+	$objTemp->ayuda = '';
+	$objTemp->jugadores = $jugadores;
+	$objTemp->puntajes = '';
+	$objTemp->tiemposRestantes = '';
+
+} else {
+    $victorias = array(
+        'nombreUsuario1' => $historial -> getNombreUsuario1(),
+        'victoriasJugador1' => $historial -> getVictoriasJugador1(),
+        'nombreUsuario2' => $historial -> getNombreUsuario2(),
+        'victoriasJugador2' => $historial -> getVictoriasJugador2()
+    );
+    
+    $ultimasPartidas = array();
+	foreach ($listadoPartidas as $partidaHistorial) {
+		$arregloTemp = array('ganador' => $partidaHistorial->getGanador(),
+						'tiempoPartida' => $partidaHistorial->getTiempoPartida(),
+						'ayuda' => $partidaHistorial->getAyuda(),
+						'jugadores' => $partidaHistorial->getJugadores(),
+						'puntajes' => $partidaHistorial->getPuntajes(),
+						'tiemposRestantes' => $partidaHistorial->getTiemposRestantes()
+                        );
+		$ultimasPartidas[] = $arregloTemp;
+	}
+}
+$historialJSON = array(
+    'victorias' => $victorias,
+    'ultimasPartidas' => $ultimasPartidas
+);
+
+$partidaJSON['historial'] = $historialJSON;
 ?>            

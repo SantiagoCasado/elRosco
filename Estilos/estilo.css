@@ -133,6 +133,35 @@ button:hover {
     background-color: #FF4D4D;
 }
 
+/* ZONA HISTORIAL */
+
+.tablaHistorial {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+}
+
+.celdaHistorialH, .celdaHistorialD, .celdaHistorialJ1, .celdaHistorialJ2 {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.celdaHistorialH {
+    background-color: #f2f2f2;
+}
+
+.celdaHistorialJ1 {
+    background-color: #FF7F50;
+    color: white;
+}
+
+.celdaHistorialJ2 {
+    background-color: #50BFFF;
+    color: white;
+}
+
 /* SECCIONES DEL JUEGO */
 
 .zonaSeccion {
