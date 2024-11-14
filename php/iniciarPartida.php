@@ -44,16 +44,16 @@ if (!isset($_SESSION['partida'])) {
         $partida = new Partida();
         $partida -> iniciarNuevaPartida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
 
-                        // Cargar el historial entre los jugadores - Se carga el historial antes de crear el nuevo registro para que no aparezca en la tabla
-                        $historial = new historial($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
-                        $historial -> getHistorialVictorias();
-                        $_SESSION['historial'] = serialize($historial);
-                
-                        $partidaHistorial = new Partida();
-                        $listadoPartidas = $partidaHistorial -> cargarHistorialPartidas($jugadores);
-                        if ($listadoPartidas != null) {
-                            $_SESSION['historialPartidas'] = serialize($listadoPartidas);
-                        }
+        // Cargar el historial entre los jugadores - Se carga el historial antes de crear el nuevo registro para que no aparezca en la tabla
+        $historial = new historial($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
+        $historial -> getHistorialVictorias();
+        $_SESSION['historial'] = serialize($historial);
+
+        $partidaHistorial = new Partida();
+        $listadoPartidas = $partidaHistorial -> cargarHistorialPartidas($jugadores);
+        if ($listadoPartidas != null) {
+            $_SESSION['historialPartidas'] = serialize($listadoPartidas);
+        }
             
         //Guardar la partida y el idPartida generado en la base de datos y en sesion respectivamente
         $idPartida = $partida -> crearPartidaBD();

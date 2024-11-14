@@ -32,12 +32,12 @@ include_once('php/iniciarPartida.php');
                         <thead>
                             <tr>
                                 <th colspan="4" rowspan="2" class="celdaHistorialP">Detalle de la Partida</th>
-                                <th colspan="2" class="celdaHistorialJ1"><?php echo $historial -> getNombreUsuario1() ?></th>
-                                <th colspan="2" class="celdaHistorialJ2"><?php echo $historial -> getNombreUsuario2() ?></th>
+                                <th colspan="2" class="celdaHistorialJ1"><?php echo $historial -> getNombreUsuario1() == $jugadores[0] -> getNombreUsuario() ? $historial -> getNombreUsuario1() : $historial -> getNombreUsuario2() ?></th>
+                                <th colspan="2" class="celdaHistorialJ2"><?php echo $historial -> getNombreUsuario2() == $jugadores[1] -> getNombreUsuario() ? $historial -> getNombreUsuario2() : $historial -> getNombreUsuario1() ?></th>
                             </tr>
                             <tr>
-                                <td colspan="2" class="celdaHistorialD"><?php echo $historial -> getVictoriasJugador1() . ' victorias' ?></td>
-                                <td colspan="2" class="celdaHistorialD"><?php echo $historial -> getVictoriasJugador2() . ' victorias' ?></td>
+                                <td colspan="2" class="celdaHistorialD"><?php echo $historial -> getNombreUsuario1() == $jugadores[0] -> getNombreUsuario() ? $historial -> getVictoriasJugador1() : $historial -> getVictoriasJugador2() . ' victorias' ?></td>
+                                <td colspan="2" class="celdaHistorialD"><?php echo $historial -> getNombreUsuario2() == $jugadores[1] -> getNombreUsuario() ? $historial -> getVictoriasJugador2() : $historial -> getVictoriasJugador1() . ' victorias' ?></td>
                             </tr>
                             <tr>
                                 <th class="celdaHistorialH">Ganador</th>
