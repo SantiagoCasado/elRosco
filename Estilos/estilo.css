@@ -117,10 +117,18 @@ button:hover {
     background-color: #0056b3;
 }
 
-.botonAceptar {
-    background-color: forestgreen;
+.botonAceptar, .botonCancelar {
     font-size: large;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.botonAceptar {
+    background-color: forestgreen;
+
+}
+
+.botonCancelar {
+    background-color: #FF4D4D;
 }
 
 /* SECCIONES DEL JUEGO */

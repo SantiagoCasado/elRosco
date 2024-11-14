@@ -6,6 +6,8 @@ function crearVistaJuego(partida) {
     pregunta = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0];
     letraSiguiente = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0].letra
     vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
+
+    crearBotonAbandonar(jugadorActual.idUsuario);
 }
 
 function crearVistaRoscos(roscos) {
@@ -48,6 +50,21 @@ function crearVistaRoscos(roscos) {
         
         zonaJugador.appendChild(tablaRosco);
     });
+}
+
+function crearBotonAbandonar(idUsuario) {
+    var formularioAbandonar = document.getElementById('idAbandonar');
+    formularioAbandonar.innerHTML = '';
+
+    var botonAbandonar = document.createElement('button');
+    botonAbandonar.type = 'button';
+    botonAbandonar.innerHTML = 'Abandonar';
+    botonAbandonar.className = 'botonCancelar';
+    botonAbandonar.onclick = function () {
+        abandonar = true;
+        cambiarTurno(idUsuario, abandonar);
+    }
+    formularioAbandonar.appendChild(botonAbandonar);
 }
 
 function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego) {
@@ -133,8 +150,9 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         botonPasapalabra.innerHTML = 'Pasapalabra';
         botonPasapalabra.className = 'botonPasapalabra';
         botonPasapalabra.onclick = function () {
-            enJuego = false;
-            cambiarTurno(jugador.idUsuario);
+            //enJuego = false;
+            abandonar = false;
+            cambiarTurno(jugador.idUsuario, abandonar);
         }
         formularioJuego.appendChild(botonPasapalabra);
         formularioJuego.appendChild(document.createElement('br'));
@@ -156,7 +174,7 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         botonComenzarTurno.className = 'botonJuego' + turnoActual;
         botonComenzarTurno.onclick = function () {
             enJuego = true;
-            vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego)
+            vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego);
         }
         formularioJuego.appendChild(botonComenzarTurno);
         botonComenzarTurno.focus();
@@ -164,13 +182,15 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
             if (event.key === "Enter") {
                 //event.preventDefault();
                 enJuego = true;
-                vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego)
+                vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego);
             }
         });
-    }
+
+        crearBotonAbandonar(jugador.idUsuario);
+    } 
 }
 
-function cambiarTurno(idUsuario) {
+function cambiarTurno(idUsuario, abandonar) {
     // Detener temporizador
     correrTiempo = false;
     controlTemporizador(idUsuario, null, correrTiempo);
@@ -178,7 +198,8 @@ function cambiarTurno(idUsuario) {
     var tiempoRestante = document.getElementById('tiempoJugador' + idUsuario).innerHTML;
 
     var parametros = "idUsuario=" + idUsuario
-                    + "&tiempoRestante=" + tiempoRestante;
+                    + "&tiempoRestante=" + tiempoRestante
+                    + "&abandonar=" + abandonar;
 
     var peticion = new XMLHttpRequest();
     peticion.open("POST", "php/pasapalabra.php", true); // Relativo a la vista (rosco.php)
@@ -358,7 +379,7 @@ function controlTemporizador(idUsuario, segundos, correrTiempo) {
                 temporizadorVista.innerHTML = 0;
                 clearInterval(temporizador);
 
-                cambiarTurno(idUsuario);
+                cambiarTurno(idUsuario, false);
             } 
         }, 1000);
         temporizadorVista.dataset.temporizador = temporizador;
@@ -396,4 +417,18 @@ function mostrarGanador(jugador) {
     }
 
     formularioJuego.appendChild(botonJuegoNuevo);
+    botonJuegoNuevo.focus();
+
+    formularioJuego.appendChild(document.createElement('br'));
+    formularioJuego.appendChild(document.createElement('br'));
+    var botonSalir = document.createElement('button');
+    botonSalir.id = 'idBotonSalir';
+    botonSalir.type = 'button';
+    botonSalir.innerHTML = 'Salir';
+    botonSalir.className = 'botonCancelar';
+    botonSalir.onclick = function () {
+        window.location.href = 'index.php';
+    }
+    formularioJuego.appendChild(botonSalir);
+
 }

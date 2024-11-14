@@ -76,9 +76,9 @@ include_once('php/iniciarPartida.php');
     <section>
         <article>
             <div class="formularios">
-                <form action="crearPartida.php" method = "post">
-                    <h1>Agregar logica para definir partida y guardar juego en la bd</h1>
-                    <div class="itemsCentrados"><button name ="botonAbandonar">Abandonar</button></div>
+                <form method = "POST">
+                    <!-- <h1>Agregar logica para definir partida y guardar juego en la bd</h1> -->
+                    <div id="idAbandonar" class="itemsCentrados"></div>
                 </form>
             </div>
         </article>

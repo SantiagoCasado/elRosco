@@ -6,13 +6,19 @@ $partida = cargarPartidaSesion();
 if (isset($_POST['idUsuario'], $_POST['idUsuario'])) {
     $idUsuario = $_POST['idUsuario'];
     $tiempoRestante = $_POST['tiempoRestante'];
+    $abandonar = $_POST['abandonar'];
     
-    // Actualizar el estado de la partida - Cambiar turno y arreglo de las preguntas
-    $partida -> pasapalabra($idUsuario, $tiempoRestante);
+    if ($tiempoRestante > 0) {
+        // El jugador paso palabra - sigue en juego
+        //Cambiar turno y arreglo de las preguntas
+        $partida -> pasapalabra($idUsuario, $tiempoRestante);
+    }
+
     $partida -> actualizarEstadoJuego($idUsuario,
                                         null,
                                         null,
-                                        $tiempoRestante); // no hay respuesta ni estado rosco (null)
+                                        $tiempoRestante,
+                                        $abandonar); // no hay respuesta ni estado rosco (null)
     $_SESSION['partida'] = serialize($partida);
     
     if (is_null($partida) || empty($partida)) {

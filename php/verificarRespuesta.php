@@ -14,7 +14,8 @@ if (isset($_POST['respuesta'])) {
     $partida -> actualizarEstadoJuego($idUsuario,
                                         $partida -> getRoscos()[$idUsuario] -> getEstadoRosco(),
                                         $preguntaRespondida -> getEstadoRespuesta(),
-                                        $tiempoRestante);
+                                        $tiempoRestante,
+                                        false); // abandonar = false
     $_SESSION['partida'] = serialize($partida);
 
     if (is_null($preguntaRespondida) || empty($preguntaRespondida)) {
