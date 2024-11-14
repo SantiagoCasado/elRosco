@@ -26,3 +26,4 @@ if (isset($_POST['respuesta'])) {
     }
     echo json_encode($resultadoJSON);
 }
+?>

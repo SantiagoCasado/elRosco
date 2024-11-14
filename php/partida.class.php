@@ -379,7 +379,7 @@ class Partida {
         return $preguntaRespondida;
     }
 
-    public function pasapalabra($idUsuarioActual, $tiempoRestante) {
+    public function pasapalabra($idUsuarioActual) {
         // Guardar el tiempo restante
         //$this -> actualizarTiempoJugador($idUsuarioActual, $tiempoRestante);
         

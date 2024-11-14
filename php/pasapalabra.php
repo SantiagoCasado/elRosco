@@ -3,15 +3,18 @@ include_once("gestionPartidas.php");
 
 $partida = cargarPartidaSesion();
 
-if (isset($_POST['idUsuario'], $_POST['idUsuario'])) {
+if (isset($_POST['idUsuario'], $_POST['tiempoRestante'], $_POST['abandonar'])) {
     $idUsuario = $_POST['idUsuario'];
     $tiempoRestante = $_POST['tiempoRestante'];
     $abandonar = $_POST['abandonar'];
+    $abandonar = $abandonar == 1 ? true : false;
+
+    error_log($abandonar ? 'abandonar' : 'no abandonar');
     
     if ($tiempoRestante > 0) {
         // El jugador paso palabra - sigue en juego
         //Cambiar turno y arreglo de las preguntas
-        $partida -> pasapalabra($idUsuario, $tiempoRestante);
+        $partida -> pasapalabra($idUsuario);
     }
 
     $partida -> actualizarEstadoJuego($idUsuario,
@@ -28,3 +31,4 @@ if (isset($_POST['idUsuario'], $_POST['idUsuario'])) {
     }
     echo json_encode($resultadoJSON);
 }
+?>

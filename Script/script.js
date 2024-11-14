@@ -156,7 +156,6 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         botonPasapalabra.innerHTML = 'Pasapalabra';
         botonPasapalabra.className = 'botonPasapalabra';
         botonPasapalabra.onclick = function () {
-            //enJuego = false;
             abandonar = false;
             cambiarTurno(jugador.idUsuario, abandonar);
         }
@@ -198,6 +197,14 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
 
 function cambiarTurno(idUsuario, abandonar) {
     // Detener temporizador
+
+    var abandonarParametro;
+    if (abandonar) {
+        abandonarParametro = 1;
+    } else {
+        abandonarParametro = 0;
+    }
+    console.log('abandonar ' + abandonarParametro);
     correrTiempo = false;
     controlTemporizador(idUsuario, null, correrTiempo);
 
@@ -205,7 +212,7 @@ function cambiarTurno(idUsuario, abandonar) {
 
     var parametros = "idUsuario=" + idUsuario
                     + "&tiempoRestante=" + tiempoRestante
-                    + "&abandonar=" + abandonar;
+                    + "&abandonar=" + abandonarParametro;
 
     var peticion = new XMLHttpRequest();
     peticion.open("POST", "php/pasapalabra.php", true); // Relativo a la vista (rosco.php)
