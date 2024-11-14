@@ -1,5 +1,6 @@
 <?php
 include_once("php/partida.class.php");
+include_once("php/historial.class.php");
 session_start();
 
 if (isset($_POST['botonSalir'])) {
@@ -39,7 +40,6 @@ if (!isset($_SESSION['partida'])) {
             $ayudaAdicional = 0;
         }
         
-            // if (!isset($_SESSION['partida'])) {
         //Instanciar la partida
         $partida = new Partida();
         $partida -> iniciarNuevaPartida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
@@ -50,7 +50,11 @@ if (!isset($_SESSION['partida'])) {
 
         // Guardar partida en sesion
         $_SESSION['partida'] = serialize($partida);
-        //}
+
+        // Cargar el historial entre los jugadores
+        $historial = new historial($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
+        $historial -> getHistorial();
+
     } else {
         $mensaje = 'Debe crear una partida para jugar';
         $_SESSION['mensaje'] = $mensaje;
@@ -70,7 +74,7 @@ $partidaJSON = array(
     'ayuda' => $partida->getAyuda(), //
     'turnoActual' => $partida->getTurnoActual(), //
     'jugadores' => array(), //
-    'roscos' => array() //
+    'roscos' => array(), //
 );
         
 // Agregar jugadores al JSON
@@ -102,17 +106,9 @@ foreach ($partida->getRoscos() as $idJugador => $rosco) {
             'estadoRespuesta' => $pregunta->getEstadoRespuesta() //
         );
     }
-    
-    // // Agregar preguntas arriesgadas al rosco
-    // foreach ($rosco->getPreguntasArriesgadas() as $pregunta) {
-        //     $roscoJSON['preguntasArriesgadas'][] = array(
-            //         'idPregunta' => $pregunta->getIdPregunta(),
-            //         'letra' => $pregunta->getLetra(),
-            //         'estadoRespuesta' => $pregunta->getEstadoRespuesta()
-            //     );
-            // }
-            
+
 // Asignar el rosco al jugador en partidaJSON
 $partidaJSON['roscos'][$idJugador] = $roscoJSON;
 }
+
 ?>            

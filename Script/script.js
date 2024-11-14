@@ -1,6 +1,8 @@
 function crearVistaJuego(partida) {
     crearVistaRoscos(partida.roscos);
 
+    crearTablaHistorial(partida.historial);
+
     var enJuego = false;
     jugadorActual = partida.jugadores[partida.turnoActual];
     pregunta = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0];
@@ -8,6 +10,10 @@ function crearVistaJuego(partida) {
     vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
 
     crearBotonAbandonar(jugadorActual.idUsuario);
+}
+
+function crearTablaHistorial(historial) {
+    //
 }
 
 function crearVistaRoscos(roscos) {

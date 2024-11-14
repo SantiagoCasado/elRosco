@@ -1,6 +1,5 @@
 <?php
 include_once('php/iniciarPartida.php');
-
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +26,9 @@ include_once('php/iniciarPartida.php');
                 <p><strong>Turno actual: </strong> <?php echo $partida -> getTurnoActual() == 0 ? $jugadores[0] -> getNombreUsuario() : $jugadores[1] -> getNombreUsuario() ?> </p>        
             </article>
             <article class="zonaDerecha" id="idZonaHistorial">
-                <div class="itemsCentrados"><h2>Historal entre <?php echo $jugadores[0] -> getNombreUsuario() ?> y <?php echo $jugadores[1] -> getNombreUsuario() ?> </h2></div>
+                <div class="itemsCentrados"><h2>Historal entre <?php echo $historial -> getNombreUsuario1() ?> y <?php echo $historial -> getNombreUsuario2() ?> </h2></div>
+                <?php echo $historial -> getVictoriasJugador1() ?>
+                <?php echo $historial -> getVictoriasJugador2() ?>
             </article>
         </div>
 

@@ -202,7 +202,7 @@ class Partida {
                                 WHERE (idUsuario1 = '$idUsuario1' AND idUsuario2 = '$idUsuario2')
                                 OR (idUsuario1 = '$idUsuario2' AND idUsuario2 = '$idUsuario1')";
             $resultadoConsulta = $bd -> consulta($sqlExisteHistorial);
-
+            // Si es la primera vez que los jugadores juegan entre si, se crea un nuevo registro
             if ($resultadoConsulta->num_rows == 0) {
                 $sqlHistorial = "INSERT INTO HISTORIAL (idUsuario1, idUsuario2, victoriasJugador1, victoriasJugador2)
                                 VALUES ('$idUsuario1', '$idUsuario2', 0, 0);";
