@@ -22,6 +22,14 @@ function cargarPartidaSesion() {
     }
 }
 
+function eliminarPartidaSesion() {
+    if (isset($_SESSION['partida'])) {
+        unset($_SESSION['partida']);
+    } else {
+        echo json_encode(['error' => 'No hay partida iniciada']);
+    }
+}
+
 function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
     $turnoActual = $partida->getTurnoActual();
     $turnoAnterior = $turnoActual == 1 ? 0 : 1; // Se pasa el jugador contrario al jugador actual

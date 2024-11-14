@@ -93,7 +93,7 @@ if (isset($_SESSION['partida'])) {
         <article>
             <div class="formularios">
                 <form action="index.php" method = "post">
-                <div class="itemsCentrados"><button name ="botonCerrarSesion">Cerrar sesión</button></div>
+                <div class="itemsCentrados"><button class="botonCancelar" name ="botonSalir">Cerrar Sesión</button></div>
                 </form>
             </div>
         </article>

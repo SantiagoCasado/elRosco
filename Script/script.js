@@ -408,8 +408,9 @@ function mostrarGanador(jugador) {
     formularioJuego.appendChild(h3puntaje);
 
     var botonJuegoNuevo = document.createElement('button');
-    botonJuegoNuevo.id = 'idBotonResultadoPartida';
+    botonJuegoNuevo.id = 'idbotonJuegoNuevo';
     botonJuegoNuevo.type = 'button';
+    botonJuegoNuevo.name = 'botonNuevaPartida';
     botonJuegoNuevo.innerHTML = 'Jugar de nuevo';
     botonJuegoNuevo.className = 'botonAceptar';
     botonJuegoNuevo.onclick = function () {
@@ -423,12 +424,14 @@ function mostrarGanador(jugador) {
     formularioJuego.appendChild(document.createElement('br'));
     var botonSalir = document.createElement('button');
     botonSalir.id = 'idBotonSalir';
-    botonSalir.type = 'button';
+    botonSalir.type = 'submit';
+    botonSalir.method = 'POST';
+    botonSalir.name = 'botonSalir';
     botonSalir.innerHTML = 'Salir';
     botonSalir.className = 'botonCancelar';
-    botonSalir.onclick = function () {
-        window.location.href = 'index.php';
-    }
+    // botonSalir.onclick = function () {
+    //     window.location.href = 'index.php';
+    // }
     formularioJuego.appendChild(botonSalir);
 
 }

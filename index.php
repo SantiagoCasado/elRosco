@@ -2,7 +2,7 @@
 include_once("php/usuario.class.php");
 session_start();
 
-if (isset($_POST['botonCerrarSesion'])) {
+if (isset($_POST['botonSalir'])) {
     $_SESSION = array();
     session_destroy();
 }
@@ -16,18 +16,16 @@ if (isset($_SESSION['mensaje'])) {
     unset($_SESSION['mensaje']);
 }
 
-// //Mostrarv los usuario con sesion iniciada
-// if (isset($_SESSION['vectorSesion'])) {
-//     $vectorSesion = $_SESSION['vectorSesion'];
-//     foreach ($vectorSesion as $index => $usuario) {
-//         echo "<br>" . $index . ' ' . $usuario -> getNombreUsuario();
-//     }
-//     }
-
 //Redirigir si hay dos sesiones iniciadas
 if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
-header("location:crearPartida.php");
-exit;
+    header("location:crearPartida.php");
+    exit;
+}
+
+// Redirigir si hay partida en juego
+if (isset($_SESSION['partida'])) {
+    header("location:rosco.php");
+    exit;
 }
 ?>
 <!DOCTYPE html>

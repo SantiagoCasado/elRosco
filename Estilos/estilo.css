@@ -92,6 +92,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+    font-size: large;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 

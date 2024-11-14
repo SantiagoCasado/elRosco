@@ -2,6 +2,13 @@
 include_once("php/partida.class.php");
 session_start();
 
+if (isset($_POST['botonSalir'])) {
+    $_SESSION = array();
+    session_destroy();
+    header("Location: index.php");
+    exit;
+}
+
 if (isset($_SESSION['mensaje'])) {
     $mensaje = $_SESSION['mensaje'];
     echo "<script type='text/javascript'>alert('$mensaje');</script>";
