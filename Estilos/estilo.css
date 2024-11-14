@@ -80,6 +80,7 @@ select {
     background-color: rgb(245, 245, 245);
     border: none;
     border-radius: 5px;
+    font-size: large;
 }
 
 button {
