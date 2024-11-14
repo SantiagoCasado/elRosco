@@ -43,8 +43,18 @@ class BaseDatos
     }
 
     public function getIdInsertado() {
-        return $this -> conexion -> insert_id;
+        $sqlUltimoIDInsertado = "SELECT LAST_INSERT_ID()"; // Consulta para obtener el ultimo id generado en la bd
+        $resultadoConsulta = $this->consulta($sqlUltimoIDInsertado);
+        
+        $registro = $resultadoConsulta->fetch_assoc(); 
+        
+        $idInsertado = $registro['LAST_INSERT_ID()']; 
+        
+        $resultadoConsulta->free();
+        
+        return $idInsertado;
     }
+    
     
     public function cerrarBD() {
         $this -> conexion -> close();

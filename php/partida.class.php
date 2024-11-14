@@ -166,16 +166,8 @@ class Partida {
             $bd -> consulta($sqlPartida);
 
             //Obtener el ID de la partida guardada y asignarselo al objeto
-            //$idPartida = $bd -> getIdInsertado();
-            $sqlUltimoIDInsertado = "SELECT LAST_INSERT_ID()"; // Consulta para obtener el ultimo id generado en la bd
-            $resultadoConsulta = $bd->consulta($sqlUltimoIDInsertado);
-             if ($registro = $resultadoConsulta->fetch_assoc()) {
-                $idPartida = $registro['LAST_INSERT_ID()'];
-                $this -> setIdPartida($idPartida);
-                // echo 'idPartida: ' . $idPartida;
-                // echo '<br> partida -> idPartida ' . $this -> getIdPartida();
-             }
-            $resultadoConsulta -> free();
+            $idPartida = $bd -> getIdInsertado();
+            $this -> setIdPartida($idPartida);
 
             // Guardar cada usuario y su respectivo rosco para la partida (PARTIDA_USUARIO)
             foreach ($this->jugadores as $jugador) {
@@ -187,17 +179,8 @@ class Partida {
                 $bd -> consulta($sqlRosco);
 
                 // Obtener el idRosco generado y asignarselo al objeto
-                $sqlUltimoIDInsertado = "SELECT LAST_INSERT_ID()"; // Consulta para obtener el ultimo id generado en la bd
-                $resultadoConsulta = $bd->consulta($sqlUltimoIDInsertado);
-                if ($registro = $resultadoConsulta->fetch_assoc()) {
-                    
-                    $idRosco = $registro['LAST_INSERT_ID()'];
-                    $rosco -> setIdRosco($idRosco);
-
-                    // echo '<br>idRosco: ' . $idRosco;
-                    // echo '<br> rosco -> idRosco ' . $rosco -> getIdRosco();
-                }
-                $resultadoConsulta -> free();
+                $idRosco = $bd -> getIdInsertado();
+                $rosco -> setIdRosco($idRosco);
 
                 $sqlPartidaUsuario = "INSERT INTO partida_usuario (idPartida, idUsuario, tiempoRestante, idRosco) 
                                       VALUES ('$idPartida', '" . $jugador->getID() . "', '$tiempoPartidaSQL', '$idRosco')";
