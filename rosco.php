@@ -29,16 +29,30 @@ include_once('php/iniciarPartida.php');
                 <div class="itemsCentrados">
                     <h2>Historial entre <?php echo $historial -> getNombreUsuario1() ?> y <?php echo $historial -> getNombreUsuario2() ?> </h2>
                     <table id="idTablaHistorial" class="tablaHistorial">
-                        <tr>
-                            <th class="celdaHistorialH">Jugador</th>
-                            <th class="celdaHistorialJ1"><?php echo $historial -> getNombreUsuario1() ?></th>
-                            <th class="celdaHistorialJ2"><?php echo $historial -> getNombreUsuario2() ?></th>
-                        </tr>
-                        <tr>
-                            <th class="celdaHistorialH">Victorias</th>
-                            <td class="celdaHistorialD"><?php echo $historial -> getVictoriasJugador1() ?></td>
-                            <td class="celdaHistorialD"><?php echo $historial -> getVictoriasJugador2() ?></td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th colspan="4" rowspan="2" class="celdaHistorialP">Detalle de la Partida</th>
+                                <th colspan="2" class="celdaHistorialJ1"><?php echo $historial -> getNombreUsuario1() ?></th>
+                                <th colspan="2" class="celdaHistorialJ2"><?php echo $historial -> getNombreUsuario2() ?></th>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="celdaHistorialD"><?php echo $historial -> getVictoriasJugador1() . ' victorias' ?></td>
+                                <td colspan="2" class="celdaHistorialD"><?php echo $historial -> getVictoriasJugador2() . ' victorias' ?></td>
+                            </tr>
+                            <tr>
+                                <th class="celdaHistorialH">Ganador</th>
+                                <th class="celdaHistorialH">Dificultad</th>
+                                <th class="celdaHistorialH">Tiempo</th>
+                                <th class="celdaHistorialH">Ayuda</th>
+                                <th class="celdaHistorialH">Puntos</th>
+                                <th class="celdaHistorialH">Tiempo</th>
+                                <th class="celdaHistorialH">Puntos</th>
+                                <th class="celdaHistorialH">Tiempo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="idTablaHistorialBody">
+                        </tbody>
+
                     </table>
             
                 </div>

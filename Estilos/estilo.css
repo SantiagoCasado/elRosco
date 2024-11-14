@@ -139,10 +139,16 @@ button:hover {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-
 }
 
-.celdaHistorialH, .celdaHistorialD, .celdaHistorialJ1, .celdaHistorialJ2 {
+.tablaHistorial td {
+    border: 1px solid #ddd;
+    padding: 2px;
+    text-align: center;
+    
+}
+
+.celdaHistorialH, .celdaHistorialD, .celdaHistorialJ1, .celdaHistorialJ2, .celdaHistorialP {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
@@ -159,6 +165,11 @@ button:hover {
 
 .celdaHistorialJ2 {
     background-color: #50BFFF;
+    color: white;
+}
+
+.celdaHistorialP {
+    background-color: #4caf50;
     color: white;
 }
 

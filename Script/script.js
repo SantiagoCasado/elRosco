@@ -1,7 +1,7 @@
 function crearVistaJuego(partida) {
     crearVistaRoscos(partida.roscos);
 
-    crearTablaHistorial(partida.historial);
+    crearTablaHistorial(partida.historial, partida.jugadores);
     //console.log(partida.historial.victorias.nombreUsuario1);
     var enJuego = false;
     jugadorActual = partida.jugadores[partida.turnoActual];
@@ -12,12 +12,58 @@ function crearVistaJuego(partida) {
     crearBotonAbandonar(jugadorActual.idUsuario);
 }
 
-function crearTablaHistorial(historial) {
-    var tablaHistorial = document.getElementById('idTablaHistorial');
+function crearTablaHistorial(historial, jugadores) {
+    var tablaHistorial = document.getElementById('idTablaHistorialBody');
 
-    var h1 = document.createElement('h1');
-    h1.innerHTML = historial.victorias.nombreUsuario1;
-    tablaHistorial.appendChild(h1);
+    for (i = 0; i < historial.ultimasPartidas.length; i++) {
+        var partida = historial.ultimasPartidas[i];
+    
+        var tr = document.createElement('tr');
+
+        var tdGanador = document.createElement('td');
+        if (partida.ganador != null) {
+            if (partida.ganador == jugadores[0].idUsuario) {
+                tdGanador.innerHTML = jugadores[0].nombreUsuario;
+            } else {
+                tdGanador.innerHTML = jugadores[1].nombreUsuario;
+            }
+        } else {
+            tdGanador.innerHTML = 'Sin ganador';
+        }
+        var tdDificultad = document.createElement('td');
+        tdDificultad.innerHTML = partida.dificultad;
+
+        var tdTiempoPartida = document.createElement('td');
+        tdTiempoPartida.innerHTML = partida.tiempoPartida;
+
+        var tdAyuda = document.createElement('td');
+        if (partida.ayuda == 1 ) {
+            tdAyuda.innerHTML = 'SI';
+        } else {
+            tdAyuda.innerHTML = 'NO';
+        }
+
+        var tdPuntaje1 = document.createElement('td');
+        tdPuntaje1.innerHTML = partida.puntajes[0];
+        var tdPuntaje2 = document.createElement('td');
+        tdPuntaje2.innerHTML = partida.puntajes[1];
+
+        var tdTiempoRestante1 = document.createElement('td');
+        tdTiempoRestante1.innerHTML = partida.tiemposRestantes[0];
+        var tdTiempoRestante2 = document.createElement('td');
+        tdTiempoRestante2.innerHTML = partida.tiemposRestantes[1];
+
+        tr.appendChild(tdGanador);
+        tr.appendChild(tdDificultad);
+        tr.appendChild(tdTiempoPartida);
+        tr.appendChild(tdAyuda);
+        tr.appendChild(tdPuntaje1);
+        tr.appendChild(tdTiempoRestante1);
+        tr.appendChild(tdPuntaje2);
+        tr.appendChild(tdTiempoRestante2);
+
+        tablaHistorial.appendChild(tr);
+    }
 }
 
 function crearVistaRoscos(roscos) {

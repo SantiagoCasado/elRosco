@@ -332,7 +332,7 @@ class Partida {
             $idUsuario2 = $jugadores[1] -> getID();
             // Ganador, dificultad, tiempo, ayuda, nombreUsuario1, puntos1, tiempo1, nombreUsuario2, puntos2, tiempo2
             $sqlHistorialPartidas = "SELECT p.ganador, p.dificultadPartida,
-                                            p.tiempo, p.ayudaAdicional, 
+                                            p.tiempo, p.ayudaAdicional,
                                             u1.puntaje AS puntos1, u1.tiempoRestante AS tiempo1,
                                             u2.puntaje AS puntos2, u2.tiempoRestante AS tiempo2 
                                     FROM partida_usuario u1 
@@ -348,7 +348,14 @@ class Partida {
             while ($registro = $resultadoPartida->fetch_object()) {	
                 $partida = new Partida();
                 $partida->setGanador($registro->ganador);
-                $partida->setTiempoPartida($registro->tiempo);
+                $partida->setDificultad($registro->dificultadPartida);
+                
+                // Pasar el tiempo de time a entero (segundos)
+                $tiempo = $registro -> tiempo;
+                [$horas, $minutos, $segundos] = explode(":", $tiempo);
+                $segundos = ($horas * 3600) + ($minutos * 60) + $segundos;
+                $partida->setTiempoPartida($segundos);
+
                 $partida->setAyuda($registro->ayudaAdicional);
                 $partida->setJugadores($jugadores);
 
@@ -358,8 +365,14 @@ class Partida {
                 $partida->setPuntajes($puntajes);
 
                 $tiemposRestantes = array();
-                $tiemposRestantes[$idUsuario1] = $registro->tiempo1;
-                $tiemposRestantes[$idUsuario2] = $registro->tiempo2;
+                $tiempo = $registro -> tiempo1;
+                [$horas, $minutos, $segundos] = explode(":", $tiempo);
+                $segundos1 = ($horas * 3600) + ($minutos * 60) + $segundos;
+                $tiemposRestantes[$idUsuario1] = $segundos1;
+                $tiempo = $registro -> tiempo2;
+                [$horas, $minutos, $segundos] = explode(":", $tiempo);
+                $segundos2 = ($horas * 3600) + ($minutos * 60) + $segundos;
+                $tiemposRestantes[$idUsuario2] = $segundos2;;
                 $partida->setTiemposRestantes($tiemposRestantes);
 
                 $listadoPartidas[]=$partida;

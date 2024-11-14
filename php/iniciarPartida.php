@@ -43,6 +43,17 @@ if (!isset($_SESSION['partida'])) {
         //Instanciar la partida
         $partida = new Partida();
         $partida -> iniciarNuevaPartida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
+
+                        // Cargar el historial entre los jugadores - Se carga el historial antes de crear el nuevo registro para que no aparezca en la tabla
+                        $historial = new historial($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
+                        $historial -> getHistorialVictorias();
+                        $_SESSION['historial'] = serialize($historial);
+                
+                        $partidaHistorial = new Partida();
+                        $listadoPartidas = $partidaHistorial -> cargarHistorialPartidas($jugadores);
+                        if ($listadoPartidas != null) {
+                            $_SESSION['historialPartidas'] = serialize($listadoPartidas);
+                        }
             
         //Guardar la partida y el idPartida generado en la base de datos y en sesion respectivamente
         $idPartida = $partida -> crearPartidaBD();
@@ -50,17 +61,6 @@ if (!isset($_SESSION['partida'])) {
 
         // Guardar partida en sesion
         $_SESSION['partida'] = serialize($partida);
-
-        // Cargar el historial entre los jugadores
-        $historial = new historial($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
-        $historial -> getHistorialVictorias();
-        $_SESSION['historial'] = serialize($historial);
-
-        $partidaHistorial = new Partida();
-        $listadoPartidas = $partidaHistorial -> cargarHistorialPartidas($jugadores);
-        if ($listadoPartidas != null) {
-            $_SESSION['historialPartidas'] = serialize($listadoPartidas);
-        }
 
     } else {
         $mensaje = 'Debe crear una partida para jugar';
@@ -154,12 +154,22 @@ if (is_null($listadoPartidas) || empty($listadoPartidas) || is_null($historial) 
     
     $ultimasPartidas = array();
 	foreach ($listadoPartidas as $partidaHistorial) {
+        $puntajes = array();
+        foreach ($partidaHistorial -> getPuntajes() as $puntaje) {
+            $puntajes[] = $puntaje;
+        }
+
+        $tiemposRestantes = array();
+        foreach ($partidaHistorial -> getTiemposRestantes() as $tiempoRestante) {
+            $tiemposRestantes[] = $tiempoRestante;
+        }
+
 		$arregloTemp = array('ganador' => $partidaHistorial->getGanador(),
-						'tiempoPartida' => $partidaHistorial->getTiempoPartida(),
-						'ayuda' => $partidaHistorial->getAyuda(),
-						'jugadores' => $partidaHistorial->getJugadores(),
-						'puntajes' => $partidaHistorial->getPuntajes(),
-						'tiemposRestantes' => $partidaHistorial->getTiemposRestantes()
+                        'dificultad' => $partidaHistorial->getDificultad(),
+						'tiempoPartida' => $partidaHistorial->getTiempoPartida(), //
+						'ayuda' => $partidaHistorial->getAyuda(), //
+						'puntajes' => $puntajes, //
+						'tiemposRestantes' => $tiemposRestantes //
                         );
 		$ultimasPartidas[] = $arregloTemp;
 	}
