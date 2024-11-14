@@ -158,7 +158,9 @@ class Partida {
             $conexion->begin_transaction();
             
             // Guardar la partida (PARTIDA)
-            $tiempoPartidaSQL = sprintf('%02d:%02d:%02d', 0, $this->tiempoPartida, 0); // Se pasa de entero a minutos
+            $minutos = $this -> tiempoPartida / 60;
+            $segundos = $this -> tiempoPartida % 60;
+            $tiempoPartidaSQL = sprintf('%02d:%02d:%02d', 0, $minutos, $segundos); // Se pasa de entero a minutos y segundos
             $sqlPartida = "INSERT INTO partida (tiempo, dificultadPartida, ayudaAdicional) 
                            VALUES ('$tiempoPartidaSQL', '$this->dificultad', '$this->ayuda')";
             $bd -> consulta($sqlPartida);
@@ -406,7 +408,7 @@ class Partida {
         }
     }
 
-    public function actualizarEstadoJugador($idUsuario, $estadoRosco, $estadoRespuesta, $tiempoRestante) {
+    public function actualizarEstadoJuego($idUsuario, $estadoRosco, $estadoRespuesta, $tiempoRestante) {
             // Si coincide y la respuesta es correcta
             if ($estadoRespuesta == 'correcto') {
                 // Si la respuesta es correcta

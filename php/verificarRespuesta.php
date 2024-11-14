@@ -11,7 +11,7 @@ if (isset($_POST['respuesta'])) {
 
     // Obtengo el estado de respuestas, actualizo el objeto Partida y guardo en sesion
     $preguntaRespondida = $partida->verificarRespuesta($idUsuario, $idPregunta, $respuesta); //FIJARSE DE SACAR O NO EL IDPREGUNTA
-    $partida -> actualizarEstadoJugador($idUsuario,
+    $partida -> actualizarEstadoJuego($idUsuario,
                                         $partida -> getRoscos()[$idUsuario] -> getEstadoRosco(),
                                         $preguntaRespondida -> getEstadoRespuesta(),
                                         $tiempoRestante);

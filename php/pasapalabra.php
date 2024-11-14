@@ -9,7 +9,7 @@ if (isset($_POST['idUsuario'], $_POST['idUsuario'])) {
     
     // Actualizar el estado de la partida - Cambiar turno y arreglo de las preguntas
     $partida -> pasapalabra($idUsuario, $tiempoRestante);
-    $partida -> actualizarEstadoJugador($idUsuario,
+    $partida -> actualizarEstadoJuego($idUsuario,
                                         null,
                                         null,
                                         $tiempoRestante); // no hay respuesta ni estado rosco (null)
