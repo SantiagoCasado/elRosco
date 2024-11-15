@@ -144,6 +144,17 @@ if (isset($_SESSION['partida'])) {
             ?>
         </article>
     </section>
+    <section>
+        <article>
+            <div class="formularios">
+                <form method = "GET" action="ranking.php">
+                    <div class="itemsCentrados">
+                        <button class="botonAceptar" type="submit">Ver Rankings</button>
+                    </div>
+                </form>
+            </div>
+        </article>
+    </section>
     <footer>
         <p>&copy; Final Laboratorio de Programacion y Lenguajes - 2024 - Santiago Casado</p>
     </footer>

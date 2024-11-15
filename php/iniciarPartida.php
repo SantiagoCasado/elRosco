@@ -45,8 +45,8 @@ if (!isset($_SESSION['partida'])) {
         $partida -> iniciarNuevaPartida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
 
         // Cargar el historial entre los jugadores - Se carga el historial antes de crear el nuevo registro para que no aparezca en la tabla
-        $historial = new historial($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
-        $historial -> getHistorialVictorias();
+        $historial = new Historial();
+        $historial -> getHistorialVictorias($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
         $_SESSION['historial'] = serialize($historial);
 
         $partidaHistorial = new Partida();

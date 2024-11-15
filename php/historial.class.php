@@ -1,5 +1,5 @@
 <?php
-include_once('baseDatos.class.php');
+include_once('partida.class.php');
 
 class Historial
 {
@@ -9,10 +9,10 @@ class Historial
     private $nombreUsuario2;
     private $victoriasJugador1;
     private $victoriasJugador2;
+    private $dificultad = ['baja', 'media', 'alta'];
+    private $victorias;
 
-    public function __construct ($idUsuario1, $idUsuario2) {
-        $this -> idUsuario1 = $idUsuario1;
-        $this -> idUsuario2 = $idUsuario2;
+    public function __construct () {
     }
 
     public function getUsuario1() {
@@ -36,6 +36,14 @@ class Historial
 
     public function getVictoriasJugador2() {
         return $this -> victoriasJugador2;
+    }
+
+    public function getDificultad() {
+        return $this -> dificultad;
+    }
+
+    public function getVictorias() {
+        return $this -> victorias;
     }
 
     public function setUsuario1($idUsuario1) {
@@ -62,13 +70,17 @@ class Historial
         $this -> victoriasJugador2 = $victoriasJugador2;
     }
 
-    public function getHistorialVictorias() {
+    public function setVictorias($victorias) {
+        $this -> victorias = $victorias;
+    }
+
+    public function getHistorialVictorias($idUsuario1, $idUsuario2) {
         try {
 			$bd = new BaseDatos();
 			$conexion = $bd -> conectarBD();
 
-            $idUsuario1 = $this -> getUsuario1();
-            $idUsuario2 = $this -> getUsuario2();
+            // $idUsuario1 = $this -> getUsuario1();
+            // $idUsuario2 = $this -> getUsuario2();
             
             $sqlHistorial = "SELECT 
                                 u1.nombreUsuario AS nombreUsuario1,
@@ -102,6 +114,48 @@ class Historial
 		} catch (Exception $e) {
       	  	error_log("Error al buscar el historial: " . $e->getMessage());
    		}
+    }
+
+    public function getMasGanadores($dificultad) {
+            try {
+                $bd = new BaseDatos();
+                $conexion = $bd -> conectarBD();
+    
+                if ($dificultad == '-----') {
+                    $sqlMasGanadores = "SELECT u.nombreUsuario, COUNT(p.idPartida) AS victorias
+                                        FROM PARTIDA p 
+                                        INNER JOIN USUARIO u ON p.ganador = u.idUsuario
+                                        GROUP BY u.nombreUsuario
+                                        ORDER BY victorias DESC
+                                        LIMIT 5";
+                } else {
+                    $sqlMasGanadores = "SELECT u.nombreUsuario, COUNT(p.idPartida) AS victorias
+                                        FROM PARTIDA p 
+                                        INNER JOIN USUARIO u ON p.ganador = u.idUsuario
+                                        WHERE p.dificultadPartida = '$dificultad'
+                                        GROUP BY u.nombreUsuario 
+                                        ORDER BY victorias DESC
+                                        LIMIT 5;";
+                }
+    
+                $resultadoConsulta = $bd -> consulta($sqlMasGanadores);
+
+                $listadoVictorias = array();
+                while ($registro = $resultadoConsulta->fetch_object()) {	
+                    $victoria = new Historial();
+                    $victoria -> setNombreUsuario1($registro -> nombreUsuario);
+                    $victoria -> setVictorias($registro -> victorias);
+                    $listadoVictorias[]=$victoria;
+                }
+    
+                $resultadoConsulta->free();
+                $bd->cerrarBD();
+
+                return $listadoVictorias;
+    
+            } catch (Exception $e) {
+                    error_log("Error al buscar a los jugadores mas ganadores: " . $e->getMessage());
+               }
     }
 }
 ?>
