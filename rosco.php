@@ -15,6 +15,16 @@ include_once('php/iniciarPartida.php');
         </div>
     </header>
 <body>
+    <!-- Audios del juego -->
+    <audio id="idAudio" preload="auto">
+        <source id="audiocorrecto" src="assets/correcto.mp3" type="audio.mp3">
+        <source id="audioincorrecto" src="assets/incorrecto.mp3" type="audio.mp3">
+        <source id="audiosinTiempo" src="assets/sinTiempo.mp3" type="audio.mp3">
+        <source id="audioreloj" src="assets/reloj.mp3" type="audio.mp3">
+        <source id="audioganador" src="assets/ganador.mp3" type="audio.mp3">
+        <source id="audioabandonar" src="assets/ganador.mp3" type="audio.mp3">
+
+    </audio>
     <section>
         <div class="zonaSeccion">
             <article class="zonaIzquierda" id="idZonaInformacionPartida" class="ZonaInformacionPartida">

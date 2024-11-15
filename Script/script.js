@@ -247,15 +247,17 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
 }
 
 function cambiarTurno(idUsuario, abandonar) {
-    // Detener temporizador
 
     var abandonarParametro;
     if (abandonar) {
         abandonarParametro = 1;
+        src = 'audioabandonar';
     } else {
         abandonarParametro = 0;
+        src = 'audioincorrecto';
     }
-    console.log('abandonar ' + abandonarParametro);
+
+    reproducirAudio(src);
     correrTiempo = false;
     controlTemporizador(idUsuario, null, correrTiempo);
 
@@ -318,6 +320,10 @@ function juegoRosco(idUsuario, idPregunta) {
 
                 // Actualizar vista rosco para el jugador que respondio
                 actualizarVistaRosco(resultado.respuesta.idPregunta, resultado.respuesta.estadoRespuesta, resultado.respuesta.palabra);
+
+                // Reproducir audio segun la respuesta
+                src = 'audio' + resultado.respuesta.estadoRespuesta;
+                reproducirAudio(src);
                 
                 // Actualizar puntaje de ambos jugadores
                 puntajeJugador1 = resultado.estadoPartida.puntajes.puntajeJugador1;
@@ -332,11 +338,13 @@ function juegoRosco(idUsuario, idPregunta) {
                     controlTemporizador(resultado.jugadorAnterior.idUsuario, null, correrTiempo);
                     controlTemporizador(resultado.jugadorActual.idUsuario, null, correrTiempo);
                          
+                    //reproducirAudio('audioganador');
+                    
                     mostrarGanador(resultado.ganador);
                 } else {
                     if (resultado.estadoPartida.enJuego) {
                         // Si la respuesta es correcta y el rosco no esta completo
-                        
+
                         //Actualizar pregunta
                         actualizarPregunta(resultado.jugadorActual.idUsuario, resultado.pregunta, resultado.pregunta.letraSiguiente)
     
@@ -436,8 +444,11 @@ function controlTemporizador(idUsuario, segundos, correrTiempo) {
         temporizador = setInterval (function () {
             actualizarVistaTemporizador(temporizadorVista, tiempo);
 
+
             if (--tiempo < 0) {
                 // Termino el juego del jugador
+                //reproducirAudio('audiosinTiempo');
+
                 temporizadorVista.innerHTML = 0;
                 clearInterval(temporizador);
 
@@ -455,9 +466,6 @@ function actualizarVistaTemporizador(temporizador, tiempo) {
 }
 
 function mostrarGanador(jugador) {
-
-    // var h2Turno = document.getElementById('idTurnoDe');
-    // h2Turno.innerHTML = '';
 
     var formularioJuego = document.getElementById('idFormularioJuego');
     formularioJuego.innerHTML = '';
@@ -501,5 +509,18 @@ function mostrarGanador(jugador) {
     //     window.location.href = 'index.php';
     // }
     formularioJuego.appendChild(botonSalir);
+}
 
+function reproducirAudio(srcAudio) {
+    var audio = document.getElementById('idAudio');
+    if (!audio.paused) {
+        // Si se esta reproduciendo pausarlo
+        audio.pause();
+    }
+
+    // Reiniciarlo
+    audio.currentTime = 0;
+    var source = document.getElementById(srcAudio);
+    audio.src = source.src;
+    audio.play();
 }
