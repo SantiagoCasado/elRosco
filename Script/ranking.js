@@ -38,56 +38,50 @@ function listarMasGanadores() {
     }
 }
 
-// function listaMejoresJugadores(idEmpresa, ciudadOrigen, ciudadDestino) {
+function listaMejoresJugadores() {
 
-//     var peticion = new XMLHttpRequest();
-//     peticion.open("GET", "index_b.php?idEmpresa="+idEmpresa+"&ciudadOrigen="+ciudadOrigen+"&ciudadDestino="+ciudadDestino, true);
-//     peticion.onreadystatechange = cargarServicios;
-//     peticion.send(null);
+    var comboMejoresPuntajes = document.getElementById("idComboMejoresPuntajes");
+    var puntaje = comboMejoresPuntajes.options[comboMejoresPuntajes.selectedIndex].value;
+
+    var comboMejoresTiempo = document.getElementById("idComboMejoresTiempo");
+    var tiempoUtilizado = comboMejoresTiempo.options[comboMejoresTiempo.selectedIndex].value;
+
+
+    var peticion = new XMLHttpRequest();
+    peticion.open("GET", "php/rankings.php?puntaje="+puntaje+"&tiempoUtilizado="+tiempoUtilizado, true);
+    peticion.onreadystatechange = cargarMejoresJugadores;
+    peticion.send(null);
     
-//     function cargarServicios() {
+    function cargarMejoresJugadores() {
+    var tablaMejoresJugadores = document.getElementById("idMejoresJugadores");
 
-//     var listarServicios = document.getElementById("listaServicios");
+    while (tablaMejoresJugadores.rows.length > 1) {
+        tablaMejoresJugadores.deleteRow(1);
+    }
 
-//     while (listarServicios.rows.length > 1) {
-//         listarServicios.deleteRow(1);
-//     }
+    if ((peticion.readyState == 4) && (peticion.status==200))
+        {	
+            var mejoresJugadores = JSON.parse(peticion.responseText);
+            console.log(mejoresJugadores)
+            for (i = 0; i < mejoresJugadores.length; i++) {
+                var tr = document.createElement("tr");
 
-//     if ((peticion.readyState == 4) && (peticion.status==200))
-//         {	
-//             var servicios = JSON.parse(peticion.responseText);
+                var mejorJugador = mejoresJugadores[i]
 
+                var tdNombreUsuario = document.createElement("td");
+                tdNombreUsuario.innerHTML = mejorJugador.nombreUsuario;
+                tr.appendChild(tdNombreUsuario);
 
-//             for (i = 0; i < servicios.length; i++) {
-//                 var tr = document.createElement("tr");
+                var tdPuntaje = document.createElement("td");
+                tdPuntaje.innerHTML = mejorJugador.puntaje;
+                tr.appendChild(tdPuntaje);
 
-//                 var servicio = servicios[i];
+                var tdTiempoUtilizado = document.createElement("td");
+                tdTiempoUtilizado.innerHTML = mejorJugador.tiempoUtilizado + ' segundos';
+                tr.appendChild(tdTiempoUtilizado);
 
-//                 var nro = document.createElement("td");
-//                 nro.innerHTML = servicio.nroServicio;
-//                 var estacionOrigen = document.createElement("td");
-//                 estacionOrigen.innerHTML = servicio.estacionOrigenServicio;
-//                 var estacionDestino = document.createElement("td");
-//                 estacionDestino.innerHTML = servicio.estacionDestinoServicio;
-//                 var horaSalida = document.createElement("td");
-//                 horaSalida.innerHTML = servicio.horaSalidaServicio;
-//                 var horaLlegada = document.createElement("td");
-//                 horaLlegada.innerHTML = servicio.horaLlegadaServicio;
-//                 var frecuencia = document.createElement("td");
-//                 frecuencia.innerHTML = servicio.frecuenciaServicio;
-//                 var precio = document.createElement("td");
-//                 precio.innerHTML = servicio.precioServicio;
-
-//                 tr.appendChild(nro);
-//                 tr.appendChild(estacionOrigen);
-//                 tr.appendChild(estacionDestino);
-//                 tr.appendChild(horaSalida);
-//                 tr.appendChild(horaLlegada);
-//                 tr.appendChild(frecuencia);
-//                 tr.appendChild(precio);
-
-//                 listarServicios.appendChild(tr);
-//             }
-//         }
-//     }
-// }
+                tablaMejoresJugadores.appendChild(tr);
+            }
+        }
+    }
+}

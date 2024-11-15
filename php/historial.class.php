@@ -11,6 +11,8 @@ class Historial
     private $victoriasJugador2;
     private $dificultad = ['baja', 'media', 'alta'];
     private $victorias;
+    private $puntaje;
+    private $tiempoUtilizado;
 
     public function __construct () {
     }
@@ -46,6 +48,14 @@ class Historial
         return $this -> victorias;
     }
 
+    public function getPuntaje() {
+        return $this -> puntaje;
+    }
+
+    public function getTiempoUtilizado() {
+        return $this -> tiempoUtilizado;
+    }
+
     public function setUsuario1($idUsuario1) {
         $this -> idUsuario2 = $idUsuario1;
     }
@@ -72,6 +82,14 @@ class Historial
 
     public function setVictorias($victorias) {
         $this -> victorias = $victorias;
+    }
+
+    public function setPuntaje($puntaje) {
+        $this -> puntaje = $puntaje;
+    }
+
+    public function setTiempoUtilizado($tiempoUtilizado) {
+        $this -> tiempoUtilizado = $tiempoUtilizado;
     }
 
     public function getHistorialVictorias($idUsuario1, $idUsuario2) {
@@ -116,46 +134,104 @@ class Historial
    		}
     }
 
-    public function getMasGanadores($dificultad) {
+    public function getMejoresJugadores($puntaje, $tiempoUtilizado) {
             try {
                 $bd = new BaseDatos();
                 $conexion = $bd -> conectarBD();
     
-                if ($dificultad == '-----') {
-                    $sqlMasGanadores = "SELECT u.nombreUsuario, COUNT(p.idPartida) AS victorias
-                                        FROM PARTIDA p 
-                                        INNER JOIN USUARIO u ON p.ganador = u.idUsuario
-                                        GROUP BY u.nombreUsuario
-                                        ORDER BY victorias DESC
-                                        LIMIT 5";
-                } else {
-                    $sqlMasGanadores = "SELECT u.nombreUsuario, COUNT(p.idPartida) AS victorias
-                                        FROM PARTIDA p 
-                                        INNER JOIN USUARIO u ON p.ganador = u.idUsuario
-                                        WHERE p.dificultadPartida = '$dificultad'
-                                        GROUP BY u.nombreUsuario 
-                                        ORDER BY victorias DESC
-                                        LIMIT 5;";
+                if ($puntaje != '-----' && $tiempoUtilizado == '-----') {
+                    $sqlMejoresJugadores = "SELECT u.nombreUsuario, pu.puntaje,
+                                                    TIMEDIFF(p.tiempo, pu.tiempoRestante) AS tiempoUtilizado
+                                                    FROM partida p 
+                                                    INNER JOIN PARTIDA_USUARIO pu ON p.idPartida = pu.idPartida
+                                                    INNER JOIN USUARIO u ON pu.idUsuario = u.idUsuario
+                                                    ORDER BY pu.puntaje DESC
+                                                    LIMIT 5;";
+
+                } elseif ($puntaje == "-----" && $tiempoUtilizado != "-----") {
+                    $sqlMejoresJugadores = "SELECT u.nombreUsuario, pu.puntaje, TIMEDIFF(p.tiempo, pu.tiempoRestante) AS tiempoUtilizado
+                                            FROM partida p 
+                                            INNER JOIN PARTIDA_USUARIO pu ON p.idPartida = pu.idPartida
+                                            INNER JOIN USUARIO u ON pu.idUsuario = p.ganador
+                                            WHERE TIMEDIFF(p.tiempo, pu.tiempoRestante) != '00:00:00'
+                                            ORDER BY pu.tiempoRestante DESC, pu.puntaje DESC
+                                            LIMIT 5;";
+                                            // Se filtra por los ganadores y tiempo utilizado != 0 para evitar las partidas abandonadas desde el inicio
+                } elseif ($puntaje != "-----" && $tiempoUtilizado != "-----") {
+                    $sqlMejoresJugadores = "SELECT u.nombreUsuario, pu.puntaje, TIMEDIFF(p.tiempo, pu.tiempoRestante) AS tiempoUtilizado
+                                            FROM partida p 
+                                            INNER JOIN PARTIDA_USUARIO pu ON p.idPartida = pu.idPartida
+                                            INNER JOIN USUARIO u ON pu.idUsuario = u.idUsuario
+                                            ORDER BY pu.puntaje DESC, pu.tiempoRestante DESC
+                                            LIMIT 5;";
                 }
     
-                $resultadoConsulta = $bd -> consulta($sqlMasGanadores);
+                $resultadoConsulta = $bd -> consulta($sqlMejoresJugadores);
 
-                $listadoVictorias = array();
+                $listadoMejoresJugadores = array();
                 while ($registro = $resultadoConsulta->fetch_object()) {	
-                    $victoria = new Historial();
-                    $victoria -> setNombreUsuario1($registro -> nombreUsuario);
-                    $victoria -> setVictorias($registro -> victorias);
-                    $listadoVictorias[]=$victoria;
+                    $mejorJugador = new Historial();
+                    $mejorJugador -> setNombreUsuario1($registro -> nombreUsuario);
+                    $mejorJugador -> setPuntaje($registro -> puntaje);
+
+                    $tiempo = $registro -> tiempoUtilizado;
+                    [$horas, $minutos, $segundos] = explode(":", $tiempo);
+                    $tiempoUtilizado = ($horas * 3600) + ($minutos * 60) + $segundos;
+                    $mejorJugador -> setTiempoUtilizado($tiempoUtilizado);
+
+                    $listadoMejoresJugadores[]=$mejorJugador;
                 }
     
                 $resultadoConsulta->free();
                 $bd->cerrarBD();
-
-                return $listadoVictorias;
+                error_log('Se buscaron los mejores jugadores');
+                return $listadoMejoresJugadores;
     
             } catch (Exception $e) {
-                    error_log("Error al buscar a los jugadores mas ganadores: " . $e->getMessage());
+                    error_log("Error al buscar a los mejores jugadores " . $e->getMessage());
                }
     }
+
+    public function getMasGanadores($dificultad) {
+        try {
+            $bd = new BaseDatos();
+            $conexion = $bd -> conectarBD();
+
+            if ($dificultad == '-----') {
+                $sqlMasGanadores = "SELECT u.nombreUsuario, COUNT(p.idPartida) AS victorias
+                                    FROM PARTIDA p 
+                                    INNER JOIN USUARIO u ON p.ganador = u.idUsuario
+                                    GROUP BY u.nombreUsuario
+                                    ORDER BY victorias DESC
+                                    LIMIT 5";
+            } else {
+                $sqlMasGanadores = "SELECT u.nombreUsuario, COUNT(p.idPartida) AS victorias
+                                    FROM PARTIDA p 
+                                    INNER JOIN USUARIO u ON p.ganador = u.idUsuario
+                                    WHERE p.dificultadPartida = '$dificultad'
+                                    GROUP BY u.nombreUsuario 
+                                    ORDER BY victorias DESC
+                                    LIMIT 5;";
+            }
+
+            $resultadoConsulta = $bd -> consulta($sqlMasGanadores);
+
+            $listadoVictorias = array();
+            while ($registro = $resultadoConsulta->fetch_object()) {	
+                $victoria = new Historial();
+                $victoria -> setNombreUsuario1($registro -> nombreUsuario);
+                $victoria -> setVictorias($registro -> victorias);
+                $listadoVictorias[]=$victoria;
+            }
+
+            $resultadoConsulta->free();
+            $bd->cerrarBD();
+
+            return $listadoVictorias;
+
+        } catch (Exception $e) {
+                error_log("Error al buscar a los jugadores mas ganadores: " . $e->getMessage());
+           }
+}
 }
 ?>

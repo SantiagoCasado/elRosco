@@ -44,14 +44,14 @@
         <article>
         <div class="formularioJuego">
                 <div class="itemsCentrados"><h2>Mejores Jugadores</h2></div>
-                <label for="idComboMejoresJugadores">Selecciona por mayor puntaje y/o tiempo utilizado</label><br>
-                <select name="comboMejoresJugadores" id="idComboMejoresJugadores" onChange="listaMejoresJugadores();">
+                <label for="idComboMejoresPuntajes">Selecciona por mayor puntaje y/o tiempo utilizado</label><br>
+                <select name="comboMejoresPuntajes" id="idComboMejoresPuntajes" onChange="listaMejoresJugadores();">
                     <option value="-----">-----</option>
-                    <option value="puntaje">Mas Puntos</option>
+                    <option value="puntaje">Con mas puntos</option>
                 </select>
-                <select name="comboMejoresJugadores" id="idComboMejoresJugadores" onChange="listaMejoresJugadores();">
+                <select name="comboMejoresTiempo" id="idComboMejoresTiempo" onChange="listaMejoresJugadores();">
                     <option value="-----">-----</option>
-                    <option value="tiempoRestante">Menos Tiempo</option>
+                    <option value="tiempoUtilizado">Con menor tiempo</option>
                 </select>
                 <br><br>
                 <table id="idMejoresJugadores" class="tablaHistorial">

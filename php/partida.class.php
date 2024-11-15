@@ -365,14 +365,17 @@ class Partida {
                 $partida->setPuntajes($puntajes);
 
                 $tiemposRestantes = array();
+
                 $tiempo = $registro -> tiempo1;
                 [$horas, $minutos, $segundos] = explode(":", $tiempo);
                 $segundos1 = ($horas * 3600) + ($minutos * 60) + $segundos;
                 $tiemposRestantes[$idUsuario1] = $segundos1;
+                
                 $tiempo = $registro -> tiempo2;
                 [$horas, $minutos, $segundos] = explode(":", $tiempo);
                 $segundos2 = ($horas * 3600) + ($minutos * 60) + $segundos;
-                $tiemposRestantes[$idUsuario2] = $segundos2;;
+                $tiemposRestantes[$idUsuario2] = $segundos2;
+
                 $partida->setTiemposRestantes($tiemposRestantes);
 
                 $listadoPartidas[]=$partida;
