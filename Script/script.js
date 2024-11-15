@@ -157,8 +157,7 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         labelDescripcion.innerHTML = pregunta.descripcion;
         formularioJuego.appendChild(labelDescripcion);
         
-        if (false) {
-        // if (ayudaAdicional) {
+        if (ayudaAdicional == 1) {
             var labelAyuda = document.createElement('label');
             labelAyuda.id = 'idAyudaAdicional';
             labelAyuda.htmlFor = 'idRespuesta';
@@ -380,14 +379,12 @@ function actualizarPregunta(idUsuario, pregunta, letraSiguiente) {
     var labelDescripcion = document.getElementById('idDescripcion');
     labelDescripcion.innerHTML = pregunta.descripcion;
     
-    if (false) {
-    // if (ayudaAdicional) {
-        // Actualizar la cantidad de letras de la palabra
-        var labelAyuda = document.getElementById('idAyudaAdicional');
+    if (labelAyuda = document.getElementById('idAyudaAdicional')) {
+        // //Actualizar la cantidad de letras de la palabra
+        // var labelAyuda = document.getElementById('idAyudaAdicional');
         labelAyuda.innerHTML = '<br>Contiene ' + pregunta.palabra.length + ' letras';
     }
     
-
     // Actualizar los parametros de la funcion a llamar en el boton Arriesgar
     var botonArriesgar = document.getElementById('idBotonArriesgar');
     botonArriesgar.onclick = function () {

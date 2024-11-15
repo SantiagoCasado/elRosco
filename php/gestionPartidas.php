@@ -76,6 +76,7 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
             'idPregunta' => $rosco->getPreguntasPendientes()[0]->getidPregunta(),
             'letra' => $rosco->getPreguntasPendientes()[0]->getLetra(),
             'descripcion' => $rosco->getPreguntasPendientes()[0]->getDescripcion(),
+            'palabra' => $rosco->getPreguntasPendientes()[0]->getPalabra(),
             // Vericar cuantas palabras quedan pendientes para asignar siguiente letra
             'letraSiguiente' => count($rosco->getPreguntasPendientes()) > 1 ? $rosco->getPreguntasPendientes()[1]->getLetra() : $rosco->getPreguntasPendientes()[0]->getLetra()
         );
@@ -84,6 +85,7 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
             'idPregunta' => '',
             'letra' => '',
             'descripcion' => 'El jugador ya respondio todas las preguntas',
+            'palabra' => '',
             'letraSiguiente' => ''
         );
     }
