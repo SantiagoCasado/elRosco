@@ -128,11 +128,13 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
     var formularioJuego = document.getElementById('idFormularioJuego');
     formularioJuego.innerHTML = '';
 
+    var turno = document.createElement('div');
+    turno.className = 'turnoDe' + turnoActual;
+
     var h2Turno = document.createElement('h2');
-    h2Turno.id = 'idTurnoDe'
     h2Turno.innerHTML = 'Turno de ' + jugador.nombreUsuario;
-    h2Turno.className = 'turnoDe' + turnoActual;
-    formularioJuego.appendChild(h2Turno);
+    turno.appendChild(h2Turno);
+    formularioJuego.appendChild(turno);
 
     if (enJuego) {
         // VISTA FORMULARIO JUEGO
@@ -453,19 +455,25 @@ function actualizarVistaTemporizador(temporizador, tiempo) {
 }
 
 function mostrarGanador(jugador) {
-    var h2Turno = document.getElementById('idTurnoDe');
-    h2Turno.innerHTML = '';
+
+    // var h2Turno = document.getElementById('idTurnoDe');
+    // h2Turno.innerHTML = '';
 
     var formularioJuego = document.getElementById('idFormularioJuego');
     formularioJuego.innerHTML = '';
 
+    var ganador = document.createElement('div');
+    ganador.className = 'ganador';
+
     var h1ganador = document.createElement('h1');
     h1ganador.innerHTML = "FELICIDADES " + jugador.nombreUsuario + "!";
-    formularioJuego.appendChild(h1ganador);
+    ganador.appendChild(h1ganador);
 
-    var h3puntaje = document.createElement('h3');
+    var h3puntaje = document.createElement('h2');
     h3puntaje.innerHTML = "Ganaste el juego con un puntaje de " + jugador.puntaje;
-    formularioJuego.appendChild(h3puntaje);
+    ganador.appendChild(h3puntaje);
+
+    formularioJuego.appendChild(ganador);
 
     var botonJuegoNuevo = document.createElement('button');
     botonJuegoNuevo.id = 'idbotonJuegoNuevo';

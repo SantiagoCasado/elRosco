@@ -4,7 +4,8 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
+    /* background-color: #f0f0f0; */
+    background-color: #E6E6FA;
 }
 
 section {
@@ -341,7 +342,7 @@ button:hover {
     font-size: large;
 }
 
-.turnoDe0 {
+/* .turnoDe0 {
     color: #FF7F50;
     font-weight: bold;
 
@@ -350,34 +351,84 @@ button:hover {
 .turnoDe1 {
     color: #50BFFF;
     font-weight: bold;
+} */
+
+.turnoDe0 {
+    background-color: #FF7F50;
+    padding: 15px;
+    border-radius: 20px;
+    height: auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }
 
-/* Estilos para listas */
-ul, ol {
-    padding-left: 20px;
-    margin-bottom: 20px;
-}
-
-li {
-    margin-bottom: 5px;
-}
-
-/* Estilos para listas sin estilos */
-.list-unstyled {
-    list-style: none;
-    padding: 0;
+.turnoDe0 h1 {
     margin: 0;
-}
+    font-size: 36px;
+    color: white;
+    font-weight: bold; 
+  }
 
-/* Estilos para listas en línea */
-.list-inline {
-    padding: 0;
+.turnoDe0 h2 {
     margin: 0;
+    font-size: 24px;
+    color: white;
+    font-weight: bold; 
+  }
+
+.turnoDe1 {
+    background-color: #50BFFF;
+    padding: 15px;
+    border-radius: 20px;
+    height: auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+.turnoDe1 h1 {
+    margin: 0;
+    font-size: 36px;
+    color: white;
+    font-weight: bold; 
+}
+  
+.turnoDe1 h2 {
+    margin: 0;
+    font-size: 36px;
+    color: white;
+    font-weight: bold; 
 }
 
-.list-inline li {
-    display: inline-block;
-    margin-right: 10px;
+.ganador {
+    background-color: #7f4dff;
+    padding: 15px;
+    border-radius: 20px;
+    height: auto;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+.ganador h1 {
+    margin: 0;
+    font-size: 36px;
+    color: white;
+    font-weight: bold; 
+}
+  
+.ganador h2 {
+    margin: 0;
+    font-size: 24px;
+    color: white;
+    font-weight: bold; 
 }
 
 /* Estilo para etiquetas divs */

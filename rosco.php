@@ -63,7 +63,6 @@ include_once('php/iniciarPartida.php');
     <section>
         <article>
             <div id="idZonaInteraccion" class="itemsCentrados">
-                <!-- <h2>TURNO DE <strong id="idTurnoDe"></strong></h2> -->
                 <div>
                     <form id="idFormularioJuego" class="formularioJuego" method="POST">
                         <!-- formulario generado en JS -->
