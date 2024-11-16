@@ -44,7 +44,8 @@ if (!isset($_SESSION['partida'])) {
         $partida = new Partida();
         $partida -> iniciarNuevaPartida($dificultad, $tiempoPartida, $ayudaAdicional, $jugadores);
 
-        // Cargar el historial entre los jugadores - Se carga el historial antes de crear el nuevo registro para que no aparezca en la tabla
+        // Cargar el historial entre los jugadores - Se carga el historial antes de crear crear la partida en BD
+        // para que no aparezca en la tabla el nuevo registro
         $historial = new Historial();
         $historial -> getHistorialVictorias($partida -> getJugadores()[0] -> getID(), $partida -> getJugadores()[1] -> getID());
         $_SESSION['historial'] = serialize($historial);
@@ -70,9 +71,6 @@ if (!isset($_SESSION['partida'])) {
     }         
 } else {
     // PARTIDA EN SESION
-    // unset($_SESSION['partida']);
-    // unset($_SESSION['historial']);
-    // unset($_SESSION['historialPartidas']);
     $partida = unserialize($_SESSION['partida']);
     $historial = unserialize($_SESSION['historial']);
     $listadoPartidas = unserialize($_SESSION['historialPartidas']);

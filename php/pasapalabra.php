@@ -8,8 +8,6 @@ if (isset($_POST['idUsuario'], $_POST['tiempoRestante'], $_POST['abandonar'])) {
     $tiempoRestante = $_POST['tiempoRestante'];
     $abandonar = $_POST['abandonar'];
     $abandonar = $abandonar == 1 ? true : false;
-
-    error_log($abandonar ? 'abandonar' : 'no abandonar');
     
     if ($tiempoRestante > 0) {
         // El jugador paso palabra - sigue en juego

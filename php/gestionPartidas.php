@@ -13,10 +13,6 @@ function cargarPartidaSesion() {
         echo json_encode(["error" => "No se pudo deserializar la partida"]);
         exit;
     } else {
-        // Si la sesión se perdió, recuperar desde la base de datos
-        // $idPartida = $_SESSION['idPartida'];
-        // $partida = new Partida();
-        // $partida = $partida -> cargarPartidaBD($idPartida); 
         echo json_encode(['error' => 'No existe la sesión partida']);
         exit;
     }

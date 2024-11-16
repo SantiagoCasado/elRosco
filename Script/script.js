@@ -1,15 +1,19 @@
 function crearVistaJuego(partida) {
-    crearVistaRoscos(partida.roscos);
-
     crearTablaHistorial(partida.historial, partida.jugadores);
-    //console.log(partida.historial.victorias.nombreUsuario1);
+
     var enJuego = false;
     jugadorActual = partida.jugadores[partida.turnoActual];
     pregunta = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0];
-    letraSiguiente = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0].letra
+    if (partida.roscos[jugadorActual.idUsuario].preguntasPendientes.length > 1) {
+        letraSiguiente = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[1].letra;
+    } else {
+        letraSiguiente = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0].letra;
+    }
     vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
 
     crearBotonAbandonar(jugadorActual.idUsuario);
+
+    crearVistaRoscos(partida.roscos);
 }
 
 function crearTablaHistorial(historial, jugadores) {
@@ -77,13 +81,14 @@ function crearVistaRoscos(roscos) {
         for (i = 0; i < 9; i++) {
             var fila = document.createElement('tr');
             
-            // Cada fila contiene tres letra/palabras
+            // Cada fila contiene tres letra/palabra
             for (j = 0; j < 3; j++) {
                 var celdaLetra = document.createElement('td');
                 var celdaPalabra = document.createElement('td');
                 celdaLetra.className = 'celdaLetra';
                 celdaPalabra.className = 'celdaPalabra';
                 
+                // Ubicacion en la matriz: numero de fila = i * 3, numero de columna= j
                 var pregunta = rosco.preguntasPendientes[i * 3 + j];
                 if (pregunta) {
                     var label = document.createElement("label");

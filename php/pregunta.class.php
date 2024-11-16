@@ -136,27 +136,5 @@ class Pregunta
     public function cargarPreguntaBD($idPregunta) {
         //
     }
-
-    // public function verificarRespuesta($idPregunta, $respuesta) {
-    //     try {
-	// 		//Buscar en la base de datos si la respuesta coincide con la palabra segun el idPregunta
-	// 		$bd = new BaseDatos();
-	// 		$conexion = $bd -> conectarBD();
-    //         $sql = "SELECT palabra 
-    //                 FROM pregunta
-    //                 WHERE idPregunta = '$idPregunta' AND palabra = '$respuesta'";
-
-	// 		$palabra = $bd -> consulta($sql);
-		
-    //         $respuestaCorrecta = $palabra->num_rows > 0;
-
-	// 		$palabra->free();
-	// 		$bd->cerrarBD();
-
-	// 		return $respuestaCorrecta;
-	// 	} catch (Exception $e) {
-    //   	  	error_log("Error al buscar la pregunta: " . $e->getMessage());
-   	// 	}
-    // }
 }
 ?>

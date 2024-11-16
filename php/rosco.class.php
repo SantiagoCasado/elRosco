@@ -9,7 +9,6 @@ class Rosco
     private $preguntasArriesgadas;
 
     
-    // Cambiar constructor = igual que Partida
     public function __construct($dificultadRosco)
     {
         $this->estadoRosco = 'incompleto';
@@ -58,9 +57,6 @@ class Rosco
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
             'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
         ];
-        // $abecedario = [
-        //     'A'
-        // ];
 
         foreach ($abecedario as $letra) {
 
@@ -88,17 +84,9 @@ class Rosco
                 array_push($this->preguntasPendientes, $pregunta);            
             } else {
 
-                $mensaje = 'No hay más preguntas para la letra '. $letra; //Ver la manera de usar este mensaje
+                $mensaje = 'No hay más preguntas para la letra '. $letra;
             }
         }
-    }
-
-    public function cargarRoscoBD($idRosco) {
-        // Obtener el estadoRosco
-
-        // Cargar las 27 preguntas
-        $pregunta = new Pregunta();
-        //$pregunta -> cargarPreguntaBD($idPregunta);
     }
 
     public function verificarRespuestaRosco($respuesta) {
