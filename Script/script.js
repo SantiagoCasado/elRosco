@@ -9,7 +9,15 @@ function crearVistaJuego(partida) {
     } else {
         letraSiguiente = partida.roscos[jugadorActual.idUsuario].preguntasPendientes[0].letra;
     }
-    vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
+    
+    if (partida.ganador == null) {
+        vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
+    } else {
+        mostrarGanador(partida.ganador);
+        console.log(partida.ganador);
+    }
+
+    //vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
 
     crearBotonAbandonar(jugadorActual.idUsuario);
 
@@ -128,52 +136,6 @@ function crearVistaRoscos(roscos) {
         zonaJugador.appendChild(tablaRosco);
     });
 }
-
-// function crearVistaRoscos(roscos) {
-//     Object.entries(roscos).forEach(([idUsuario, rosco]) => {
-//         // Crear la tabla para las letras y palabras del rosco
-//         var zonaJugador = document.getElementById('idLetrasJugador' + idUsuario);
-//         var tablaRosco = document.createElement('table');
-//         tablaRosco.className = 'tablaRosco';
-
-//         abecedario = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-//             'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-
-//         // Agregar las filas y las celdas (9x3)
-//         for (i = 0; i < 9; i++) {
-//             var fila = document.createElement('tr');
-            
-//             // Cada fila contiene tres letra/palabra
-//             for (j = 0; j < 3; j++) {
-//                 var celdaLetra = document.createElement('td');
-//                 var celdaPalabra = document.createElement('td');
-//                 celdaLetra.className = 'celdaLetra';
-//                 celdaPalabra.className = 'celdaPalabra';
-                
-//                 // Ubicacion en la matriz: numero de fila = i * 3, numero de columna= j
-//                 var pregunta = rosco.preguntasPendientes[i * 3 + j];
-//                 if (pregunta) {
-//                     var label = document.createElement("label");
-//                     label.id = pregunta.idPregunta;
-//                     label.className = pregunta.estadoRespuesta;
-//                     label.innerHTML = pregunta.letra;
-//                     celdaLetra.appendChild(label);
-                    
-//                     var h3palabra = document.createElement("h3");
-//                     h3palabra.id = 'palabra' + pregunta.idPregunta;
-//                     celdaPalabra.appendChild(h3palabra);
-//                 }
-                
-//                 fila.appendChild(celdaLetra);
-//                 fila.appendChild(celdaPalabra);
-//             }
-            
-//             tablaRosco.appendChild(fila);
-//         }
-        
-//         zonaJugador.appendChild(tablaRosco);
-//     });
-// }
 
 function crearBotonAbandonar(idUsuario) {
     var formularioAbandonar = document.getElementById('idAbandonar');

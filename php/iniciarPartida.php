@@ -83,7 +83,8 @@ $partidaJSON = array(
     'tiempoPartida' => $partida->getTiempoPartida(), //
     'ayuda' => $partida->getAyuda(), //
     'turnoActual' => $partida->getTurnoActual(), //
-    'jugadores' => array(), //
+    'jugadores' => array(),
+    'ganador' => '', //
     'roscos' => array(),
     'historial' => array()
 );
@@ -95,6 +96,23 @@ foreach ($partida->getJugadores() as $jugador) {
         'nombreUsuario' => $jugador->getNombreUsuario(), //
         );
 }
+
+if ($partida -> getGanador() != null) {
+    // Termino el juego - Obtener el ganador
+    $ganadorPartida = $partida -> getGanador();
+    $ganador = array(
+        'idUsuario' => $ganadorPartida -> getId(),
+        'nombreUsuario' => $ganadorPartida -> getNombreUsuario(),
+        'puntaje' => $partida -> getPuntajes()[$ganadorPartida -> getID()],
+        'tiempo' => $partida -> getTIemposRestantes()[$ganadorPartida -> getID()]
+    );
+} else {
+    $ganador = null;    
+}
+$partidaJSON['ganador'] = $ganador;
+
+
+
         
 // Agregar roscos al JSON
 foreach ($partida->getRoscos() as $idJugador => $rosco) {

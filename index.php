@@ -7,9 +7,6 @@ if (isset($_POST['botonSalir'])) {
     session_destroy();
 }
 
-// // $_SESSION = array();
-// // session_destroy();
-
 if (isset($_SESSION['mensaje'])) {
     $mensaje = $_SESSION['mensaje'];
     echo "<script type='text/javascript'>alert('$mensaje');</script>";
@@ -126,10 +123,6 @@ if (isset($_SESSION['partida'])) {
                                 placeholder="Contrase&ntilde;a" 
                                 required>
                             <br><br>
-
-                            <!-- Darle funcionalidad  -->
-                            <!-- <input type="checkbox" name = "checkboxRecordarme" value="True"><label for="checkboxRecordarme">Recordarme</label>
-                            <br><br> -->
                         
                             <div class="itemsCentrados"><button class="botonAceptar" type="submit" name = "botonInicio">Ingresar</button></div>
                         

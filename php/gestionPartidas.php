@@ -88,12 +88,12 @@ function generarJSON($partida, $idPregunta = null, $preguntaRespondida = null) {
 
     if ($partida -> getGanador() != null) {
         // Termino el juego - Obtener el ganador
-        $ganador = $partida -> getGanador();
+        $ganadorPartida = $partida -> getGanador();
         $ganador = array(
-            'idUsuario' => $ganador -> getId(),
-            'nombreUsuario' => $ganador -> getNombreUsuario(),
-            'puntaje' => $partida -> getPuntajes()[$ganador -> getID()],
-            'tiempo' => $partida -> getTIemposRestantes()[$ganador -> getID()]
+            'idUsuario' => $ganadorPartida -> getId(),
+            'nombreUsuario' => $ganadorPartida -> getNombreUsuario(),
+            'puntaje' => $partida -> getPuntajes()[$ganadorPartida -> getID()],
+            'tiempo' => $partida -> getTIemposRestantes()[$ganadorPartida -> getID()]
         );
     } else {
         $ganador = null;    
