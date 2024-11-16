@@ -19,8 +19,6 @@ include_once('php/iniciarPartida.php');
     <audio id="idAudio" preload="auto">
         <source id="audiocorrecto" src="assets/correcto.mp3" type="audio.mp3">
         <source id="audioincorrecto" src="assets/incorrecto.mp3" type="audio.mp3">
-        <source id="audiosinTiempo" src="assets/sinTiempo.mp3" type="audio.mp3">
-        <source id="audioreloj" src="assets/reloj.mp3" type="audio.mp3">
         <source id="audioganador" src="assets/ganador.mp3" type="audio.mp3">
         <source id="audioabandonar" src="assets/abandonar.mp3" type="audio.mp3">
 
@@ -85,7 +83,7 @@ include_once('php/iniciarPartida.php');
                 
                     <table class="tablaEstadoJugador">
                             <tr>
-                                <td class="celdaEstadoJugador" id="tiempoJugador<?php echo $jugadores[0]->getID(); ?>"><?php echo $partida -> getTiempoPartida(); ?></td>
+                                <td class="celdaEstadoJugador" id="tiempoJugador<?php echo $jugadores[0]->getID(); ?>"><?php echo $partida -> getTiemposRestantes()[$jugadores[0]->getID()]; ?></td>
                                 <td class="celdaEstadoJugador" id="puntajeJugador<?php echo $jugadores[0]->getID(); ?>"><?php echo $partida -> getPuntajes()[$jugadores[0]->getID()]; ?></td>
                             </tr>
                     </table>
@@ -98,7 +96,7 @@ include_once('php/iniciarPartida.php');
                     <h1><?php echo $partida -> getJugadores()[1] -> getNombreUsuario() ?></h1>
                     <table class="tablaEstadoJugador">
                             <tr>
-                                <td class="celdaEstadoJugador" id="tiempoJugador<?php echo $jugadores[1]->getID(); ?>"><?php echo $partida -> getTiempoPartida(); ?></td>
+                                <td class="celdaEstadoJugador" id="tiempoJugador<?php echo $jugadores[1]->getID(); ?>"><?php echo $partida -> getTiemposRestantes()[$jugadores[1]->getID()]; ?></td>
                                 <td class="celdaEstadoJugador" id="puntajeJugador<?php echo $jugadores[1]->getID(); ?>"><?php echo $partida -> getPuntajes()[$jugadores[1]->getID()]; ?></td>
                             </tr>
                     </table>

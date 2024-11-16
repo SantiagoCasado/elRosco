@@ -94,6 +94,7 @@ foreach ($partida->getJugadores() as $jugador) {
     $partidaJSON['jugadores'][] = array(
         'idUsuario' => $jugador->getID(), //
         'nombreUsuario' => $jugador->getNombreUsuario(), //
+        'tiempoRestante' => $partida->getTiemposRestantes()[$jugador->getID()]
         );
 }
 

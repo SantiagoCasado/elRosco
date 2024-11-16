@@ -1,4 +1,5 @@
 function crearVistaJuego(partida) {
+    console.log(partida);
     crearTablaHistorial(partida.historial, partida.jugadores);
 
     var enJuego = false;
@@ -11,7 +12,7 @@ function crearVistaJuego(partida) {
     }
     
     if (partida.ganador == null) {
-        vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
+        vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, jugadorActual.tiempoRestante, enJuego);
     } else {
         mostrarGanador(partida.ganador);
         console.log(partida.ganador);
@@ -165,10 +166,6 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
 
     if (enJuego) {
         // VISTA FORMULARIO JUEGO
-
-        // Iniciar temporizador del jugador
-        correrTiempo = true;
-        controlTemporizador(jugador.idUsuario, tiempoRestante, correrTiempo);
         
         // Mostrar letra y descripcion del rosco
 
@@ -258,6 +255,9 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
         botonComenzarTurno.onclick = function () {
             enJuego = true;
             vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego);
+
+            correrTiempo = true;
+            controlTemporizador(jugador.idUsuario, tiempoRestante, correrTiempo);
         }
         formularioJuego.appendChild(botonComenzarTurno);
         botonComenzarTurno.focus();
@@ -266,6 +266,9 @@ function vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaA
                 //event.preventDefault();
                 enJuego = true;
                 vistaInteraccion(jugador, pregunta, letraSiguiente, turnoActual, ayudaAdicional, tiempoRestante, enJuego);
+
+                correrTiempo = true;
+                controlTemporizador(jugador.idUsuario, tiempoRestante, correrTiempo);
             }
         });
 
@@ -283,7 +286,7 @@ function cambiarTurno(idUsuario, abandonar) {
         abandonarParametro = 0;
         src = 'audioincorrecto';
     }
-    
+
     reproducirAudio(src);
     correrTiempo = false;
     controlTemporizador(idUsuario, null, correrTiempo);
@@ -365,7 +368,7 @@ function juegoRosco(idUsuario, idPregunta) {
                     controlTemporizador(resultado.jugadorAnterior.idUsuario, null, correrTiempo);
                     controlTemporizador(resultado.jugadorActual.idUsuario, null, correrTiempo);
                          
-                    //reproducirAudio('audioganador');
+                    reproducirAudio('audioganador');
                     
                     mostrarGanador(resultado.ganador);
                 } else {
@@ -471,10 +474,8 @@ function controlTemporizador(idUsuario, segundos, correrTiempo) {
         temporizador = setInterval (function () {
             actualizarVistaTemporizador(temporizadorVista, tiempo);
 
-
             if (--tiempo < 0) {
                 // Termino el juego del jugador
-                //reproducirAudio('audiosinTiempo');
 
                 temporizadorVista.innerHTML = 0;
                 clearInterval(temporizador);
@@ -493,6 +494,8 @@ function actualizarVistaTemporizador(temporizador, tiempo) {
 }
 
 function mostrarGanador(jugador) {
+
+
 
     var formularioJuego = document.getElementById('idFormularioJuego');
     formularioJuego.innerHTML = '';
