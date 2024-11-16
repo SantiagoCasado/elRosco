@@ -162,13 +162,15 @@ if (is_null($listadoPartidas) || empty($listadoPartidas) || is_null($historial) 
         'victoriasJugador2' => '0',
     );
 
-    $ultimasPartidas = new StdClass();
+    $objTemp = new StdClass();
 	$objTemp->ganador = 'No hay historial entre los jugadores';
+    $objTemp->dificultad = '';
 	$objTemp->tiempoPartida = '';
 	$objTemp->ayuda = '';
-	$objTemp->jugadores = $jugadores;
 	$objTemp->puntajes = '';
 	$objTemp->tiemposRestantes = '';
+
+    $ultimasPartidas = $objTemp;
 
 } else {
     $victorias = array(
@@ -197,7 +199,7 @@ if (is_null($listadoPartidas) || empty($listadoPartidas) || is_null($historial) 
 						'puntajes' => $puntajes, //
 						'tiemposRestantes' => $tiemposRestantes //
                         );
-		$ultimasPartidas[] = $arregloTemp;
+        $ultimasPartidas[] = $arregloTemp;
 	}
 }
 $historialJSON = array(
