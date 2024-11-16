@@ -90,15 +90,13 @@ class Usuario
 				$this->setContrasenia($registro->contrasenia);
 				$this->setFechaNacimiento($registro->fechaNacimiento);
 
-				// $resultadoConsulta->free();
-				// $bd->cerrarBD();
-				// return True;
 			}
 
 			$resultadoConsulta->free();
 			$bd->cerrarBD();
-			// return False;
+
 		} catch (Exception $e) {
+			$bd->cerrarBD();
       	  	error_log("Error al buscar el usuario: " . $e->getMessage());
    		}
 	}
@@ -107,8 +105,5 @@ class Usuario
 		return password_verify($contraseniaFormulario, $this-> contraseniaUsuario);
     }
 
-	public function cargarJugadorBD($idUsuario) {
-		// Aprovechar getUsuario();
-	}
 }
 ?>

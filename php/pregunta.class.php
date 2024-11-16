@@ -103,6 +103,7 @@ class Pregunta
 			$bd->cerrarBD();
 			return $pregunta;
 		} catch (Exception $e) {
+            $bd->cerrarBD();
       	  	error_log("Error al buscar la pregunta: " . $e->getMessage());
    		}
     }
