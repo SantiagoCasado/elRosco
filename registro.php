@@ -20,7 +20,6 @@ if (isset($_SESSION['vectorSesion']) && count($_SESSION['vectorSesion']) >= 2) {
         <meta charset="UTF-8"/>
         <title>El Rosco</title>
         <link rel="stylesheet" href="Estilos/estilo.css">
-        <!-- <script type="text/javascript"  src="Script/script.js"></script> -->
     </head>
     <header>
         <div class="itemsCentrados">
