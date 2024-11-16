@@ -103,7 +103,7 @@ foreach ($partida->getRoscos() as $idJugador => $rosco) {
         'idRosco' => $rosco->getIdRosco(),
         'estadoRosco' => $rosco->getEstadoRosco(), //
         'preguntasPendientes' => array(),
-        'preguntasArriesgadas' => array()
+        'preguntasArriesgadas' => array(),
     );
     
     // Agregar preguntas pendientes al rosco
@@ -113,7 +113,16 @@ foreach ($partida->getRoscos() as $idJugador => $rosco) {
             'letra' => $pregunta->getLetra(), //
             'palabra' => $pregunta->getPalabra(), //
             'descripcion' => $pregunta->getDescripcion(), //
-            'dificultadPregunta' => $pregunta->getDificultadPregunta(),
+            'estadoRespuesta' => $pregunta->getEstadoRespuesta() //
+        );
+    }
+
+    // Agregar preguntas arriesgadas al rosco
+    foreach ($rosco->getPreguntasArriesgadas() as $pregunta) {
+        $roscoJSON['preguntasArriesgadas'][] = array(
+            'idPregunta' => $pregunta->getIdPregunta(), //
+            'letra' => $pregunta->getLetra(), //
+            'palabra' => $pregunta->getPalabra(), //
             'estadoRespuesta' => $pregunta->getEstadoRespuesta() //
         );
     }
