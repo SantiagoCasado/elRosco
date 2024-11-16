@@ -17,11 +17,9 @@ function crearVistaJuego(partida) {
         console.log(partida.ganador);
     }
 
-    //vistaInteraccion(jugadorActual, pregunta, letraSiguiente, partida.turnoActual, partida.ayuda, partida.tiempoPartida, enJuego);
+    crearVistaRoscos(partida.roscos);
 
     crearBotonAbandonar(jugadorActual.idUsuario);
-
-    crearVistaRoscos(partida.roscos);
 }
 
 function crearTablaHistorial(historial, jugadores) {
@@ -285,7 +283,7 @@ function cambiarTurno(idUsuario, abandonar) {
         abandonarParametro = 0;
         src = 'audioincorrecto';
     }
-
+    
     reproducirAudio(src);
     correrTiempo = false;
     controlTemporizador(idUsuario, null, correrTiempo);
@@ -347,12 +345,12 @@ function juegoRosco(idUsuario, idPregunta) {
             try {
                 var resultado = JSON.parse(peticion.responseText);
 
-                // Actualizar vista rosco para el jugador que respondio
-                actualizarVistaRosco(resultado.respuesta.idPregunta, resultado.respuesta.estadoRespuesta, resultado.respuesta.palabra);
-
                 // Reproducir audio segun la respuesta
                 src = 'audio' + resultado.respuesta.estadoRespuesta;
                 reproducirAudio(src);
+
+                // Actualizar vista rosco para el jugador que respondio
+                actualizarVistaRosco(resultado.respuesta.idPregunta, resultado.respuesta.estadoRespuesta, resultado.respuesta.palabra);
                 
                 // Actualizar puntaje de ambos jugadores
                 puntajeJugador1 = resultado.estadoPartida.puntajes.puntajeJugador1;

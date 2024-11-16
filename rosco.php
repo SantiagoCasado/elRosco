@@ -22,7 +22,7 @@ include_once('php/iniciarPartida.php');
         <source id="audiosinTiempo" src="assets/sinTiempo.mp3" type="audio.mp3">
         <source id="audioreloj" src="assets/reloj.mp3" type="audio.mp3">
         <source id="audioganador" src="assets/ganador.mp3" type="audio.mp3">
-        <source id="audioabandonar" src="assets/ganador.mp3" type="audio.mp3">
+        <source id="audioabandonar" src="assets/abandonar.mp3" type="audio.mp3">
 
     </audio>
     <section>
@@ -32,8 +32,6 @@ include_once('php/iniciarPartida.php');
                 <p><strong>Dificultad: </strong> <?php echo $partida -> getDificultad() ?> </p>
                 <p><strong>Tiempo por jugador: </strong> <?php echo $partida -> getTiempoPartida() / 60 ?> minutos </p>
                 <p><strong>Ayuda adicional: </strong> <?php echo $partida -> getAyuda() == 1 ? "Si" : "No" ?> </p>
-                <!-- <p><strong>Primero en jugar: </strong> <?php //echo $partida -> getTurnoActual() == 0 ? $jugadores[0] -> getNombreUsuario() : $jugadores[1] -> getNombreUsuario() ?></p>
-                <p><strong>Turno actual: </strong> <?php //echo $partida -> getTurnoActual() == 0 ? $jugadores[0] -> getNombreUsuario() : $jugadores[1] -> getNombreUsuario() ?> </p>         -->
             </article>
             <article class="zonaDerecha" id="idZonaHistorial">
                 <div class="itemsCentrados">

@@ -342,17 +342,6 @@ button:hover {
     font-size: large;
 }
 
-/* .turnoDe0 {
-    color: #FF7F50;
-    font-weight: bold;
-
-}
-
-.turnoDe1 {
-    color: #50BFFF;
-    font-weight: bold;
-} */
-
 .turnoDe0 {
     background-color: #FF7F50;
     padding: 15px;
@@ -374,10 +363,10 @@ button:hover {
 
 .turnoDe0 h2 {
     margin: 0;
-    font-size: 24px;
+    font-size: 36px;
     color: white;
     font-weight: bold; 
-  }
+}
 
 .turnoDe1 {
     background-color: #50BFFF;
